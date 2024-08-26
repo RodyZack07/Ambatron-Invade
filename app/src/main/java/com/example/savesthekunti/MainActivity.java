@@ -31,20 +31,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showSettingsPopup(View anchorView) {
-        // Inflate layout untuk popup
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_layout, null);
 
-        // Calculate the width and height of the popup
-        int popupWidth = 650;  // The new width in dp
-        int popupHeight = 450; // The new height in dp
+        // Ambil dimensi dari resources
+        int popupWidth = getResources().getDimensionPixelSize(R.dimen.popup_width);
+        int popupHeight = getResources().getDimensionPixelSize(R.dimen.popup_height);
 
-
-        // Create the PopupWindow
         popupWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
-
         popupWindow.setAnimationStyle(R.style.PopupAnimation);
-        // Show the popup at the center of the screen
         popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
     }
+
 }
