@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Saves The Kunti</string>
+    <string name="exit_button_description"></string>
 </resources>
