@@ -21,7 +21,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/judul_ambatron"
+            android:src="@drawable/judul_ambatron1"
             android:contentDescription="@null"
             android:layout_marginBottom="100dp" />
 
