@@ -1,5 +1,7 @@
 package com.example.savesthekunti;
 
+import android.media.MediaPlayer;
+
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,6 +14,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+    //class audio
+    private AudioPlayer audioPlayer;
+
+
     private PopupWindow popupWindow;
     private PopupWindow exitPopupWindow;
 
@@ -19,6 +25,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Inisialisasi Audio
+        audioPlayer = new AudioPlayer(this, R.raw.galatic_idle);
+        audioPlayer.playMusic();
+
 
         // Inisialisasi setting button
         ImageButton settingsBtn = findViewById(R.id.setting_button);
@@ -36,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 showExitPopup(view);
             }
+
         });
     }
 
@@ -95,5 +107,13 @@ public class MainActivity extends AppCompatActivity {
                 exitPopupWindow.dismiss();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        if(audioPlayer != null){
+            audioPlayer.stopMusik();
+        }
     }
 }
