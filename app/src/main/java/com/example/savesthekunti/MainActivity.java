@@ -1,54 +1,87 @@
+// ============ Packages ====================
 package com.example.savesthekunti;
 
 import android.media.MediaPlayer;
-
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
-
+import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
 
+// ============== Main Code ==================
 public class MainActivity extends AppCompatActivity {
 
-    //class audio
+    // Class audio
     private AudioPlayer audioPlayer;
-
-
+    private VideoView videoViewBackground;
     private PopupWindow popupWindow;
     private PopupWindow exitPopupWindow;
 
+    // =========== OnCreate ===============
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Inisialisasi Audio
+        // Inisialisasi VideoView
+        videoViewBackground = findViewById(R.id.videoViewBackground);
+        Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.background_loop);
+        videoViewBackground.setVideoURI(videoUri);
+
+        // Mengatur volume ke 0
+        videoViewBackground.setOnPreparedListener(mp -> {
+            mp.setLooping(true);
+            setVolume(mp, 0f);  // Mengatur volume ke 0
+        });
+
+        // Mengubah ukuran VideoView untuk rasio 9:16
+        adjustVideoViewSize();
+
+        // Start Video
+        videoViewBackground.start();
+
+        // Inisialisasi Audio
         audioPlayer = new AudioPlayer(this, R.raw.galatic_idle);
         audioPlayer.playMusic();
-
 
         // Inisialisasi setting button
         ImageButton settingsBtn = findViewById(R.id.setting_button);
         ImageButton quitButton = findViewById(R.id.btn_quit);
 
-        settingsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showSettingsPopup(view);
-            }
-        });
+        settingsBtn.setOnClickListener(view -> showSettingsPopup(view));
 
-        quitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showExitPopup(view);
-            }
+        quitButton.setOnClickListener(view -> showExitPopup(view));
+    }
 
-        });
+    private void setVolume(MediaPlayer mediaPlayer, float volume) {
+        mediaPlayer.setVolume(volume, volume);
+    }
+
+    private void adjustVideoViewSize() {
+        // Mendapatkan ukuran layar dalam dp
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidthDp = (int) (displayMetrics.widthPixels / displayMetrics.density);
+
+        // Menghitung tinggi berdasarkan rasio 9:16
+        int videoWidth = screenWidthDp;
+        int videoHeight = (int) (videoWidth * 16.0 / 9.0);
+
+        // Mengonversi dari dp ke piksel
+        int videoWidthPx = (int) (videoWidth * displayMetrics.density);
+        int videoHeightPx = (int) (videoHeight * displayMetrics.density);
+
+        // Mengatur ukuran VideoView
+        ViewGroup.LayoutParams params = videoViewBackground.getLayoutParams();
+        params.width = videoWidthPx;
+        params.height = videoHeightPx;
+        videoViewBackground.setLayoutParams(params);
     }
 
     private void showSettingsPopup(View anchorView) {
@@ -94,25 +127,15 @@ public class MainActivity extends AppCompatActivity {
         noParams.height = yesNoHeight;
         noBtn.setLayoutParams(noParams);
 
-        yesBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        yesBtn.setOnClickListener(view -> finish());
 
-        noBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                exitPopupWindow.dismiss();
-            }
-        });
+        noBtn.setOnClickListener(view -> exitPopupWindow.dismiss());
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
-        if(audioPlayer != null){
+        if (audioPlayer != null) {
             audioPlayer.stopMusik();
         }
     }
