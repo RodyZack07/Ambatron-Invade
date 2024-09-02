@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private VideoView videoViewBackground;
     private PopupWindow popupWindow;
     private PopupWindow exitPopupWindow;
+    private int videoPosition;
 
     // =========== OnCreate ===============
     @Override
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
             mp.setLooping(true);
             setVolume(mp, 0f);  // Mengatur volume ke 0
         });
+
 
         // Mengubah ukuran VideoView untuk rasio 9:16
         adjustVideoViewSize();
@@ -59,6 +61,20 @@ public class MainActivity extends AppCompatActivity {
         quitButton.setOnClickListener(view -> showExitPopup(view));
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        videoViewBackground.seekTo(videoPosition);
+        videoViewBackground.start();
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        videoPosition = videoViewBackground.getCurrentPosition();
+       videoViewBackground.pause();
+    }
+
     private void setVolume(MediaPlayer mediaPlayer, float volume) {
         mediaPlayer.setVolume(volume, volume);
     }
@@ -71,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Menghitung tinggi berdasarkan rasio 9:16
         int videoWidth = screenWidthDp;
-        int videoHeight = (int) (videoWidth * 16.0 / 9.0);
+        int videoHeight = (int) (videoWidth * 21.0 / 9.0);
 
         // Mengonversi dari dp ke piksel
         int videoWidthPx = (int) (videoWidth * displayMetrics.density);
