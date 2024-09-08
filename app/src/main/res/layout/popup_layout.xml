@@ -1,15 +1,14 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="450dp"
+    android:layout_width="340dp"
     android:id="@+id/popup_layout"
-    android:layout_height="340dp"
+    android:layout_height="300dp"
     android:orientation="vertical"
     android:layout_gravity="center"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:padding="25dp"
     android:background="@android:color/transparent">
-
 
     <ImageView
         android:layout_width="match_parent"
@@ -45,14 +44,12 @@
 
     </FrameLayout>
 
-
     <ImageButton
         android:id="@+id/silang"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="-10dp"
-
         android:background="@android:color/transparent"
         android:elevation="50dp"
         android:scaleType="fitXY"
@@ -61,7 +58,6 @@
 
     <ImageView
         android:id="@+id/border"
-
         android:layout_width="30dp"
         android:layout_height="35dp"
         android:layout_marginTop="-18dp"
@@ -70,84 +66,89 @@
     <FrameLayout
         android:layout_width="300dp"
         android:layout_height="140dp"
-        android:layout_gravity="top|center_horizontal">
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="25dp">
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="40dp"
-            android:layout_height="100dp"
-            android:layout_marginLeft="157dp"
-            android:layout_marginTop="-12dp"
-            app:srcCompat="@drawable/music_text" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center">
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="40dp"
-            android:layout_height="100dp"
-            android:layout_marginLeft="155dp"
-            android:layout_marginTop="25dp"
-            app:srcCompat="@drawable/music_icon" />
+            <!-- Left Alignment -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
 
+                <ImageView
+                    android:id="@+id/imageView9"
+                    android:layout_width="28dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:srcCompat="@drawable/sfx_text" />
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="40dp"
-            android:layout_height="70dp"
-            android:layout_marginLeft="210dp"
-            android:layout_marginTop="25dp"
-            app:srcCompat="@drawable/garis" />
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="55dp"
+                    android:layout_height="60dp"
+                    app:srcCompat="@drawable/sfx_icon"
+                    android:scaleType="fitXY"/>
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="40dp"
-            android:layout_height="70dp"
-            android:layout_marginLeft="110dp"
-            android:layout_marginTop="25dp"
-            app:srcCompat="@drawable/garis" />
+            </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="50dp"
-            android:layout_height="100dp"
-            android:layout_marginLeft="75dp"
-            android:layout_marginTop="25dp"
-            app:srcCompat="@drawable/sfx_icon" />
+            <!-- Center Alignment -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
 
-        <ImageView
-            android:id="@+id/imageView6"
-            android:layout_width="45dp"
-            android:layout_height="100dp"
-            android:layout_marginLeft="250dp"
-            android:layout_marginTop="-12dp"
-            app:srcCompat="@drawable/volume_text" />
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:srcCompat="@drawable/music_text" />
 
-        <ImageView
-            android:id="@+id/imageView7"
-            android:layout_width="45dp"
-            android:layout_height="100dp"
-            android:layout_marginLeft="250dp"
-            android:layout_marginTop="20dp"
-            app:srcCompat="@drawable/volume_icon" />
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="45dp"
+                    android:layout_height="50dp"
+                    app:srcCompat="@drawable/music_icon"
+                    android:scaleType="fitXY"/>
 
-        <ImageView
-            android:id="@+id/imageView8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/volume_text" />
+            </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imageView9"
-            android:layout_width="28dp"
-            android:layout_height="100dp"
-            android:layout_marginLeft="85dp"
-            android:layout_marginTop="-12dp"
-            app:srcCompat="@drawable/sfx_text" />
-        </FrameLayout>
+            <!-- Right Alignment -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
 
-</FrameLayout>
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="45dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:srcCompat="@drawable/volume_text" />
 
+                <ImageView
+                    android:id="@+id/imageView7"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:srcCompat="@drawable/volume_icon"
+                    android:scaleType="fitXY"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </FrameLayout>

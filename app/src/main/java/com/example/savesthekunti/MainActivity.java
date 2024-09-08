@@ -1,6 +1,7 @@
 // ============ Packages ====================
 package com.example.savesthekunti;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -55,10 +56,22 @@ public class MainActivity extends AppCompatActivity {
         // Inisialisasi setting button
         ImageButton settingsBtn = findViewById(R.id.setting_button);
         ImageButton quitButton = findViewById(R.id.btn_quit);
+        ImageButton playButton = findViewById(R.id.play_button);
+
 
         settingsBtn.setOnClickListener(view -> showSettingsPopup(view));
 
         quitButton.setOnClickListener(view -> showExitPopup(view));
+
+        playButton.setOnClickListener(View ->{
+
+        Intent intent = new Intent(MainActivity.this, SelectFighterActivity.class);
+        startActivity(intent);
+        });
+
+
+
+        //
     }
 
     @Override
@@ -146,6 +159,10 @@ public class MainActivity extends AppCompatActivity {
         yesBtn.setOnClickListener(view -> finish());
 
         noBtn.setOnClickListener(view -> exitPopupWindow.dismiss());
+    }
+
+    private void swapSelect(View anchorView){
+
     }
 
     @Override

@@ -1,0 +1,26 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/asteroidContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <!-- Background untuk gameplay -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/background_gameplay"
+        android:scaleType="fitXY"/>
+
+    <!-- Gambar pesawat -->
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="60dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/blue_cosmos_game"/>
+</FrameLayout>

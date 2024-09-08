@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <VideoView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/selectBg"
+        android:layout_gravity="center"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="0dp"
+        />
+
+    <ImageView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/chose_fighter_text"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="50dp"/>
+    <FrameLayout
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:layout_gravity="center"
+        android:background="@drawable/pick_line">
+
+        <ImageView
+            android:id="@+id/ship_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="350dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="600dp"
+
+
+        >
+        <ImageButton
+            android:id="@+id/prevsBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/previous_btn"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:layout_marginRight="100dp"
+
+            />
+
+        <ImageButton
+            android:id="@+id/nextBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/previous_btn"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:layout_marginLeft="100dp"
+
+            />
+
+    </FrameLayout>
+
+</FrameLayout>
