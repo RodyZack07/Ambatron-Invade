@@ -1,6 +1,7 @@
 // ============ Packages ====================
 package com.example.savesthekunti;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -12,8 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
+import android.database.sqlite.SQLiteDatabase;
 
 // ============== Main Code ==================
 public class MainActivity extends AppCompatActivity {
@@ -24,12 +27,16 @@ public class MainActivity extends AppCompatActivity {
     private PopupWindow popupWindow;
     private PopupWindow exitPopupWindow;
     private int videoPosition;
+    private DBHelper dbHelper;
 
     // =========== OnCreate ===============
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Initialize DBHelper for database operations
+        dbHelper = new DBHelper(this);
 
         // Inisialisasi VideoView
         videoViewBackground = findViewById(R.id.videoViewBackground);
@@ -41,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
             mp.setLooping(true);
             setVolume(mp, 0f);  // Mengatur volume ke 0
         });
-
 
         // Mengubah ukuran VideoView untuk rasio 9:16
         adjustVideoViewSize();
@@ -58,34 +64,31 @@ public class MainActivity extends AppCompatActivity {
         ImageButton quitButton = findViewById(R.id.btn_quit);
         ImageButton playButton = findViewById(R.id.play_button);
 
-
         settingsBtn.setOnClickListener(view -> showSettingsPopup(view));
 
         quitButton.setOnClickListener(view -> showExitPopup(view));
 
-        playButton.setOnClickListener(View ->{
+        playButton.setOnClickListener(View -> {
+            // Insert akun, profile, dan achievement ke database
+            insertAkunData("JohnDoe", "john.doe@example.com", "securePassword123");
 
-        Intent intent = new Intent(MainActivity.this, SelectFighterActivity.class);
-        startActivity(intent);
+            Intent intent = new Intent(MainActivity.this, SelectFighterActivity.class);
+            startActivity(intent);
         });
-
-
-
-        //
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         videoViewBackground.seekTo(videoPosition);
         videoViewBackground.start();
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
         videoPosition = videoViewBackground.getCurrentPosition();
-       videoViewBackground.pause();
+        videoViewBackground.pause();
     }
 
     private void setVolume(MediaPlayer mediaPlayer, float volume) {
@@ -161,8 +164,59 @@ public class MainActivity extends AppCompatActivity {
         noBtn.setOnClickListener(view -> exitPopupWindow.dismiss());
     }
 
-    private void swapSelect(View anchorView){
+    private void insertAkunData(String username, String email, String password) {
+        // Inserting data into Akun table
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues akunValues = new ContentValues();
+        akunValues.put("username", username);
+        akunValues.put("email", email);
+        akunValues.put("password", password);
 
+        long akunId = db.insert("Akun", null, akunValues);
+        if (akunId != -1) {
+            Toast.makeText(this, "Account created successfully!", Toast.LENGTH_SHORT).show();
+
+            // Insert profile and achievement after account is created
+            insertProfileData((int) akunId, "https://example.com/profile.jpg");
+            insertAchievementData((int) akunId, "First Achievement", "This is the first achievement.");
+        } else {
+            Toast.makeText(this, "Error creating account.", Toast.LENGTH_SHORT).show();
+        }
+
+        db.close();
+    }
+
+    private void insertProfileData(int akunId, String photoProfile) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues profileValues = new ContentValues();
+        profileValues.put("id_akun", akunId);
+        profileValues.put("photo_profile", photoProfile);
+
+        long profileId = db.insert("Profile", null, profileValues);
+        if (profileId != -1) {
+            Toast.makeText(this, "Profile created successfully!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Error creating profile.", Toast.LENGTH_SHORT).show();
+        }
+
+        db.close();
+    }
+
+    private void insertAchievementData(int akunId, String namaAchievement, String deskripsi) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues achievementValues = new ContentValues();
+        achievementValues.put("id_akun", akunId);
+        achievementValues.put("nama_achievement", namaAchievement);
+        achievementValues.put("deskripsi", deskripsi);
+
+        long achievementId = db.insert("Achievement", null, achievementValues);
+        if (achievementId != -1) {
+            Toast.makeText(this, "Achievement added successfully!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Error adding achievement.", Toast.LENGTH_SHORT).show();
+        }
+
+        db.close();
     }
 
     @Override
