@@ -11,10 +11,11 @@ public class GameActivity extends AppCompatActivity {
 
     private FrameLayout asteroidContainer;
     private Handler asteroidHandler = new Handler();
-    private int delay = 50; // 0.05 detik dalam milidetik
+    private int delay = 20; // 0.02 detik dalam milidetik
     private int asteroidSizeStart = 30; // Ukuran awal asteroid
     private int asteroidSizeEnd = 150;  // Ukuran akhir asteroid (ketika mendekati pemain)
     private int screenHeight; // Tinggi layar untuk menentukan batas pergerakan asteroid
+    private int screenWidth; // Lebar layar untuk menentukan posisi tengah
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,18 +24,19 @@ public class GameActivity extends AppCompatActivity {
 
         asteroidContainer = findViewById(R.id.asteroidContainer);
 
-        // Dapatkan tinggi layar untuk membatasi pergerakan asteroid
+        // Dapatkan tinggi dan lebar layar untuk membatasi pergerakan asteroid
         screenHeight = getResources().getDisplayMetrics().heightPixels;
+        screenWidth = getResources().getDisplayMetrics().widthPixels;
 
-        // Memulai looping untuk menambahkan asteroid setiap 0.05 detik
+        // Memulai looping untuk menambahkan asteroid setiap 0.02 detik
         asteroidHandler.postDelayed(asteroidRunnable, delay);
     }
 
-    private Runnable asteroidRunnable = new Runnable() {
+    private final Runnable asteroidRunnable = new Runnable() {
         @Override
         public void run() {
             spawnAsteroid();
-            asteroidHandler.postDelayed(this, delay); // Memanggil lagi setelah 0.05 detik
+            asteroidHandler.postDelayed(this, delay); // Memanggil lagi setelah 0.02 detik
         }
     };
 
@@ -47,9 +49,10 @@ public class GameActivity extends AppCompatActivity {
         int size = asteroidSizeStart;
         asteroid.setLayoutParams(new FrameLayout.LayoutParams(size, size));
 
-        // Tentukan posisi awal asteroid (sesuai dengan posisi asteroid terkecil di XML)
-        asteroid.setY(0); // Mulai dari atas layar
-        asteroid.setX(100); // Sesuaikan dengan posisi X yang diinginkan (contohnya 100)
+        // Tentukan posisi awal asteroid (di tengah atas layar)
+        float respawnXPosition = (screenWidth - size) / 2f; // Posisi X di tengah layar
+        asteroid.setX(respawnXPosition);
+        asteroid.setY(0);  // Mulai dari atas layar
 
         // Tambahkan asteroid ke container
         asteroidContainer.addView(asteroid);
@@ -59,7 +62,7 @@ public class GameActivity extends AppCompatActivity {
                 .translationY(screenHeight) // Bergerak sampai ke bawah layar
                 .scaleX(asteroidSizeEnd / (float) asteroidSizeStart) // Membesar secara horizontal
                 .scaleY(asteroidSizeEnd / (float) asteroidSizeStart) // Membesar secara vertikal
-                .setDuration(3000) // Durasi pergerakan asteroid (3 detik untuk contoh ini)
+                .setDuration(3000) // Durasi pergerakan asteroid (3 detik)
                 .withEndAction(() -> asteroidContainer.removeView(asteroid)) // Hapus asteroid saat keluar dari layar
                 .start();
     }
@@ -70,4 +73,3 @@ public class GameActivity extends AppCompatActivity {
         asteroidHandler.removeCallbacks(asteroidRunnable); // Hentikan handler saat aktivitas dihancurkan
     }
 }
-

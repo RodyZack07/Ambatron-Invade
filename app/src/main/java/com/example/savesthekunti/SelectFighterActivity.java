@@ -1,10 +1,10 @@
 package com.example.savesthekunti;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageButton;
@@ -19,8 +19,8 @@ public class SelectFighterActivity extends AppCompatActivity {
 
     //PESAWAT
     private ImageView spaceShip;
-    private int[] spaceShips = {R.drawable.blue_cosmos, R.drawable.retro_sky, R.drawable.wing_of_justice};
-    private int[] gameSpaceShips ={R.drawable.blue_cosmos_game,R.drawable.retro_sky, R.drawable.wing_of_justice_game};
+    private int[] spaceShips = {R.drawable.blue_cosmos, R.drawable.retro_sky, R.drawable.wing_of_justice, R.drawable.x56_core};
+    private int[] gameSpaceShips ={R.drawable.blue_cosmos_game,R.drawable.retro_sky, R.drawable.wing_of_justice_game, R.drawable.x56_core_game};
 
     private int currentIndex = 0;
 
@@ -34,6 +34,7 @@ public class SelectFighterActivity extends AppCompatActivity {
 
         ImageButton prevsBtn = findViewById(R.id.prevsBtn);
         ImageButton nextBtn = findViewById(R.id.nextBtn);
+        ImageButton selectBtn = findViewById(R.id.selectBtn);
 
         //inisialisasi blue cosmos secara default
         spaceShip.setImageResource(spaceShips[currentIndex]);
@@ -51,6 +52,8 @@ public class SelectFighterActivity extends AppCompatActivity {
 
         prevsBtn.setOnClickListener(v -> prevsFighter());
         nextBtn.setOnClickListener(v -> nextFighter());
+        selectBtn.setOnClickListener(v -> selectGame());
+
 
     }
 
@@ -77,6 +80,12 @@ public class SelectFighterActivity extends AppCompatActivity {
        FighterSwitchAnimation();
 
     }
+
+    private void selectGame(){
+        Intent intent = new Intent(SelectFighterActivity.this, GameActivity.class);
+        startActivity(intent);
+    }
+
 
     private void FighterSwitchAnimation(){
         //animasi fade-out
