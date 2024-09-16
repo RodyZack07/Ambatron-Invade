@@ -2,17 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/asteroidContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/spawnPosition"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|center" />
-    </FrameLayout>
+    <!-- Asteroid Container (Untuk menampung asteroid sebagai environment) -->
 
     <!-- Background untuk gameplay -->
     <ImageView
@@ -21,37 +11,77 @@
         android:src="@drawable/background_gameplay"
         android:scaleType="fitXY"/>
 
+    <FrameLayout
+        android:id="@+id/asteroidContainerLeft"
+        android:layout_width="150dp"
+        android:layout_height="500dp"
+        android:layout_gravity="bottom|left"
+        android:layout_marginBottom="100dp">
+
+
+
+        <Button
+            android:id="@+id/leftButton"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:background="@android:color/transparent" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/asteroidContainerRight"
+        android:layout_width="150dp"
+        android:layout_height="500dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="100dp">
+
+
+    </FrameLayout>
+
     <!-- Gambar pesawat -->
     <FrameLayout
         android:layout_width="350dp"
         android:layout_height="200dp"
         android:layout_gravity="bottom|center"
         android:layout_marginBottom="65dp">
-    <ImageView
-        android:id="@+id/playerShip"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center"
-        android:scaleType="fitXY"
-        android:src="@drawable/blue_cosmos_game"/>
 
+        <ImageView
+            android:id="@+id/playerShip"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/blue_cosmos_game"/>
     </FrameLayout>
 
+    <!-- Kontainer Monster -->
+    <FrameLayout
+        android:id="@+id/monsterContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top|center">
+
+        <!-- Musuh / Monster -->
+        <ImageView
+            android:id="@+id/monsterMini"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/monster_mini"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+    <!-- Tombol Kiri dan Kanan -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <Button
-            android:layout_width="200dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:background="@android:color/transparent"/>
-
-        <Button
+            android:id="@+id/rightButton"
             android:layout_width="200dp"
             android:layout_height="match_parent"
             android:layout_gravity="right"
-            android:background="@android:color/transparent"/>
-
+            android:background="@android:color/transparent"
+        />
     </FrameLayout>
 </FrameLayout>
