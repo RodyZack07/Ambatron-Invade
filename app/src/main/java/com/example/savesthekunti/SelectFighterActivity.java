@@ -83,6 +83,7 @@ public class SelectFighterActivity extends AppCompatActivity {
 
     private void selectGame(){
         Intent intent = new Intent(SelectFighterActivity.this, GameActivity.class);
+        intent.putExtra("selectedShipIndex", currentIndex);
         startActivity(intent);
     }
 

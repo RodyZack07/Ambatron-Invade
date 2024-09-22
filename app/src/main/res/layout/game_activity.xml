@@ -1,6 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/gameContent">
 
     <!-- Asteroid Container (Untuk menampung asteroid sebagai environment) -->
 
@@ -39,7 +40,14 @@
 
     </FrameLayout>
 
-    <!-- Gambar pesawat -->
+    <!-- Gambar pesawat dan peluru-->
+    <FrameLayout
+        android:id="@+id/bulletContainer"
+        android:layout_width="350dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="top|center">
+    </FrameLayout>
+
     <FrameLayout
         android:layout_width="350dp"
         android:layout_height="200dp"
@@ -52,7 +60,7 @@
             android:layout_height="150dp"
             android:layout_gravity="center"
             android:scaleType="fitXY"
-            android:src="@drawable/blue_cosmos_game"/>
+           />
     </FrameLayout>
 
     <!-- Kontainer Monster -->

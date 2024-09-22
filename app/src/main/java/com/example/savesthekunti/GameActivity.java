@@ -15,19 +15,24 @@
 
         private ImageView playerShip ;
         private Button leftBtn, rightBtn;
-        private FrameLayout asteContainerLeft,  asteContainerRight ,shipContainer;
+        private FrameLayout asteContainerLeft,  asteContainerRight ,shipContainer, bulletContainer;
         private float shipSpeed = 10f;
         private Handler moveHandler = new Handler();
         private Handler asteroidHandler = new Handler();
+        private Handler bulletHandler = new Handler();
         private Runnable asteroidRunnableLeft, asteroidRunnableRight;
         private boolean isMovingLeft = false;
         private boolean isMovingRight = false;
+        private boolean isMoving = false;
         private ArrayList<ImageView> asteroidListLeft = new ArrayList<>();
         private ArrayList<ImageView> asteroidListRight= new ArrayList<>();
+        private ArrayList<ImageView> bulletList = new ArrayList<>();
 
         private static final int asteroidSize = 25;
         private static final int asteroidInterval = 400;
         private static final int asteroidSpeed =2;
+        private static final int bulletSpeed = 10;
+        private static final int bulletInterval = 300;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -44,18 +49,35 @@
             asteContainerLeft = findViewById(R.id.asteroidContainerLeft);
             asteContainerRight = findViewById(R.id.asteroidContainerRight);
 
+            //Refrensi bullet
+            bulletContainer = findViewById(R.id.bulletContainer);
+
+
+            //INDEX UNTUK PESAWAT
+             int selectedShipIndex = getIntent().getIntExtra("selectedShipIndex", 0);
+
+             int gameSpaceShips[] = {
+                     R.drawable.blue_cosmos_game,
+                     R.drawable.retro_sky,
+                     R.drawable.wing_of_justice_game,
+                     R.drawable.x56_core_game
+             };
+
+             // Set pesawat sesuai index
+            playerShip.setImageResource(gameSpaceShips[selectedShipIndex]);
+
 
             leftBtn.setOnTouchListener((v, event) ->{
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         isMovingLeft = true;
                         isMovingRight = false;
-                        startMoving();
+                        startMovingIfNeeded();
                         break;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
                         isMovingLeft = false;
-                        stopMoving();
+                        stopMovingIfNeeded();
                         break;
                 } return true;
             });
@@ -65,13 +87,13 @@
                     case MotionEvent.ACTION_DOWN:
                         isMovingRight = true;
                         isMovingLeft = false;
-                        startMoving();
+                        startMovingIfNeeded();
                         break;
 
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
                         isMovingRight = false;
-                        stopMoving();
+                        stopMovingIfNeeded();
                         break;
                 }return true;
             });
@@ -79,6 +101,7 @@
 
             startAsteroidSpawn();
             startAsteroirdAnim();
+            startShooting();
 
 
 
@@ -96,14 +119,7 @@
             }
         }
 
-        // START MOVUNG DAN STOP MOVING
-        private void startMoving (){
-            moveHandler.removeCallbacks(moveRunnable);
-            moveHandler.post(moveRunnable);
-        }
-        private void stopMoving(){
-            moveHandler.removeCallbacks(moveRunnable);
-        }
+      
 
 
 
@@ -120,15 +136,33 @@
                 //ulangi jika tomboil ditahan
                 if(isMovingLeft || isMovingRight){
                     moveHandler.postDelayed(this, 5);
+                }else{
+                    isMoving = false;
                 }
             }
         };
+
+        private void startMovingIfNeeded(){
+            if(!isMoving){
+                isMoving = true;
+                moveHandler.post(moveRunnable);
+            }
+        }
+
+        private void stopMovingIfNeeded(){
+            if(!isMovingLeft && !isMovingRight){
+                isMoving = false;
+                moveHandler.removeCallbacks(moveRunnable);
+            }
+        }
 
         //hentikan handler saat berhenti
         @Override
         protected void onDestroy(){
             super.onDestroy();
             moveHandler.removeCallbacks(moveRunnable);
+            asteroidHandler.removeCallbacks(asteroidRunnableRight);
+            asteroidHandler.removeCallbacks(asteroidRunnableLeft);
         }
 
         //LOGIKA ASTEROID
@@ -170,7 +204,7 @@
                 @Override
                 public void run() {
                     moveAsteroids();
-                    asteroidHandler.postDelayed(this, 20);
+                    asteroidHandler.postDelayed(this, 10);
                 }
             });
 
@@ -220,12 +254,82 @@
 
 
             //transisi
-            float scaleIncrement = 0.025f;
+            float scaleIncrement = 0.03f;
 
             if(currentScaleX < maxScale){
                 asteroid.setScaleX(currentScaleX + scaleIncrement);
                 asteroid.setScaleY(currentScaleY + scaleIncrement);
             }
         }
+
+        //LOGIKA TEMBAKAN
+        private void spawnBullet(){
+            ImageView bullet = new ImageView(this);
+            bullet.setLayoutParams(new FrameLayout.LayoutParams(100, 200));
+            bullet.setImageResource(R.drawable.bullet);
+
+            //Atur posisi bulllet
+            float bulletX = playerShip.getX() + (playerShip.getWidth() / 2) - (bullet.getLayoutParams().width / 2);
+            float bulletY = playerShip.getY() - bullet.getLayoutParams().height;
+
+            //set poisisi bulletnya
+            bullet.setX(bulletX);
+            bullet.setY(bulletY);
+
+            ((FrameLayout) findViewById(R.id.gameContent)).addView(bullet);
+            bulletList.add(bullet);
+        }
+
+
+        private void startShooting(){
+            bulletHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    spawnBullet();
+                    moveBullet();
+
+                    bulletHandler.postDelayed(this, bulletInterval);
+                }
+            }, bulletInterval);
+
+        }
+
+        private void moveBullet (){
+            bulletHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    for(int i = bulletList.size() - 1; i >= 0; i--) {
+                        ImageView bullet = bulletList.get(i);
+                        bullet.setY(bullet.getY() - bulletSpeed);
+
+                        //Hapus bullet
+
+                    }
+                    bulletHandler.postDelayed(this, 16);// animasi bullet
+                }
+            });
+        }
+
+        // PAUSE UNTUK MEMINIMALISIR MEMORI
+        @Override
+        protected void onPause(){
+            super.onPause();
+            moveHandler.removeCallbacks(moveRunnable);
+            asteroidHandler.removeCallbacksAndMessages(null);
+            bulletHandler.removeCallbacksAndMessages(null);
+
+            asteroidListRight.clear();
+            asteroidListLeft.clear();
+            bulletList.clear();
+        }
+
+        @Override
+        protected void onResume(){
+            super.onResume();
+            startAsteroidSpawn();
+            startShooting();
+        }
+
+
 
     }
