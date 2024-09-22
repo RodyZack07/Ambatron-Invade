@@ -3,4 +3,20 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <!-- Warna dasar -->
+
+    <color name="blue">#1E88E5</color>
+    <color name="yellow">#FFD700</color> <!-- Untuk SeekBar progress dan thumb -->
+
+    <!-- Warna khusus latar belakang -->
+    <color name="background">#000033</color> <!-- Latar belakang biru gelap -->
+
+    <!-- Warna tombol info -->
+    <color name="button_info_bg">#3C3C3C</color>
+    <color name="button_info_text">#FFFFFF</color>
+
+    <!-- Warna Divider -->
+    <color name="divider_color">#FFFFFF</color>
+
+
 </resources>
