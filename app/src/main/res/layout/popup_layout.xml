@@ -96,6 +96,7 @@
                     app:srcCompat="@drawable/sfx_icon" />
 
                 <SeekBar
+                    android:id="@+id/seekBarSFX"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:max="100"
@@ -131,6 +132,7 @@
                     app:srcCompat="@drawable/music_icon" />
 
                 <SeekBar
+                    android:id="@+id/seekBarMusic"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:max="100"
@@ -165,6 +167,7 @@
                     app:srcCompat="@drawable/volume_icon" />
 
                 <SeekBar
+                    android:id="@+id/seekBarVol"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:max="100"

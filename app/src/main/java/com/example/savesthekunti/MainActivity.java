@@ -3,6 +3,7 @@ package com.example.savesthekunti;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -14,12 +15,16 @@ import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 import android.widget.VideoView;
+import android.widget.SeekBar;
+import android.content.SharedPreferences;
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.database.sqlite.SQLiteDatabase;
 
+
 public class MainActivity extends AppCompatActivity {
 
-    private AudioPlayer audioPlayer;
     private VideoView videoViewBackground;
     private PopupWindow popupWindow;
     private PopupWindow exitPopupWindow;
@@ -46,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
         videoViewBackground.start();
 
-        audioPlayer = new AudioPlayer(this, R.raw.galatic_idle);
-        audioPlayer.playMusic();
 
         ImageButton settingsBtn = findViewById(R.id.setting_button);
         ImageButton quitButton = findViewById(R.id.btn_quit);
@@ -111,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         popupWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
         popupWindow.setAnimationStyle(R.style.PopupAnimation);
         popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+
     }
 
     private void showExitPopup(View anchorView) {
@@ -201,8 +205,5 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (audioPlayer != null) {
-            audioPlayer.stopMusik();
-        }
     }
 }
