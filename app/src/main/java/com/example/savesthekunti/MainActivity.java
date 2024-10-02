@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         dbHelper = new DBHelper(this);
 
         videoViewBackground = findViewById(R.id.videoViewBackground);
@@ -47,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             setVolume(mp, 0f);
         });
 
-        adjustVideoViewSize();
+
 
         videoViewBackground.start();
 
@@ -87,22 +89,7 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.setVolume(volume, volume);
     }
 
-    private void adjustVideoViewSize() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenWidthDp = (int) (displayMetrics.widthPixels / displayMetrics.density);
 
-        int videoWidth = screenWidthDp;
-        int videoHeight = (int) (videoWidth * 21.0 / 9.0);
-
-        int videoWidthPx = (int) (videoWidth * displayMetrics.density);
-        int videoHeightPx = (int) (videoHeight * displayMetrics.density);
-
-        ViewGroup.LayoutParams params = videoViewBackground.getLayoutParams();
-        params.width = videoWidthPx;
-        params.height = videoHeightPx;
-        videoViewBackground.setLayoutParams(params);
-    }
 
     private void showSettingsPopup(View anchorView) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -206,4 +193,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
     }
+
+
+
+
 }

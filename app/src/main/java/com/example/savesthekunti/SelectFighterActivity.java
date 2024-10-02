@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageButton;
@@ -29,6 +30,14 @@ public class SelectFighterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_fighter);
+
+        ImageButton prevsBtn1 = findViewById(R.id.prevsBtn2);
+        prevsBtn1.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         spaceShip = findViewById(R.id.ship_img);
 
@@ -82,7 +91,7 @@ public class SelectFighterActivity extends AppCompatActivity {
     }
 
     private void selectGame(){
-        Intent intent = new Intent(SelectFighterActivity.this, GameActivity.class);
+        Intent intent = new Intent(SelectFighterActivity.this, SelectLevelActivity.class);
         intent.putExtra("selectedShipIndex", currentIndex);
         startActivity(intent);
     }
