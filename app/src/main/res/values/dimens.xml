@@ -10,5 +10,8 @@
     //ukuran video
     <dimen name= "video_width">700dp</dimen>
     <dimen name= "video_height">600dp</dimen>
+
+    <dimen name= "profile_width">385dp</dimen>
+    <dimen name= "profile_height">600dp</dimen>
 </resources>
 

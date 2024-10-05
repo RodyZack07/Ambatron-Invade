@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private int videoPosition;
     private DBHelper dbHelper;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +58,9 @@ public class MainActivity extends AppCompatActivity {
         ImageButton settingsBtn = findViewById(R.id.setting_button);
         ImageButton quitButton = findViewById(R.id.btn_quit);
         ImageButton playButton = findViewById(R.id.play_button);
+        ImageButton profilMenu = findViewById(R.id.profile);
 
+        profilMenu.setOnClickListener(view -> showProfilePopup(view));
 
         settingsBtn.setOnClickListener(view -> showSettingsPopup(view));
 
@@ -88,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
     private void setVolume(MediaPlayer mediaPlayer, float volume) {
         mediaPlayer.setVolume(volume, volume);
     }
-
 
 
     private void showSettingsPopup(View anchorView) {
@@ -135,6 +137,22 @@ public class MainActivity extends AppCompatActivity {
 
         noBtn.setOnClickListener(view -> exitPopupWindow.dismiss());
     }
+
+    private void showProfilePopup(View anchorView) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.profile_menu, null);
+
+        int popupWidth = getResources().getDimensionPixelSize(R.dimen.profile_width);
+        int popupHeight = getResources().getDimensionPixelSize(R.dimen.profile_height);
+
+        PopupWindow profilePopupWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
+        profilePopupWindow.setAnimationStyle(R.style.PopupAnimation);
+        profilePopupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+
+
+    }
+
+
 
     private void insertAkunData(String username, String email, String password) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
