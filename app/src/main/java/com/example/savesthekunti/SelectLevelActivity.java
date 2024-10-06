@@ -18,83 +18,83 @@ public class SelectLevelActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Hubungkan layout XML level_activity.xml dengan Activity ini
         setContentView(R.layout.level_activity);
 
-        // Inisialisasi ImageButton prevButton setelah setContentView
         ImageButton prevButton = findViewById(R.id.prevsBtn1);
-
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish(); // Kembali ke Activity sebelumnya
+                finish(); // Kembali ke Activity sebelumnya dan menghancurkannya
             }
         });
 
-        // Inisialisasi komponen VideoView
+        // Inisialisasi VideoView dan komponen lainnya
         backgroundVideo = findViewById(R.id.backgroundVideo);
-
-        // Set path video dari folder raw
         Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.raw_gameplay);
         backgroundVideo.setVideoURI(videoUri);
 
-        // Matikan volume dan looping otomatis
         backgroundVideo.setOnPreparedListener(mp -> {
             mp.setVolume(0f, 0f);  // Volume di-mute
             mp.setLooping(true);    // Set looping
         });
 
-        // Mulai video
         backgroundVideo.start();
 
-        // Inisialisasi komponen lain dari XML
         ImageView bgLevel1 = findViewById(R.id.bg_level_1_1);
         ImageView bgLevel2 = findViewById(R.id.bg_level_2_1);
         ImageView bgLevel3 = findViewById(R.id.bg_level_3_1);
 
-        TextView tvLevel1 = findViewById(R.id.tv_level_1_2);
-        TextView tvLevel2 = findViewById(R.id.tv_level_2_2);
-        TextView tvLevel3 = findViewById(R.id.tv_level_3_2);
-
-        // Mengatur listener untuk ImageButton bgLevel1
         bgLevel1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Gunakan Intent untuk berpindah ke GameplayActivity (ganti dengan Activity yang benar)
+                // Beralih ke GameActivity dan menghancurkan SelectLevelActivity
                 Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-                startActivity(intent); // Memulai Activity baru
+                startActivity(intent);
+                finish(); // Menghancurkan SelectLevelActivity untuk menghemat memori
             }
         });
 
-        // Jika kamu ingin menambahkan event untuk level lainnya
         bgLevel2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Beralih ke GameActivity2 dan menghancurkan SelectLevelActivity
                 Intent intent = new Intent(SelectLevelActivity.this, GameActivity2.class);
                 startActivity(intent);
+                finish(); // Menghancurkan SelectLevelActivity untuk menghemat memori
             }
         });
-//
-//        bgLevel3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(SelectLevelActivity.this, GameplayActivity3.class);
-//                startActivity(intent);
-//            }
-//        });
+
+        // Uncomment jika diperlukan untuk level 3
+        /*
+        bgLevel3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectLevelActivity.this, GameActivity3.class);
+                startActivity(intent);
+                finish(); // Menghancurkan SelectLevelActivity untuk menghemat memori
+            }
+        });
+        */
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Melanjutkan video jika Activity kembali ke foreground
         backgroundVideo.start();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        // Pause video ketika Activity masuk ke background
         backgroundVideo.pause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (backgroundVideo != null) {
+            backgroundVideo.stopPlayback(); // Menghentikan video playback
+            backgroundVideo = null;        // Membersihkan referensi
+        }
     }
 }
