@@ -18,6 +18,8 @@ import android.widget.VideoView;
 import android.widget.SeekBar;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Button;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.database.sqlite.SQLiteDatabase;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         ImageButton playButton = findViewById(R.id.play_button);
         ImageButton profilMenu = findViewById(R.id.profile);
 
+
         profilMenu.setOnClickListener(view -> showProfilePopup(view));
 
         settingsBtn.setOnClickListener(view -> showSettingsPopup(view));
@@ -97,14 +100,29 @@ public class MainActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_layout, null);
 
+        // Tentukan ukuran popup
         int popupWidth = getResources().getDimensionPixelSize(R.dimen.popup_width);
         int popupHeight = getResources().getDimensionPixelSize(R.dimen.popup_height);
 
+        // Buat PopupWindow
         popupWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
         popupWindow.setAnimationStyle(R.style.PopupAnimation);
         popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
 
+        // Menangani klik tombol Info
+        ImageButton infoButton = popupView.findViewById(R.id.info_button); // Pastikan ID ini cocok
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Arahkan ke InfoMenuActivity
+                Intent intent = new Intent(MainActivity.this, InfoMenuActivity.class);
+                startActivity(intent);
+                popupWindow.dismiss(); // Tutup popup setelah tombol ditekan
+            }
+        });
     }
+
+
 
     private void showExitPopup(View anchorView) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);

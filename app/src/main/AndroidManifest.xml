@@ -27,6 +27,8 @@
         <activity android:name=".GameView"/>
         <activity android:name=".GameActivity2"/>
         <activity android:name=".SelectLevelActivity" />
+        <activity android:name=".InfoMenuActivity"/>
+
 
 
     </application>
