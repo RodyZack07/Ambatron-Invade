@@ -13,5 +13,11 @@
 
     <dimen name= "profile_width">385dp</dimen>
     <dimen name= "profile_height">600dp</dimen>
+
+    //GameObject
+    <dimen name ="player_ship_width">200dp</dimen>
+    <dimen name ="player_ship_height">200dp</dimen>
+
+    <dimen name ="mosnter_size">100dp</dimen>
 </resources>
 
