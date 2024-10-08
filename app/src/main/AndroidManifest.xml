@@ -28,6 +28,8 @@
         <activity android:name=".GameActivity2"/>
         <activity android:name=".SelectLevelActivity" />
         <activity android:name=".InfoMenuActivity"/>
+        <activity android:name=".createAkun"/>
+
 
 
 

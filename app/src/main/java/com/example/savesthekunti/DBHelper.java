@@ -1,12 +1,29 @@
 package com.example.savesthekunti;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "savesthekunti.db";
+
+    private static final String DATABASE_NAME = "app_database.db";
     private static final int DATABASE_VERSION = 1;
+
+    // Nama tabel dan kolom
+    private static final String TABLE_AKUN = "Akun";
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_USERNAME = "username";
+    private static final String COLUMN_EMAIL = "email";
+    private static final String COLUMN_PASSWORD = "password";
+
+    private static final String TABLE_PROGRESS = "Progress";
+    private static final String COLUMN_PROGRESS_ID = "id";
+    private static final String COLUMN_AKUN_ID = "id_akun";
+    private static final String COLUMN_LEVEL = "level";
+    private static final String COLUMN_SCORE = "score";
+    private static final String COLUMN_TIMESTAMP = "timestamp";
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -14,82 +31,63 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Create table Akun
-        String CREATE_TABLE_AKUN = "CREATE TABLE Akun (" +
-                "id_akun INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "username VARCHAR(50), " +
-                "email VARCHAR(100), " +
-                "password VARCHAR(255), " +
-                "created_at DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-                "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP)";
-        db.execSQL(CREATE_TABLE_AKUN);
+        // Membuat tabel Akun
+        String createAkunTable = "CREATE TABLE " + TABLE_AKUN + " (" +
+                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_USERNAME + " TEXT, " +
+                COLUMN_EMAIL + " TEXT, " +
+                COLUMN_PASSWORD + " TEXT)";
+        db.execSQL(createAkunTable);
 
-        // Create table Profile
-        String CREATE_TABLE_PROFILE = "CREATE TABLE Profile (" +
-                "id_profile INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "id_akun INTEGER, " +
-                "photo_profile VARCHAR(255), " +
-                "created_at DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-                "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-                "FOREIGN KEY (id_akun) REFERENCES Akun(id_akun) ON DELETE CASCADE)";
-        db.execSQL(CREATE_TABLE_PROFILE);
-
-        // Create table Achievement
-        String CREATE_TABLE_ACHIEVEMENT = "CREATE TABLE Achievement (" +
-                "id_achievement INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "id_akun INTEGER, " +
-                "nama_achievement VARCHAR(100), " +
-                "deskripsi TEXT, " +
-                "created_at DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-                "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-                "FOREIGN KEY (id_akun) REFERENCES Akun(id_akun) ON DELETE CASCADE)";
-        db.execSQL(CREATE_TABLE_ACHIEVEMENT);
-
-        // Create table Isi_Achievement
-        String CREATE_TABLE_ISI_ACHIEVEMENT = "CREATE TABLE Isi_Achievement (" +
-                "id_isi_achievement INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "id_achievement INTEGER, " +
-                "progress VARCHAR(100), " +
-                "detail_isi TEXT, " +
-                "created_at DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-                "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-                "FOREIGN KEY (id_achievement) REFERENCES Achievement(id_achievement) ON DELETE CASCADE)";
-        db.execSQL(CREATE_TABLE_ISI_ACHIEVEMENT);
-
-        // Create table Skin
-        String CREATE_TABLE_SKIN = "CREATE TABLE Skin (" +
-                "id_skin INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "nama_skin VARCHAR(100), " +
-                "deskripsi_skin TEXT, " +
-                "created_at DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-                "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP)";
-        db.execSQL(CREATE_TABLE_SKIN);
-
-        // Create table Koleksi_Skin
-        String CREATE_TABLE_KOLEKSI_SKIN = "CREATE TABLE Koleksi_Skin (" +
-                "id_koleksi INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "id_akun INTEGER, " +
-                "id_skin INTEGER, " +
-                "jumlah_koleksi INTEGER, " +
-                "status_terkunci BOOLEAN, " +
-                "created_at DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-                "updated_at DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-                "FOREIGN KEY (id_akun) REFERENCES Akun(id_akun) ON DELETE CASCADE, " +
-                "FOREIGN KEY (id_skin) REFERENCES Skin(id_skin) ON DELETE CASCADE)";
-        db.execSQL(CREATE_TABLE_KOLEKSI_SKIN);
+        // Membuat tabel Progress
+        String createProgressTable = "CREATE TABLE " + TABLE_PROGRESS + " (" +
+                COLUMN_PROGRESS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_AKUN_ID + " INTEGER, " +
+                COLUMN_LEVEL + " INTEGER, " +
+                COLUMN_SCORE + " INTEGER, " +
+                COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP, " +
+                "FOREIGN KEY(" + COLUMN_AKUN_ID + ") REFERENCES " + TABLE_AKUN + "(" + COLUMN_ID + "))";
+        db.execSQL(createProgressTable);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop tables if they exist
-        db.execSQL("DROP TABLE IF EXISTS Koleksi_Skin");
-        db.execSQL("DROP TABLE IF EXISTS Skin");
-        db.execSQL("DROP TABLE IF EXISTS Isi_Achievement");
-        db.execSQL("DROP TABLE IF EXISTS Achievement");
-        db.execSQL("DROP TABLE IF EXISTS Profile");
-        db.execSQL("DROP TABLE IF EXISTS Akun");
-
-        // Recreate tables
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_AKUN);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROGRESS);
         onCreate(db);
     }
+
+    public long addAkun(String username, String email, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USERNAME, username);
+        values.put(COLUMN_EMAIL, email);
+        values.put(COLUMN_PASSWORD, password);
+
+        long id = db.insert(TABLE_AKUN, null, values);
+        // Jangan tutup db di sini jika masih digunakan
+        // db.close();
+        return id;
+    }
+
+    public void saveProgress(int idAkun, int level, int score) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_AKUN_ID, idAkun);
+        values.put(COLUMN_LEVEL, level);
+        values.put(COLUMN_SCORE, score);
+
+        db.insert(TABLE_PROGRESS, null, values);
+        // db.close();
+    }
+
+    public Cursor getProgressByAkunId(int idAkun) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(TABLE_PROGRESS,
+                null,
+                COLUMN_AKUN_ID + " = ?",
+                new String[]{String.valueOf(idAkun)},
+                null, null, null);
+
 }
+    }
