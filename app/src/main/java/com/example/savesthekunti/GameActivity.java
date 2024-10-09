@@ -18,8 +18,10 @@
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
+            int selectedShipIndex = getIntent().getIntExtra("selectedShipIndex", 0);
+
             //INISIALISASI GameView
-            gameView = new GameView(this);
+            gameView = new GameView(this, selectedShipIndex);
             setContentView(gameView); // Mengatur layout ke game_activity.xml
 
         }

@@ -21,7 +21,7 @@ public class SelectFighterActivity extends AppCompatActivity {
     //PESAWAT
     private ImageView spaceShip;
     private int[] spaceShips = {R.drawable.blue_cosmos, R.drawable.retro_sky, R.drawable.wing_of_justice, R.drawable.x56_core};
-    private int[] gameSpaceShips ={R.drawable.blue_cosmos_game,R.drawable.retro_sky, R.drawable.wing_of_justice_game, R.drawable.x56_core_game};
+
 
     private int currentIndex = 0;
 

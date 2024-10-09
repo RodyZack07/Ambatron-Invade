@@ -16,23 +16,31 @@ import java.util.Random;
 public class GameView extends View {
 
     private PlayerShip playerShip;
+    //bitmap
     private Bitmap background;
-    private Bitmap monsterMiniBitmap; // Bitmap monster mini
+    private Bitmap monsterMiniBitmap;
+    private Bitmap bulletsBitmap;
+    //Array
     private List<MonsterMini> monsterMini;
+    private List<Bullet> bullets;
+
     private int screenWidth, screenHeight;
     private Handler handler;
     private Paint paint;
-
-    private int spawnGroup = 0;
     private long lastFrameTime = 0;
+    private int[] spaceShips = {R.drawable.blue_cosmos, R.drawable.retro_sky, R.drawable.wing_of_justice, R.drawable.x56_core};
 
-    public GameView(Context context) {
+
+
+                        //CONSCRUCTOR GAMEVIEW
+    public GameView(Context context, int selectedShipIndex) {
         super(context);
-        // Inisialisasi gambar dan posisi pesawat
+
+        //posisi pesawat
         background = BitmapFactory.decodeResource(getResources(), R.drawable.background_gameplay);
         paint = new Paint();
 
-        playerShip = new PlayerShip(context);
+        playerShip = new PlayerShip(context, spaceShips[selectedShipIndex]);
         monsterMini = new ArrayList<>();
 
         // Memuat bitmap monster mini hanya sekali
@@ -44,6 +52,7 @@ public class GameView extends View {
             playerShip.setShipPosition(screenWidth, screenHeight);
             spawnMonsterMini();
             startRespawn();
+            startShooting();
         });
     }
 
@@ -58,13 +67,12 @@ public class GameView extends View {
             // Menghasilkan posisi X acak dalam batas layar
             int randomX = random.nextInt(screenWidth - monsterSize);
             int randomY = 0; // Tetapkan posisi Y monster dari bagian atas layar
-            monsterMini.add(new MonsterMini(monsterMiniBitmap, randomX, randomY, 200, monsterSize)); // Kecepatan monster
+            monsterMini.add(new MonsterMini(getContext(), monsterMiniBitmap, randomX, randomY, 400, monsterSize)); // Kecepatan monster
         }
 
-        spawnGroup++; // Meningkatkan spawn group untuk pola
     }
 
-    // DRAW ON CANVAS
+                        // DRAW ON CANVAS
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -102,35 +110,53 @@ public class GameView extends View {
             public void run() {
                 spawnMonsterMini();
                 invalidate(); // Gambar ulang setelah spawn monster
-                handler.postDelayed(this, 2000); // Spawn setiap 1 detik
+                handler.postDelayed(this, 700); // Spawn setiap 1 detik
             }
-        }, 1000);
+        }, 700);
     }
+
+    private void startShooting (){
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                shootBullet();
+                handler.postDelayed(this, 100);
+            }
+        }, 100);
+    }
+
+    private void shootBullet() {
+        float BulletX = playerShip.getShipX() + (playerShip.getShipWidth() / 2) - (20 / 2);
+        float BulletY = playerShip.getShipY();
+        int bulletSize = getResources().getDimensionPixelSize(R.dimen.bullet_size);
+        bullets.add(new Bullet(getContext(),bulletsBitmap, BulletX, BulletY, 800, bulletSize));
+
+    }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return playerShip.handleTouch(event);
     }
 
-    // CLASS PLAYER SHIP
+
+                        // CLASS PLAYER SHIP
     class PlayerShip {
         private Bitmap playerShipBitmap;
         private float shipX, shipY;
         private int shipWidth, shipHeight;
 
         // Class untuk membuat pesawat
-        public PlayerShip(Context context) {
-            playerShipBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.blue_cosmos);
-            shipWidth = 250;
-            shipHeight = 250;
+        public PlayerShip(Context context, int playerShipResId) {
+            playerShipBitmap = BitmapFactory.decodeResource(context.getResources(), playerShipResId);
+            shipWidth = context.getResources().getDimensionPixelSize(R.dimen.player_ship_width);
+            shipHeight = context.getResources().getDimensionPixelSize(R.dimen.player_ship_height);
         }
-
         // Set posisi pesawat
         public void setShipPosition(int screenWidth, int screenHeight) {
             shipX = (screenWidth - shipWidth) / 2;
             shipY = screenHeight - shipHeight - 50;
         }
-
         // Gambar pesawat
         public void draw(Canvas canvas) {
             canvas.drawBitmap(Bitmap.createScaledBitmap(playerShipBitmap, shipWidth, shipHeight, false), shipX, shipY, paint);
@@ -143,7 +169,6 @@ public class GameView extends View {
 
             // Gerakan horizontal
             shipX = touchX - (shipWidth / 2);
-
             // Gerakan vertikal (batasi agar tidak keluar dari batas layar)
             shipY = touchY - (shipHeight / 2);
 
@@ -163,6 +188,19 @@ public class GameView extends View {
             invalidate(); // Panggil invalidate() setelah posisi diubah
             return true;
         }
+
+        public float getShipX(){
+            return shipX;
+        }
+        public float getShipY(){
+            return shipY;
+        }
+        public int getShipWidth(){
+            return shipWidth;
+        }
+        public int getShipheight(){
+            return shipHeight;
+        }
     }
 
     public void removeOffScreenMonsters() {
@@ -176,19 +214,21 @@ public class GameView extends View {
         monsterMini.removeAll(monstersToRemove);
     }
 
-    // CLASS MONSTER MINI
+
+                        // CLASS MONSTER MINI
     class MonsterMini {
         private Bitmap monsterMiniBitmap;
         private float x, y;
         private int size;
         private float velocity;
 
-        public MonsterMini(Bitmap monsterMiniBitmap, float x, float y, float velocityY, int size) {
+        public MonsterMini(Context context,Bitmap monsterMiniBitmap, float x, float y, float velocityY, int size) {
             this.monsterMiniBitmap = monsterMiniBitmap;
             this.x = x;
             this.y = y;
             this.velocity = velocityY;
-            this.size = size;
+
+            this.size = context.getResources().getDimensionPixelSize(R.dimen.mosnter_size);
         }
 
         public void updatePositionMonster(float deltaTime) {
@@ -203,24 +243,35 @@ public class GameView extends View {
             return y > screenHeight;  // Jika y lebih besar dari tinggi layar, monster dianggap keluar
         }
     }
+                        //CLASS MONSTER END
+
+
+                        //CLASS BULLET
+    class Bullet{
+        private Bitmap bulletsBitmap;
+        private float x, y;
+        private int size;
+        private float velocity;
+
+            public Bullet (Context context, Bitmap bulletBitmap, float x, float y, float velocityY, int size) {
+                this.bulletsBitmap = bulletBitmap;
+                this.x = x;
+                this.y = y;
+                this.velocity = velocityY;
+                this.size = context.getResources().getDimensionPixelSize(R.dimen.bullet_size);
+            }
+            public void updatePositionBullet(float deltaTime){
+                y -= velocity * deltaTime;
+            }
+            public void draw(Canvas canvas){
+                canvas.drawBitmap(Bitmap.createScaledBitmap(bulletsBitmap, size, size, false), x, y, paint);
+            }
+            public boolean isOffScreen(int screenHeight){
+                return y < 0;
+            }
+
+    }
 }
 
 
 
-//public void spawnMonsterMini() {
-//        Random random = new Random();
-//        Bitmap monsterMiniBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.monster_mini);
-//        int monsterSize = 100;
-//        int rows = (spawnGroup % 2 == 0) ? 3 : 4; // Alternatif pola monster
-//        int spacing = 15;
-//
-//        // Posisi Spawn monster mini
-//        int startY = 0; // Tetapkan Y di posisi 0 (bagian atas layar)
-//
-//        for (int i = 0; i < rows; i++) {
-//            int cols = (spawnGroup % 2 == 0) ? 4 : i + 1; // Untuk pola persegi panjang atau segitiga
-//            for (int j = 0; j < cols; j++) {
-//                // Menghasilkan posisi X acak dalam batas layar
-//                int randomX = random.nextInt(screenWidth - monsterSize);
-//                int y = startY + i * (monsterSize + spacing);  // Posisi Y masih berurutan
-//                monsterMini.add(new MonsterMini(monsterMiniBitmap, randomX, y, 400, monsterSize));

@@ -49,6 +49,7 @@ public class SelectLevelActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Beralih ke GameActivity dan menghancurkan SelectLevelActivity
                 Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+                intent.putExtra("selectedShipIndex", getIntent().getIntExtra("selectedShipIndex", 0));
                 startActivity(intent);
                 finish(); // Menghancurkan SelectLevelActivity untuk menghemat memori
             }

@@ -1,95 +1,18 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/gameContent">
 
-    <!-- Asteroid Container (Untuk menampung asteroid sebagai environment) -->
-
-    <!-- Background untuk gameplay -->
-    <ImageView
+    <!-- VideoView untuk memutar video latar belakang -->
+    <VideoView
+        android:id="@+id/videoView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/background_gameplay"
-        android:scaleType="fitXY"/>
+        android:layout_height="match_parent" />
 
-    <FrameLayout
-        android:id="@+id/asteroidContainerLeft"
-        android:layout_width="150dp"
-        android:layout_height="500dp"
-        android:layout_gravity="bottom|left"
-        android:layout_marginBottom="100dp">
-
-
-
-        <Button
-            android:id="@+id/leftButton"
-            android:layout_width="200dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="left"
-            android:background="@android:color/transparent" />
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/asteroidContainerRight"
-        android:layout_width="150dp"
-        android:layout_height="500dp"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="100dp">
-
-
-    </FrameLayout>
-
-    <!-- Gambar pesawat dan peluru-->
-    <FrameLayout
-        android:id="@+id/bulletContainer"
-        android:layout_width="350dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="top|center">
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="350dp"
-        android:layout_height="200dp"
-        android:layout_gravity="bottom|center"
-        android:layout_marginBottom="65dp">
-
-        <ImageView
-            android:id="@+id/playerShip"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center"
-            android:scaleType="fitXY"
-           />
-    </FrameLayout>
-
-    <!-- Kontainer Monster -->
-    <FrameLayout
-        android:id="@+id/monsterContainer"
+    <!-- GameView untuk menggambar game -->
+    <com.example.savesthekunti.GameView
+        android:id="@+id/gameView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="top|center">
+        android:layout_height="match_parent" />
 
-        <!-- Musuh / Monster -->
-        <ImageView
-            android:id="@+id/monsterMini"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/monster_mini"
-            android:layout_gravity="center" />
-    </FrameLayout>
-
-    <!-- Tombol Kiri dan Kanan -->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <Button
-            android:id="@+id/rightButton"
-            android:layout_width="200dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="right"
-            android:background="@android:color/transparent"
-        />
-    </FrameLayout>
-</FrameLayout>
+</RelativeLayout>

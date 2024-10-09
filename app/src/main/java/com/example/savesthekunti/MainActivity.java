@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         profilMenu.setOnClickListener(view -> showProfilePopup(view));
         settingsBtn.setOnClickListener(view -> showSettingsPopup(view));
         quitButton.setOnClickListener(view -> showExitPopup(view));
+        playButton.setOnClickListener(v -> directSelectFighter());
 
     }
 
@@ -133,6 +134,13 @@ public class MainActivity extends AppCompatActivity {
         PopupWindow profilePopupWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
         profilePopupWindow.setAnimationStyle(R.style.PopupAnimation);
         profilePopupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+    }
+
+
+    //Direct to Select Fighter
+    private void directSelectFighter(){
+        Intent intent = new Intent(MainActivity.this, SelectFighterActivity.class);
+        startActivity(intent);
     }
 
 
