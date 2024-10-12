@@ -17,7 +17,7 @@ public class GameView extends View {
 
     private PlayerShip playerShip;
     //bitmap
-    private Bitmap background;
+
     private Bitmap monsterMiniBitmap;
     private Bitmap bulletsBitmap;
     //Array
@@ -37,14 +37,15 @@ public class GameView extends View {
         super(context);
 
         //posisi pesawat
-        background = BitmapFactory.decodeResource(getResources(), R.drawable.background_gameplay);
         paint = new Paint();
 
         playerShip = new PlayerShip(context, spaceShips[selectedShipIndex]);
         monsterMini = new ArrayList<>();
+        bullets =  new ArrayList<>();
 
         // Memuat bitmap monster mini hanya sekali
         monsterMiniBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.monster_mini);
+        bulletsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.beam_bullet);
 
         post(() -> {
             screenWidth = getWidth();
@@ -61,7 +62,7 @@ public class GameView extends View {
         int monsterSize = 100;
 
         // Menghasilkan jumlah monster yang acak antara 1 hingga 10
-        int numberOfMonsters = random.nextInt(4) + 1; // Antara 1 hingga 10
+        int numberOfMonsters = random.nextInt(5) + 1; // Antara 1 hingga 10
 
         for (int i = 0; i < numberOfMonsters; i++) {
             // Menghasilkan posisi X acak dalam batas layar
@@ -78,7 +79,6 @@ public class GameView extends View {
         super.onDraw(canvas);
 
         // Menggambar background
-        canvas.drawBitmap(background, 0, 0, paint);
 
         playerShip.draw(canvas);
 
@@ -90,14 +90,37 @@ public class GameView extends View {
         float deltaTime = (currentTime - lastFrameTime) / 1000f;
         lastFrameTime = currentTime;
 
+        //Array baru buat hitting monster & bullet
+        List<MonsterMini> removeMosnters = new ArrayList<>();
+        List<Bullet> removeBullets = new ArrayList<>();
+
         // Perbarui posisi monster dan gambar
         for (MonsterMini monster : monsterMini) {
             monster.updatePositionMonster(deltaTime);
             monster.draw(canvas);
         }
 
+        for (Bullet bullet : bullets){
+            bullet.updatePositionBullet(deltaTime);
+            bullet.draw(canvas);
+
+            //collision
+            for(MonsterMini monsters : monsterMini){
+                if(checkCollision(bullet, monsters)){
+                    removeBullets.add(bullet);
+                    removeMosnters.add(monsters);
+                }
+            }
+        }
+
+
+        //PANGGIL Collision
+        monsterMini.removeAll(removeMosnters);
+        bullets.removeAll(removeBullets);
+
         // Hapus monster yang sudah keluar dari layar
         removeOffScreenMonsters();
+        removeOffScreenBullets();
 
         // Hanya panggil invalidate() di akhir
         invalidate();
@@ -125,11 +148,12 @@ public class GameView extends View {
         }, 100);
     }
 
+
     private void shootBullet() {
-        float BulletX = playerShip.getShipX() + (playerShip.getShipWidth() / 2) - (20 / 2);
-        float BulletY = playerShip.getShipY();
         int bulletSize = getResources().getDimensionPixelSize(R.dimen.bullet_size);
-        bullets.add(new Bullet(getContext(),bulletsBitmap, BulletX, BulletY, 800, bulletSize));
+        float bulletX = playerShip.getShipX() + (playerShip.getShipWidth() / 2) - (bulletSize / 2);
+        float BulletY = playerShip.getShipY();
+        bullets.add(new Bullet(getContext(),bulletsBitmap, bulletX, BulletY, 2500, bulletSize));
 
     }
 
@@ -161,6 +185,7 @@ public class GameView extends View {
         public void draw(Canvas canvas) {
             canvas.drawBitmap(Bitmap.createScaledBitmap(playerShipBitmap, shipWidth, shipHeight, false), shipX, shipY, paint);
         }
+
 
         public boolean handleTouch(MotionEvent event) {
             // Menggerakkan pesawat sesuai posisi sentuhan (horizontal dan vertikal)
@@ -203,6 +228,14 @@ public class GameView extends View {
         }
     }
 
+        //METHOD COLLISION
+    public boolean checkCollision (Bullet bullet, MonsterMini monsters){
+        return bullet.getX() < monsters.getX() + monsters.getSize() &&
+                bullet.getX() + bullet.getSize() > monsters.getX() &&
+                bullet.getY() < monsters.getY() + monsters.getSize() &&
+                bullet.getY() + bullet.getSize() > monsters.getY();
+    }
+
     public void removeOffScreenMonsters() {
         List<MonsterMini> monstersToRemove = new ArrayList<>();
         for (MonsterMini monster : monsterMini) {
@@ -212,6 +245,16 @@ public class GameView extends View {
             }
         }
         monsterMini.removeAll(monstersToRemove);
+    }
+
+    public void removeOffScreenBullets(){
+        List<Bullet> bulletsToRemove = new ArrayList<>();
+        for (Bullet bullet : bullets){
+            if(bullet.isOffScreen(screenHeight)){
+                bulletsToRemove.add(bullet);
+            }
+        }
+        bullets.removeAll(bulletsToRemove);
     }
 
 
@@ -242,7 +285,12 @@ public class GameView extends View {
         public boolean isOffScreen(int screenHeight) {
             return y > screenHeight;  // Jika y lebih besar dari tinggi layar, monster dianggap keluar
         }
+
+                            public float getX (){return x;}
+                            public float getY () {return y;}
+                            public float getSize(){return size;}
     }
+
                         //CLASS MONSTER END
 
 
@@ -258,7 +306,7 @@ public class GameView extends View {
                 this.x = x;
                 this.y = y;
                 this.velocity = velocityY;
-                this.size = context.getResources().getDimensionPixelSize(R.dimen.bullet_size);
+                this.size = size;
             }
             public void updatePositionBullet(float deltaTime){
                 y -= velocity * deltaTime;
@@ -269,6 +317,10 @@ public class GameView extends View {
             public boolean isOffScreen(int screenHeight){
                 return y < 0;
             }
+
+            public float getX (){return x;}
+            public float getY () {return y;}
+            public float getSize(){return size;}
 
     }
 }
