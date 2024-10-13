@@ -43,10 +43,10 @@
             android:shadowColor="@color/white" />
 
         <EditText
-            android:id="@+id/emailText"
+            android:id="@+id/usernameText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
+            android:hint="Nickname"
             android:inputType="textEmailAddress" />
 
         <EditText

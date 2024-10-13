@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,11 +27,22 @@ public class MainActivity extends AppCompatActivity {
 
     // Inisialisasi MediaPlayer
     private MediaPlayer mediaPlayer;
+    private TextView welcomeText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Ambil username dari Intent
+        String username = getIntent().getStringExtra("username");
+        if (username != null) {
+            Toast.makeText(this, "Selamat datang, " + username + "!", Toast.LENGTH_SHORT).show();
+        }
+
+        // Inisialisasi TextView untuk menyambut pengguna
+        welcomeText = findViewById(R.id.welcomeText); // Pastikan ID ini ada di layout
+        welcomeText.setText(username != null ? "Selamat datang, " + username + "!" : "Selamat datang!"); // Menampilkan pesan sambutan
 
         dbHelper = new DBHelper(this);  // Inisialisasi DBHelper
 
@@ -57,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         settingsBtn.setOnClickListener(view -> showSettingsPopup(view));
         quitButton.setOnClickListener(view -> showExitPopup(view));
         playButton.setOnClickListener(v -> directSelectFighter());
-        profilMenu.setOnClickListener(view -> Login());
+        profilMenu.setOnClickListener(view -> openLoginActivity());
     }
 
     @Override
@@ -178,16 +191,14 @@ public class MainActivity extends AppCompatActivity {
         noParams.height = yesNoHeight;
         noBtn.setLayoutParams(noParams);
 
-        yesBtn.setOnClickListener(view -> {
-            finish(); // Keluar dari aplikasi
-        });
+        yesBtn.setOnClickListener(view -> finish()); // Keluar dari aplikasi
         noBtn.setOnClickListener(view -> exitPopupWindow.dismiss()); // Menutup popup
     }
 
     // Menampilkan popup profile
-    private void Login() {
-        Intent LoginBtn = new Intent(MainActivity.this, Login.class);
-        startActivity(LoginBtn);
+    private void openLoginActivity() {
+        Intent loginIntent = new Intent(MainActivity.this, Login.class);
+        startActivity(loginIntent);
     }
 
     // Direct to Select Fighter

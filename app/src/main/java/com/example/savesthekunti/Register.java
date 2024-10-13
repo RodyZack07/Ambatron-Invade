@@ -30,49 +30,47 @@ public class Register extends AppCompatActivity {
         emailText = findViewById(R.id.emailText);
         passwordText = findViewById(R.id.passwordText);
         createAccountButton = findViewById(R.id.regisnow);
+        prevsBtn = findViewById(R.id.prevsBtn3);
 
-        // Inisialisasi Firebase Database Reference
-        ambatronDB = FirebaseDatabase.getInstance().getReference();
+        // Inisialisasi Firebase Database dengan URL yang benar
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://ambatrondb-default-rtdb.asia-southeast1.firebasedatabase.app");
+        ambatronDB = database.getReference("Akun"); // Set referensi untuk child "Akun"
 
         // Inisialisasi tombol kembali
-        prevsBtn = findViewById(R.id.prevsBtn3);
-        prevsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish(); // Menutup aktivitas saat ini dan kembali ke aktivitas sebelumnya
-            }
-        });
+        prevsBtn.setOnClickListener(view -> finish()); // Menutup aktivitas saat ini dan kembali ke aktivitas sebelumnya
 
         // Set OnClickListener untuk createAccountButton
-        createAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Ambil data dari EditText
-                String username = usernameText.getText().toString().trim();
-                String email = emailText.getText().toString().trim();
-                String password = passwordText.getText().toString().trim();
+        createAccountButton.setOnClickListener(view -> {
+            // Ambil data dari EditText
+            String username = usernameText.getText().toString().trim();
+            String email = emailText.getText().toString().trim();
+            String password = passwordText.getText().toString().trim();
 
-                // Validasi jika ada data yang kosong
-                if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Ada data yang masih kosong", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Menyimpan data ke Firebase di bawah child "Akun" dengan username sebagai key
-                    DatabaseReference userRef = ambatronDB.child("Akun").child(username);
-                    userRef.child("username").setValue(username);
-                    userRef.child("email").setValue(email);
-                    userRef.child("password").setValue(password);
+            // Validasi jika ada data yang kosong
+            if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(getApplicationContext(), "Ada data yang masih kosong", Toast.LENGTH_SHORT).show();
+            } else {
+                // Menyimpan data ke Firebase di bawah child "Akun" dengan username sebagai key
+                DatabaseReference userRef = ambatronDB.child(username);
+                userRef.child("username").setValue(username);
+                userRef.child("email").setValue(email);
+                userRef.child("password").setValue(password).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Tampilkan pesan sukses
+                        Toast.makeText(getApplicationContext(), "Pendaftaran Berhasil", Toast.LENGTH_SHORT).show();
 
-                    // Tampilkan pesan sukses
-                    Toast.makeText(getApplicationContext(), "Pendaftaran Berhasil", Toast.LENGTH_SHORT).show();
+                        // Kosongkan field setelah pendaftaran
+                        usernameText.setText("");
+                        emailText.setText("");
+                        passwordText.setText("");
 
-                    // Kosongkan field setelah pendaftaran
-                    usernameText.setText("");
-                    emailText.setText("");
-                    passwordText.setText("");
-
-                    // Redirect ke MainActivity setelah pendaftaran berhasil
-                    startActivity(new Intent(Register.this, MainActivity.class));
-                }
+                        // Redirect ke MainActivity setelah pendaftaran berhasil
+                        startActivity(new Intent(Register.this, MainActivity.class));
+                    } else {
+                        // Jika gagal, tampilkan error
+                        Toast.makeText(getApplicationContext(), "Gagal mendaftar, silakan coba lagi", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }

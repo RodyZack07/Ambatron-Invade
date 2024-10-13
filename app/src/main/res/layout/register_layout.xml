@@ -48,6 +48,9 @@
             android:layout_height="wrap_content"
             android:hint="Nickname"
             android:inputType="textEmailAddress" />
+
+
+
         <EditText
             android:id="@+id/emailText"
             android:layout_width="match_parent"
