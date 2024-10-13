@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <EditText
+            android:id="@+id/namaField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nama"
+            android:padding="10dp"
+            android:layout_marginBottom="10dp"
+            android:inputType="text"/>
+
+        <EditText
+            android:id="@+id/progressField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Progress Game"
+            android:padding="10dp"
+            android:layout_marginBottom="10dp"
+            android:inputType="number"/>
+
+        <EditText
+            android:id="@+id/achievementField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Achievement"
+            android:padding="10dp"
+            android:layout_marginBottom="10dp"
+            android:inputType="text"/>
+
+        <EditText
+            android:id="@+id/skinField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Skin"
+            android:padding="10dp"
+            android:layout_marginBottom="20dp"
+            android:inputType="text"/>
+
+        <Button
+            android:id="@+id/updateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Update Data"
+            android:padding="10dp"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -20,5 +20,8 @@
 
     <dimen name ="mosnter_size">50dp</dimen>
     <dimen name ="bullet_size">50dp</dimen>
+
+    <dimen name ="setting_width">400dp</dimen>
+    <dimen name ="setting_height">400dp</dimen>
 </resources>
 

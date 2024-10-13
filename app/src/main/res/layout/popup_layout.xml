@@ -48,7 +48,7 @@
     </FrameLayout>
 
     <ImageButton
-        android:id="@+id/silang"
+        android:id="@+id/silangBtn"
         android:layout_width="26dp"
         android:layout_height="26dp"
         android:layout_marginRight="2dp"
@@ -65,7 +65,7 @@
         android:id="@+id/frameLayoutControls"
         android:layout_width="300dp"
         android:layout_height="140dp"
-        app:layout_constraintTop_toBottomOf="@id/silang"
+        app:layout_constraintTop_toBottomOf="@id/silangBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp">

@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
-import android.widget.Toast;
+import android.widget.SeekBar;
 import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,6 +21,10 @@ public class MainActivity extends AppCompatActivity {
     private PopupWindow exitPopupWindow;
     private int videoPosition;
     private DBHelper dbHelper;
+    private View settingsView;
+
+    // Inisialisasi MediaPlayer
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +44,20 @@ public class MainActivity extends AppCompatActivity {
 
         videoViewBackground.start();
 
+        // Inisialisasi MediaPlayer untuk audio
+        mediaPlayer = MediaPlayer.create(this, R.raw.galatic_idle); // Ganti dengan nama file audio kamu
+        mediaPlayer.setLooping(true); // Memutar audio berulang
+        mediaPlayer.start(); // Memulai pemutaran audio
+
         ImageButton settingsBtn = findViewById(R.id.setting_button);
         ImageButton quitButton = findViewById(R.id.btn_quit);
         ImageButton playButton = findViewById(R.id.play_button);
         ImageButton profilMenu = findViewById(R.id.profile);
 
-        profilMenu.setOnClickListener(view -> showProfilePopup(view));
         settingsBtn.setOnClickListener(view -> showSettingsPopup(view));
         quitButton.setOnClickListener(view -> showExitPopup(view));
         playButton.setOnClickListener(v -> directSelectFighter());
-
+        profilMenu.setOnClickListener(view -> Login());
     }
 
     @Override
@@ -71,24 +79,75 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.setVolume(volume, volume);
     }
 
-    // Menampilkan popup pengaturan
     private void showSettingsPopup(View anchorView) {
+        // Inflate layout popup Settings
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_layout, null);
 
+        // Popup size and animation
+        int popupWidth = getResources().getDimensionPixelSize(R.dimen.popup_width);
+        int popupHeight = getResources().getDimensionPixelSize(R.dimen.popup_height);
+        popupWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
+        popupWindow.setAnimationStyle(R.style.PopupAnimation);
+
+        // Hide the Settings button to avoid overlap
+        settingsView = findViewById(R.id.setting_button);
+        settingsView.setVisibility(View.GONE);
+
+        // Show popup
+        popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+
+        // Handle the Info button inside the popup
+        ImageButton infoButton = popupView.findViewById(R.id.info_button);
+        infoButton.setOnClickListener(v -> {
+            // Show Info as a popup
+            showInfoPopup();
+            popupWindow.dismiss();
+        });
+
+        // Inisialisasi SeekBar untuk mengatur volume musik
+        SeekBar seekBarVol = popupView.findViewById(R.id.seekBarVol);
+        seekBarVol.setMax(100);
+        seekBarVol.setProgress(50); // Set default volume to 50%
+        setVolume(mediaPlayer, 0.5f); // Set initial volume to 50%
+
+        // Listener untuk mengubah volume saat SeekBar berubah
+        seekBarVol.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float volume = progress / 100f; // Mengubah progress menjadi nilai antara 0.0 dan 1.0
+                setVolume(mediaPlayer, volume); // Mengatur volume MediaPlayer
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Tidak ada tindakan yang diperlukan di sini
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Tidak ada tindakan yang diperlukan di sini
+            }
+        });
+
+        // Restore the Settings button when the popup is dismissed
+        popupWindow.setOnDismissListener(() -> settingsView.setVisibility(View.VISIBLE));
+    }
+
+    private void showInfoPopup() {
+        // Inflate the Info popup layout
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View infoPopupView = inflater.inflate(R.layout.info_menu, null);
+
+        // Get width and height from dimens.xml
         int popupWidth = getResources().getDimensionPixelSize(R.dimen.popup_width);
         int popupHeight = getResources().getDimensionPixelSize(R.dimen.popup_height);
 
-        popupWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
-        popupWindow.setAnimationStyle(R.style.PopupAnimation);
-        popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+        // Setup PopupWindow for Info menu with imported width and height
+        PopupWindow infoPopupWindow = new PopupWindow(infoPopupView, popupWidth, popupHeight, true);
 
-        ImageButton infoButton = popupView.findViewById(R.id.info_button);
-        infoButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, InfoMenuActivity.class);
-            startActivity(intent);
-            popupWindow.dismiss();
-        });
+        infoPopupWindow.setAnimationStyle(R.style.PopupAnimation);
+        infoPopupWindow.showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
     }
 
     // Menampilkan popup keluar
@@ -119,34 +178,30 @@ public class MainActivity extends AppCompatActivity {
         noParams.height = yesNoHeight;
         noBtn.setLayoutParams(noParams);
 
-        yesBtn.setOnClickListener(view -> finish());
-        noBtn.setOnClickListener(view -> exitPopupWindow.dismiss());
+        yesBtn.setOnClickListener(view -> {
+            finish(); // Keluar dari aplikasi
+        });
+        noBtn.setOnClickListener(view -> exitPopupWindow.dismiss()); // Menutup popup
     }
 
     // Menampilkan popup profile
-    private void showProfilePopup(View anchorView) {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.create_akun, null);
-
-        int popupWidth = getResources().getDimensionPixelSize(R.dimen.profile_width);
-        int popupHeight = getResources().getDimensionPixelSize(R.dimen.profile_height);
-
-        PopupWindow profilePopupWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
-        profilePopupWindow.setAnimationStyle(R.style.PopupAnimation);
-        profilePopupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+    private void Login() {
+        Intent LoginBtn = new Intent(MainActivity.this, Login.class);
+        startActivity(LoginBtn);
     }
 
-
-    //Direct to Select Fighter
-    private void directSelectFighter(){
+    // Direct to Select Fighter
+    private void directSelectFighter() {
         Intent intent = new Intent(MainActivity.this, SelectFighterActivity.class);
         startActivity(intent);
     }
 
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.release(); // Melepaskan sumber daya MediaPlayer saat aktivitas dihancurkan
+            mediaPlayer = null; // Mengatur objek menjadi null
+        }
     }
 }

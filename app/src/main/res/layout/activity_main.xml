@@ -84,12 +84,12 @@
 
     <ImageButton
         android:id="@+id/profile"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
-        android:layout_marginLeft="270dp"
+        android:layout_marginLeft="310dp"
         android:layout_marginTop="35dp"
         android:outlineSpotShadowColor="@color/black"
-        app:srcCompat="@drawable/profile_img" />
+        app:srcCompat="@drawable/profil_logo" />
 </FrameLayout>
