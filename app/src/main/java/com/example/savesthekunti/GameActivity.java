@@ -2,41 +2,36 @@
 
     import android.net.Uri;
     import android.os.Bundle;
-    import android.os.Handler;
-    import android.view.MotionEvent;
-    import android.view.View;
-    import android.widget.Button;
-    import android.widget.FrameLayout;
-    import android.widget.ImageView;
+    import android.widget.TextView;
     import android.widget.VideoView;
-
     import androidx.appcompat.app.AppCompatActivity;
 
-    import java.util.ArrayList;
 
     public class GameActivity extends AppCompatActivity {
         private GameView gameView;
         VideoView gameplayBg;
+        private TextView scoreTxt, defeatedTxt;
+
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-
-            int selectedShipIndex = getIntent().getIntExtra("selectedShipIndex", 0);
+            setContentView(R.layout.game_activity);
 
             //INISIALISASI GameView
-            gameView = new GameView(this, selectedShipIndex);
-
-            setContentView(R.layout.game_activity);
-            // Mengatur layout ke game_activity.xml
-
+            gameView = findViewById(R.id.gameView);
             gameplayBg = findViewById(R.id.videoView);
 
-            Uri gameplayBgUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.raw_gameplay);
-            gameplayBg.setVideoURI(gameplayBgUri);
+            // Mengatur layout ke game_activity.xml
 
+            gameplayBg.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.raw_gameplay));
+            gameplayBg.setOnPreparedListener(mp ->{
+                mp.setLooping(true);
+                gameplayBg.start();
+            });
 
-
+            int selectedShipIndex = getIntent().getIntExtra("selectedShipIndex", 0);
+            gameView.setSelectedShipIndex(selectedShipIndex);
         }
     }
 

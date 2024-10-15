@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Handler;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,17 +30,36 @@ public class GameView extends View {
     private Paint paint;
     private long lastFrameTime = 0;
     private int[] spaceShips = {R.drawable.blue_cosmos, R.drawable.retro_sky, R.drawable.wing_of_justice, R.drawable.x56_core};
+    private int score = 0;
+    private int defeatedCount = 0;
+    private OnChangeScoreListener scoreChangeListener;
+
+
+                    //UI SCORE DAN DEFEATED COUNT
+    private interface OnChangeScoreListener{
+        void onScoreChange(int score, int defeatedCount);
+    }
+
+    public void setOnChangeScoreListener(OnChangeScoreListener listener){
+        this.scoreChangeListener = listener;
+    }
+    public GameView (Context context, AttributeSet attrs){
+        super(context, attrs);
+        Init(context);
+    }
 
 
 
-                        //CONSCRUCTOR GAMEVIEW
-    public GameView(Context context, int selectedShipIndex) {
-        super(context);
-
+    public GameView (Context context, AttributeSet attrs, int defStyle){
+        super(context, attrs, defStyle);
+        Init(context);
+    }
+                        //
+    public void Init (Context context) {
         //posisi pesawat
         paint = new Paint();
 
-        playerShip = new PlayerShip(context, spaceShips[selectedShipIndex]);
+        playerShip = new PlayerShip(context, spaceShips[0]);
         monsterMini = new ArrayList<>();
         bullets =  new ArrayList<>();
 
@@ -57,18 +77,23 @@ public class GameView extends View {
         });
     }
 
+    public void setSelectedShipIndex(int selectedShipIndex){
+        playerShip = new PlayerShip(getContext(), spaceShips[selectedShipIndex]);
+        playerShip.setShipPosition(screenWidth, screenHeight);
+    }
+
     public void spawnMonsterMini() {
         Random random = new Random();
         int monsterSize = 100;
 
         // Menghasilkan jumlah monster yang acak antara 1 hingga 10
-        int numberOfMonsters = random.nextInt(5) + 1; // Antara 1 hingga 10
+        int numberOfMonsters = random.nextInt(10) + 1; // Antara 1 hingga 10
 
         for (int i = 0; i < numberOfMonsters; i++) {
             // Menghasilkan posisi X acak dalam batas layar
             int randomX = random.nextInt(screenWidth - monsterSize);
             int randomY = 0; // Tetapkan posisi Y monster dari bagian atas layar
-            monsterMini.add(new MonsterMini(getContext(), monsterMiniBitmap, randomX, randomY, 400, monsterSize)); // Kecepatan monster
+            monsterMini.add(new MonsterMini(getContext(), monsterMiniBitmap, randomX, randomY, 1200, monsterSize)); // Kecepatan monster
         }
 
     }
@@ -109,6 +134,12 @@ public class GameView extends View {
                 if(checkCollision(bullet, monsters)){
                     removeBullets.add(bullet);
                     removeMosnters.add(monsters);
+                    score += 10;
+                    defeatedCount++;
+
+                    if(scoreChangeListener != null){
+                        scoreChangeListener.onScoreChange(score, defeatedCount);
+                    }
                 }
             }
         }
@@ -133,9 +164,9 @@ public class GameView extends View {
             public void run() {
                 spawnMonsterMini();
                 invalidate(); // Gambar ulang setelah spawn monster
-                handler.postDelayed(this, 700); // Spawn setiap 1 detik
+                handler.postDelayed(this, 400); // Spawn setiap 1 detik
             }
-        }, 700);
+        }, 400);
     }
 
     private void startShooting (){

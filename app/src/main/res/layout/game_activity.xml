@@ -3,6 +3,8 @@
     android:layout_height="match_parent"
     android:id="@+id/gameContent">
 
+
+
     <!-- VideoView untuk memutar video latar belakang -->
     <VideoView
         android:id="@+id/videoView"
@@ -10,9 +12,38 @@
         android:layout_height="match_parent" />
 
     <!-- GameView untuk menggambar game -->
+
+
     <com.example.savesthekunti.GameView
         android:id="@+id/gameView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/scoreText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="top|end"
+            android:layout_marginTop="8dp"
+            android:text="Score : 0"
+            android:textColor="@color/white"
+            android:textSize="20dp"/>
+
+        <TextView
+            android:id="@+id/scoreText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="top|end"
+            android:layout_marginTop="48dp"
+            android:text="Monster Defeated : 0"
+            android:textColor="@color/white"
+            android:textSize="20dp"/>
+
+    </FrameLayout>
+
+
 
 </RelativeLayout>

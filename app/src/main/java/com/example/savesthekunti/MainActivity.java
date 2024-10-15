@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
         // Restore the Settings button when the popup is dismissed
         popupWindow.setOnDismissListener(() -> settingsView.setVisibility(View.VISIBLE));
     }
+                    //SeekBar Music End
 
     private void showInfoPopup() {
         // Inflate the Info popup layout
