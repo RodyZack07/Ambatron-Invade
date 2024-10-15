@@ -27,17 +27,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="top|end"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="30dp"
             android:text="Score : 0"
             android:textColor="@color/white"
             android:textSize="20dp"/>
 
         <TextView
-            android:id="@+id/scoreText"
+            android:id="@+id/MonsterDefeated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="top|end"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="57dp"
             android:text="Monster Defeated : 0"
             android:textColor="@color/white"
             android:textSize="20dp"/>

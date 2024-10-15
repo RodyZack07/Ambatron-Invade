@@ -10,9 +10,12 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 
 public class GameView extends View {
 
@@ -21,6 +24,7 @@ public class GameView extends View {
 
     private Bitmap monsterMiniBitmap;
     private Bitmap bulletsBitmap;
+    private Bitmap monsterBulletBitmap; // Bitmap untuk peluru monster
     //Array
     private List<MonsterMini> monsterMini;
     private List<Bullet> bullets;
@@ -33,10 +37,13 @@ public class GameView extends View {
     private int score = 0;
     private int defeatedCount = 0;
     private OnChangeScoreListener scoreChangeListener;
+    private TextView scoreText;
+    private TextView monsterDefeatedText;
+    private GameView gameView;
 
 
                     //UI SCORE DAN DEFEATED COUNT
-    private interface OnChangeScoreListener{
+                    interface OnChangeScoreListener{
         void onScoreChange(int score, int defeatedCount);
     }
 
@@ -47,6 +54,7 @@ public class GameView extends View {
         super(context, attrs);
         Init(context);
     }
+
 
 
 
@@ -87,15 +95,30 @@ public class GameView extends View {
         int monsterSize = 100;
 
         // Menghasilkan jumlah monster yang acak antara 1 hingga 10
-        int numberOfMonsters = random.nextInt(10) + 1; // Antara 1 hingga 10
+        int numberOfMonsters = random.nextInt(3) + 1; // Antara 1 hingga 10
 
         for (int i = 0; i < numberOfMonsters; i++) {
-            // Menghasilkan posisi X acak dalam batas layar
-            int randomX = random.nextInt(screenWidth - monsterSize);
-            int randomY = 0; // Tetapkan posisi Y monster dari bagian atas layar
+            int randomX, randomY;
+            boolean isOverlapping;
+            // Loop hingga posisi monster tidak bertumpuk
+            do {
+                isOverlapping = false;
+                randomX = random.nextInt(screenWidth - monsterSize);
+                randomY = 0; // Tetapkan posisi Y monster dari bagian atas layar
+
+                // Cek apakah posisi monster bertumpuk dengan monster lain
+                for (MonsterMini existingMonster : monsterMini) {
+                    if (Math.abs(existingMonster.getX() - randomX) < monsterSize &&
+                            Math.abs(existingMonster.getY() - randomY) < monsterSize) {
+                        isOverlapping = true;
+                        break;
+                    }
+                }
+            } while (isOverlapping);
+
+            // Tambahkan monster ke list setelah memastikan tidak bertumpuk
             monsterMini.add(new MonsterMini(getContext(), monsterMiniBitmap, randomX, randomY, 1200, monsterSize)); // Kecepatan monster
         }
-
     }
 
                         // DRAW ON CANVAS
@@ -134,7 +157,7 @@ public class GameView extends View {
                 if(checkCollision(bullet, monsters)){
                     removeBullets.add(bullet);
                     removeMosnters.add(monsters);
-                    score += 10;
+                    score += 15;
                     defeatedCount++;
 
                     if(scoreChangeListener != null){
