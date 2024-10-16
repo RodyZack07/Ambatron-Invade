@@ -8,12 +8,14 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     // Inisialisasi MediaPlayer
     private MediaPlayer mediaPlayer;
     private TextView welcomeText;
+    private View profilView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +39,17 @@ public class MainActivity extends AppCompatActivity {
 
         // Ambil username dari Intent
         String username = getIntent().getStringExtra("username");
+
+        // Ambil username dari Intent
+        Intent intent = getIntent();
+        username = intent.getStringExtra("username");
+
+
         if (username != null) {
             Toast.makeText(this, "Selamat datang, " + username + "!", Toast.LENGTH_SHORT).show();
+
+//            ImageButton showAchievementButton = findViewById(R.id.achievement); // Sesuaikan dengan ID button yang digunakan
+//            showAchievementButton.setOnClickListener(view -> showAchievement(view, username)); // Kirim username ke showAchievement
         }
 
         // Inisialisasi TextView untuk menyambut pengguna
@@ -46,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         dbHelper = new DBHelper(this);  // Inisialisasi DBHelper
 
+        // Inisialisasi VideoView untuk background
         videoViewBackground = findViewById(R.id.videoViewBackground);
         Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.background_loop);
         videoViewBackground.setVideoURI(videoUri);
@@ -62,15 +75,19 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.setLooping(true); // Memutar audio berulang
         mediaPlayer.start(); // Memulai pemutaran audio
 
+        // Inisialisasi tombol
         ImageButton settingsBtn = findViewById(R.id.setting_button);
         ImageButton quitButton = findViewById(R.id.btn_quit);
         ImageButton playButton = findViewById(R.id.play_button);
         ImageButton profilMenu = findViewById(R.id.profile);
+        ImageButton achievementMenu = findViewById(R.id.achievement);
 
+        // Set onClickListener untuk masing-masing tombol
         settingsBtn.setOnClickListener(view -> showSettingsPopup(view));
         quitButton.setOnClickListener(view -> showExitPopup(view));
         playButton.setOnClickListener(v -> directSelectFighter());
         profilMenu.setOnClickListener(view -> openLoginActivity());
+        achievementMenu.setOnClickListener(view -> showAchievement(view));
     }
 
     @Override
@@ -92,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.setVolume(volume, volume);
     }
 
+    // Menampilkan popup pengaturan (Settings)
     private void showSettingsPopup(View anchorView) {
         // Inflate layout popup Settings
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -146,12 +164,13 @@ public class MainActivity extends AppCompatActivity {
         // Restore the Settings button when the popup is dismissed
         popupWindow.setOnDismissListener(() -> settingsView.setVisibility(View.VISIBLE));
     }
-                    //SeekBar Music End
 
+    // Menampilkan popup informasi (Info)
     private void showInfoPopup() {
         // Inflate the Info popup layout
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View infoPopupView = inflater.inflate(R.layout.info_menu, null);
+        View popupView = inflater.inflate(R.layout.profile_menu, null);
 
         // Get width and height from dimens.xml
         int popupWidth = getResources().getDimensionPixelSize(R.dimen.popup_width);
@@ -159,12 +178,35 @@ public class MainActivity extends AppCompatActivity {
 
         // Setup PopupWindow for Info menu with imported width and height
         PopupWindow infoPopupWindow = new PopupWindow(infoPopupView, popupWidth, popupHeight, true);
-
         infoPopupWindow.setAnimationStyle(R.style.PopupAnimation);
         infoPopupWindow.showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
+
+
+
+        // Inisialisasi TextView untuk nickname dan achievement
+        TextView nicknameTextView = popupView.findViewById(R.id.nicknameTextView);
+        TextView achievementTextView = popupView.findViewById(R.id.achievementTextView);
+
+
     }
 
-    // Menampilkan popup keluar
+    // Menampilkan Achievement
+    private void showAchievement(View anchorView) {
+        // Inflate layout popup Achievement
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.profile_menu, null);
+
+        // Popup size and animation
+        int popupWidth = getResources().getDimensionPixelSize(R.dimen.profile_width);
+        int popupHeight = getResources().getDimensionPixelSize(R.dimen.profile_height);
+        popupWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
+        popupWindow.setAnimationStyle(R.style.PopupAnimation);
+
+        // Show popup
+        popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+    }
+
+    // Menampilkan popup keluar (Exit)
     private void showExitPopup(View anchorView) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.exit_layout, null);
@@ -196,13 +238,13 @@ public class MainActivity extends AppCompatActivity {
         noBtn.setOnClickListener(view -> exitPopupWindow.dismiss()); // Menutup popup
     }
 
-    // Menampilkan popup profile
+    // Membuka activity Login
     private void openLoginActivity() {
         Intent loginIntent = new Intent(MainActivity.this, Login.class);
         startActivity(loginIntent);
     }
 
-    // Direct to Select Fighter
+    // Direct ke Select Fighter
     private void directSelectFighter() {
         Intent intent = new Intent(MainActivity.this, SelectFighterActivity.class);
         startActivity(intent);

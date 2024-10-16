@@ -18,5 +18,8 @@
     <!-- Warna Divider -->
     <color name="divider_color">#FFFFFF</color>
 
+    <color name="gray">#808080</color>
+    <color name="light_blue">#A4D3FF</color>
+
 
 </resources>

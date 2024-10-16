@@ -22,64 +22,53 @@ public class Login extends AppCompatActivity {
     private EditText usernameField, passwordField;
     private Button loginButton, registerButton;
     private ImageButton prevsBtn;
-    private DatabaseReference ambatronDB; // Tambahkan referensi database
+    private DatabaseReference ambatronDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
 
-        // Inisialisasi Firebase Database dengan URL yang benar
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://ambatrondb-default-rtdb.asia-southeast1.firebasedatabase.app");
-        ambatronDB = database.getReference("Akun"); // Set referensi untuk child "Akun"
+        ambatronDB = database.getReference("Akun");
 
-        // Inisialisasi tombol kembali
         prevsBtn = findViewById(R.id.prevsBtn3);
         prevsBtn.setOnClickListener(view -> finish());
 
-        // Inisialisasi view
         usernameField = findViewById(R.id.usernameText);
         passwordField = findViewById(R.id.passwordText);
         loginButton = findViewById(R.id.Login);
         registerButton = findViewById(R.id.createAccountButton);
 
-        // Login button click
         loginButton.setOnClickListener(v -> loginUser());
-
-        // Pindah ke halaman registrasi
         registerButton.setOnClickListener(v -> startActivity(new Intent(Login.this, Register.class)));
     }
 
     private void loginUser() {
-        String username = usernameField.getText().toString().trim(); // Ambil username
-        String password = passwordField.getText().toString().trim(); // Ambil password
+        String username = usernameField.getText().toString().trim();
+        String password = passwordField.getText().toString().trim();
 
-        // Validasi jika ada field yang kosong
         if (username.isEmpty() || password.isEmpty()) {
             Toast.makeText(Login.this, "Username atau password tidak boleh kosong!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Mengambil referensi pengguna dari Firebase Database
-        DatabaseReference userRef = ambatronDB.child(username); // Menggunakan ambatronDB yang sudah diinisialisasi
+        DatabaseReference userRef = ambatronDB.child(username);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     String storedPassword = dataSnapshot.child("password").getValue(String.class);
                     if (storedPassword != null && storedPassword.equals(password)) {
-                        // Jika password cocok, arahkan ke MainActivity
                         Intent intent = new Intent(Login.this, MainActivity.class);
                         intent.putExtra("username", username); // Kirim username ke MainActivity
-                        Toast.makeText(Login.this, "Selamat datang, " + username + "!", Toast.LENGTH_SHORT).show(); // Notifikasi selamat datang
+                        Toast.makeText(Login.this, "Selamat datang, " + username + "!", Toast.LENGTH_SHORT).show();
                         startActivity(intent);
-                        finish(); // Tutup activity login
+                        finish();
                     } else {
-                        // Jika password salah
                         Toast.makeText(Login.this, "Password salah!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    // Jika username tidak ditemukan
                     Toast.makeText(Login.this, "Username tidak ditemukan!", Toast.LENGTH_SHORT).show();
                 }
             }

@@ -40,13 +40,16 @@
             android:textStyle="bold"
             android:layout_gravity="center"
             android:paddingBottom="16dp"
-            android:shadowColor="@color/white" />
+            android:shadowColor="@color/white"
+            android:textColor="@color/black"/>
 
         <EditText
             android:id="@+id/usernameText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:hint="Nickname"
+            android:textColorHint="@color/gray"
             android:inputType="textEmailAddress" />
 
         <EditText
@@ -54,6 +57,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
+            android:textColorHint="@color/gray"
+            android:textColor="@color/black"
             android:inputType="textPassword" />
 
         <Button
@@ -61,13 +66,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Login"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/light_blue"
+            android:textColor="@color/black"/>
         <Button
             android:id="@+id/createAccountButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Not have account? regist Now!"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/light_blue"
+            android:textColor="@color/black"/>
 
     </LinearLayout>
 </FrameLayout>

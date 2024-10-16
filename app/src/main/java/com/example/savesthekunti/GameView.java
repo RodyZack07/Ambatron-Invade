@@ -340,7 +340,7 @@ public class GameView extends View {
             return y > screenHeight;  // Jika y lebih besar dari tinggi layar, monster dianggap keluar
         }
 
-                            public float getX (){return x;}
+        public float getX (){return x;}
                             public float getY () {return y;}
                             public float getSize(){return size;}
     }

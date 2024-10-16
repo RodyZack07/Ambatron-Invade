@@ -40,14 +40,17 @@
             android:textStyle="bold"
             android:layout_gravity="center"
             android:paddingBottom="16dp"
-            android:shadowColor="@color/white" />
+            android:shadowColor="@color/white"
+            android:textColor="@color/black"/>
 
         <EditText
             android:id="@+id/usernameText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nickname"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"/>
 
 
 
@@ -56,21 +59,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"/>
 
         <EditText
             android:id="@+id/passwordText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"/>
 
         <Button
             android:id="@+id/regisnow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Regist"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/light_blue"/>
 
 
     </LinearLayout>

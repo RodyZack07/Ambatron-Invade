@@ -489,7 +489,7 @@
                 <ImageView
                     android:layout_width="120dp"
                     android:layout_height="145dp"
-                    android:src="@drawable/chapter_text"
+                    android:src="@drawable/chapter_text2"
                     android:layout_marginTop="28dp"
                     android:layout_marginLeft="40dp"
                     />
@@ -905,19 +905,17 @@
                 <ImageView
                     android:layout_width="200dp"
                     android:layout_height="200dp"
-                    android:src="@drawable/chapter_banner"
+                    android:src="@drawable/chapter_box"
+                    />
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="145dp"
+                    android:src="@drawable/chapter_text3"
+                    android:layout_marginTop="28dp"
+                    android:layout_marginLeft="40dp"
                     />
 
-                <TextView
-                    android:id="@+id/chapter_banner2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="-100dp"
-                    android:layout_marginLeft="-72dp"
-                    android:text="Serangan Ambatron"
-                    android:textColor="#000000"
-                    android:textSize="13sp"/>
+
             </FrameLayout>
         </LinearLayout>
 
