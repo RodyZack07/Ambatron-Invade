@@ -104,12 +104,12 @@
         app:srcCompat="@drawable/achievement_button" />
 
 
-    <ImageView
-        android:layout_width="400dp"
-        android:layout_height="200dp"
-        android:src="@drawable/box_horizontal"
-        android:layout_marginLeft="-9dp"
-        android:layout_marginTop="700dp"
+<!--    <ImageView-->
+<!--        android:layout_width="400dp"-->
+<!--        android:layout_height="200dp"-->
+<!--        android:src="@drawable/box_horizontal"-->
+<!--        android:layout_marginLeft="-9dp"-->
+<!--        android:layout_marginTop="700dp"-->
 
         />
     <TextView

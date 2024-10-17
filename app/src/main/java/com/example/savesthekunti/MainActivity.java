@@ -37,24 +37,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Ambil username dari Intent
         String username = getIntent().getStringExtra("username");
-
-        // Ambil username dari Intent
-        Intent intent = getIntent();
-        username = intent.getStringExtra("username");
+        String user = getIntent().getStringExtra("username");
 
 
         if (username != null) {
             Toast.makeText(this, "Selamat datang, " + username + "!", Toast.LENGTH_SHORT).show();
-
-//            ImageButton showAchievementButton = findViewById(R.id.achievement); // Sesuaikan dengan ID button yang digunakan
-//            showAchievementButton.setOnClickListener(view -> showAchievement(view, username)); // Kirim username ke showAchievement
         }
 
         // Inisialisasi TextView untuk menyambut pengguna
         welcomeText = findViewById(R.id.welcomeText); // Pastikan ID ini ada di layout
-        welcomeText.setText(username != null ? "Selamat datang, " + username + "!" : "Selamat datang!"); // Menampilkan pesan sambutan
+        welcomeText.setText(username != null ? "Selamat datang " + user + "!" : "Selamat datang!"); // Menampilkan pesan sambutan
 
         dbHelper = new DBHelper(this);  // Inisialisasi DBHelper
 
@@ -87,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         quitButton.setOnClickListener(view -> showExitPopup(view));
         playButton.setOnClickListener(v -> directSelectFighter());
         profilMenu.setOnClickListener(view -> openLoginActivity());
-        achievementMenu.setOnClickListener(view -> showAchievement(view));
+        achievementMenu.setOnClickListener(view -> showAchievement());
     }
 
     @Override
@@ -190,21 +183,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // Menampilkan Achievement
-    private void showAchievement(View anchorView) {
-        // Inflate layout popup Achievement
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.profile_menu, null);
 
-        // Popup size and animation
-        int popupWidth = getResources().getDimensionPixelSize(R.dimen.profile_width);
-        int popupHeight = getResources().getDimensionPixelSize(R.dimen.profile_height);
-        popupWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
-        popupWindow.setAnimationStyle(R.style.PopupAnimation);
-
-        // Show popup
-        popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
-    }
 
     // Menampilkan popup keluar (Exit)
     private void showExitPopup(View anchorView) {
@@ -238,6 +217,10 @@ public class MainActivity extends AppCompatActivity {
         noBtn.setOnClickListener(view -> exitPopupWindow.dismiss()); // Menutup popup
     }
 
+    private void showAchievement() {
+        Intent showAchievement = new Intent (MainActivity.this, ProfilActivity.class);
+        startActivity(showAchievement);
+    }
     // Membuka activity Login
     private void openLoginActivity() {
         Intent loginIntent = new Intent(MainActivity.this, Login.class);
