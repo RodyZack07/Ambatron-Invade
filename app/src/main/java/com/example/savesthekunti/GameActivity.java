@@ -1,35 +1,58 @@
 package com.example.savesthekunti;
 
+import android.graphics.drawable.AnimationDrawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
+import android.widget.MediaController;
+
 
 public class GameActivity extends AppCompatActivity {
     private GameView gameView;
-    VideoView gameplayBg;
+    private VideoView gameplayBg;
     private TextView scoreTxt, defeatedTxt;
+    private ImageView explosionView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_activity);
 
-        // INISIALISASI GameView
+        // Inisialisasi komponen UI
+        explosionView = new ImageView(this);
+        explosionView.setLayoutParams(new RelativeLayout.LayoutParams(300, 230)); // Atur ukuran sesuai kebutuhan
+        explosionView.setVisibility(View.GONE);  // Sembunyikan awalnya
+
+        // Tambahkan explosionView ke layout
+        ((ViewGroup) findViewById(R.id.gameContent)).addView(explosionView);
+
         gameView = findViewById(R.id.gameView);
-        gameplayBg = findViewById(R.id.videoView);
+        gameplayBg = findViewById(R.id.videoView); // Menggunakan gameplayBg
         scoreTxt = findViewById(R.id.scoreText);
         defeatedTxt = findViewById(R.id.MonsterDefeated);
 
-        // Mengatur layout ke game_activity.xml
-        gameplayBg.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.raw_gameplay));
-        gameplayBg.setOnPreparedListener(mp -> {
-            mp.setLooping(true);
-            gameplayBg.start();
-        });
+        // Memuat video dari sumber yang diinginkan
+        Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.raw_gameplay); // Ganti dengan nama file video yang benar
 
-        // ============================ FUNCTON SELECT PESAWAT  =================================
+        gameplayBg.setVideoURI(videoUri); // Menggunakan gameplayBg
+        gameplayBg.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.setLooping(true); // Mengatur video agar looping
+                mp.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING); // Menyesuaikan skala video
+            }
+        });
+        gameplayBg.start(); // Menggunakan gameplayBg
+
+        // ============================ FUNCTION SELECT PESAWAT =================================
         int selectedShipIndex = getIntent().getIntExtra("selectedShipIndex", 0);
         gameView.setSelectedShipIndex(selectedShipIndex);
 
@@ -37,10 +60,22 @@ public class GameActivity extends AppCompatActivity {
         gameView.setOnChangeScoreListener(new GameView.OnChangeScoreListener() {
             @Override
             public void onScoreChange(int score, int defeatedCount) {
-                // FUNCTION CHANGE TEXT SCORE
                 scoreTxt.setText("Score: " + score);
                 defeatedTxt.setText("Monster Defeated: " + defeatedCount);
             }
         });
+    }
+
+    public void triggerExplosion(float x, float y) {
+        explosionView.setX(x);
+        explosionView.setY(y - 50); // Menempatkan animasi di atas monster
+        explosionView.setBackgroundResource(R.drawable.explosion_animation);
+        explosionView.setVisibility(View.VISIBLE);
+
+        AnimationDrawable explosionAnimation = (AnimationDrawable) explosionView.getBackground();
+        explosionAnimation.start();
+
+        explosionView.postDelayed(() -> explosionView.setVisibility(View.GONE),
+                explosionAnimation.getNumberOfFrames() * 7);
     }
 }

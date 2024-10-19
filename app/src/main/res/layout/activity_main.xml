@@ -62,6 +62,16 @@
                 android:clickable="true"/>
 
             <ImageButton
+                android:id="@+id/achievement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="Play Button"
+                android:src="@drawable/achievement_button"
+                android:clickable="true"/>
+
+            <ImageButton
                 android:id="@+id/setting_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -88,20 +98,11 @@
         android:layout_height="50dp"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
-        android:layout_marginLeft="310dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="40dp"
         android:outlineSpotShadowColor="@color/black"
-        app:srcCompat="@drawable/profil_logo" />
-    <ImageButton
-        android:id="@+id/achievement"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:background="@android:color/transparent"
-        android:scaleType="fitXY"
-        android:layout_marginLeft="200dp"
-        android:layout_marginTop="42dp"
-        android:outlineSpotShadowColor="@color/black"
-        app:srcCompat="@drawable/achievement_button" />
+        app:srcCompat="@drawable/profil_icon" />
+
 
 
 <!--    <ImageView-->

@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView welcomeText;
     private View profilView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         ImageButton playButton = findViewById(R.id.play_button);
         ImageButton profilMenu = findViewById(R.id.profile);
         ImageButton achievementMenu = findViewById(R.id.achievement);
+
+
 
         // Set onClickListener untuk masing-masing tombol
         settingsBtn.setOnClickListener(view -> showSettingsPopup(view));
@@ -123,6 +126,13 @@ public class MainActivity extends AppCompatActivity {
 
         // Handle the Info button inside the popup
         ImageButton infoButton = popupView.findViewById(R.id.info_button);
+        ImageButton closeBtn = popupView.findViewById(R.id.closebtn); // Perubahan: Mengakses dari popupView
+
+        // Menangani klik tombol close untuk menutup popup
+        closeBtn.setOnClickListener(view -> {
+            popupWindow.dismiss(); // Menutup popup
+        });
+
         infoButton.setOnClickListener(v -> {
             // Show Info as a popup
             showInfoPopup();
