@@ -40,6 +40,9 @@ public class GameView extends View {
     private TextView scoreText;
     private TextView monsterDefeatedText;
     private GameView gameView;
+    private int bossHp;
+    private int bulletAtkValue;
+
 
 
                     //UI SCORE DAN DEFEATED COUNT
@@ -375,6 +378,40 @@ public class GameView extends View {
             public float getX (){return x;}
             public float getY () {return y;}
             public float getSize(){return size;}
+
+    }
+
+    class BossAmba {
+            private Bitmap bossAmbaBitmap;
+            private float x, y;
+            private float velocity;
+            private int width, height;
+
+                public BossAmba(Context context, Bitmap bossAmbaBitmap, float x, float y, float velocityY, int width, int height){
+                    this.bossAmbaBitmap = bossAmbaBitmap;
+                    this.x = x;
+                    this.y = y;
+                    this.velocity = velocityY;
+
+                    width = getResources().getDimensionPixelSize(R.dimen.boss_width);
+                    height= getResources().getDimensionPixelSize(R.dimen.boss_height);
+                }
+                
+                public void updatePositionBoss(float deltaTime){
+                    if( y < 500){
+                        y += velocity * deltaTime;
+                    }
+
+                }
+                public void draw(Canvas canvas){
+                    canvas.drawBitmap(Bitmap.createScaledBitmap(bossAmbaBitmap, width, height, false), x, y, paint);
+                }
+
+
+                public float getX (){return x;}
+                public float getY () {return y;}
+                public int getWidth(){return width;}
+                public int getHeight(){return height;}
 
     }
 }

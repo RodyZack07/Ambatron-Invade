@@ -23,5 +23,9 @@
 
     <dimen name ="setting_width">400dp</dimen>
     <dimen name ="setting_height">400dp</dimen>
+
+    <dimen name = "boss_width">400dp</dimen>
+    <dimen name = "boss_height">400dp</dimen>
+
 </resources>
 
