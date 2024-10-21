@@ -43,6 +43,14 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageView bgLevel1 = findViewById(R.id.bg_level_1_1);
         ImageView bgLevel2 = findViewById(R.id.bg_level_2_1);
         ImageView bgLevel3 = findViewById(R.id.bg_level_3_1);
+        ImageView bgLevel4 = findViewById(R.id.bg_level_4_1);
+        ImageView bgLevel5 = findViewById(R.id.bg_level_5_1);
+        ImageView bgLevel6 = findViewById(R.id.bg_level_6_1);
+        ImageView bgLevel7 = findViewById(R.id.bg_level_7_1);
+        ImageView bgLevel8 = findViewById(R.id.bg_level_8_1);
+        ImageView bgLevel9 = findViewById(R.id.bg_level_9_1);
+        ImageView bgLevel10 = findViewById(R.id.bg_level_10_1);
+
 
         bgLevel1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,23 +67,85 @@ public class SelectLevelActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Beralih ke GameActivity2 dan menghancurkan SelectLevelActivity
-                Intent intent = new Intent(SelectLevelActivity.this, GameActivity2.class);
+                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
                 startActivity(intent);
                 finish(); // Menghancurkan SelectLevelActivity untuk menghemat memori
             }
         });
 
         // Uncomment jika diperlukan untuk level 3
-        /*
+
         bgLevel3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SelectLevelActivity.this, GameActivity3.class);
+                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
                 startActivity(intent);
                 finish(); // Menghancurkan SelectLevelActivity untuk menghemat memori
             }
         });
-        */
+
+        bgLevel4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        bgLevel5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        bgLevel6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        bgLevel7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        bgLevel8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        bgLevel9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        bgLevel10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     @Override

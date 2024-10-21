@@ -18,20 +18,35 @@ import java.util.Random;
 
 public class GameView extends View {
     private PlayerShip playerShip;
+    private BossAmba bossAmba;
+
     private Bitmap monsterMiniBitmap;
     private Bitmap bulletsBitmap;
+    private Bitmap bossAmbaBitmap;
+
     private List<MonsterMini> monsterMini;
     private List<Bullet> bullets;
+    private List<Bullet> bossBullets;
+
+    private boolean isBossAmbaSpawned = false;
+    private boolean isBossAmbaDefeated = false;
+    private boolean isPlayerDefeated = false;
 
     private GameActivity gameActivity; // Referensi ke GameActivity
     private int screenWidth, screenHeight;
     private Handler handler;
     private Paint paint;
     private long lastFrameTime = 0;
+
     private int[] spaceShips = {R.drawable.blue_cosmos, R.drawable.retro_sky, R.drawable.wing_of_justice, R.drawable.x56_core};
     private int score = 0;
     private int defeatedCount = 0;
+
     private OnChangeScoreListener scoreChangeListener;
+
+
+
+    //LOGIC
 
     // Interface untuk mengubah skor
     interface OnChangeScoreListener {
@@ -62,9 +77,14 @@ public class GameView extends View {
         playerShip = new PlayerShip(context, spaceShips[0]);
         monsterMini = new ArrayList<>();
         bullets = new ArrayList<>();
+        bossBullets = new ArrayList<>();
 
+
+        //Objek Bitmap
         monsterMiniBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.monster_mini);
         bulletsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.beam_bullet);
+        bossAmbaBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.boss_amba);
+
 
         post(() -> {
             screenWidth = getWidth();
@@ -92,10 +112,19 @@ public class GameView extends View {
         List<MonsterMini> removeMonsters = new ArrayList<>();
         List<Bullet> removeBullets = new ArrayList<>();
 
+        //Panggil BosAmba
+        if(isBossAmbaSpawned && bossAmba != null){
+            bossAmba.updatePositionBoss(deltaTime);
+            bossAmba.draw(canvas);
+        }
+
         for (MonsterMini monster : monsterMini) {
             monster.updatePositionMonster(deltaTime);
             monster.draw(canvas);
         }
+
+
+
 
         for (Bullet bullet : bullets) {
             bullet.updatePositionBullet(deltaTime);
@@ -117,6 +146,18 @@ public class GameView extends View {
                     }
                 }
             }
+
+            if (isBossAmbaSpawned && checkCollision(bullet, bossAmba)) {
+                bossAmba.reduceHp(bullet.getDamage());
+                removeBullets.add(bullet);  // Hapus peluru setelah mengenai bos
+
+
+                if (bossAmba.getHp() <= 0) {
+                    isBossAmbaSpawned = false;
+                    isBossAmbaDefeated = true;
+                }
+            }
+
         }
 
         monsterMini.removeAll(removeMonsters);
@@ -124,6 +165,10 @@ public class GameView extends View {
 
         removeOffScreenMonsters();
         removeOffScreenBullets();
+
+        if(score >= 200 && !isBossAmbaSpawned && !isBossAmbaDefeated){
+            spawnBossAmba();
+        }
 
         invalidate();
     }
@@ -178,6 +223,8 @@ public class GameView extends View {
         }, 100);
     }
 
+
+                    //SHOOT METHOD
     private void shootBullet() {
         int bulletSize = getResources().getDimensionPixelSize(R.dimen.bullet_size);
         float bulletX = playerShip.getShipX() + (playerShip.getShipWidth() / 2) - (bulletSize / 2);
@@ -185,17 +232,68 @@ public class GameView extends View {
         bullets.add(new Bullet(getContext(), bulletsBitmap, bulletX, bulletY, 2500, bulletSize));
     }
 
+    private void bossShootBullet() {
+        if (bossAmba == null) return;
+
+        int bulletSize = getResources().getDimensionPixelSize(R.dimen.bullet_size);
+
+        // Posisi X acak di dalam lebar BossAmba
+        float bulletX = bossAmba.getX() + (new Random().nextFloat() * bossAmba.getWidth());
+        float bulletY = bossAmba.getY() + bossAmba.getHeight();
+
+        // Tambahkan peluru baru dengan velocity ke bawah
+        bossBullets.add(new Bullet(getContext(), bulletsBitmap, bulletX, bulletY, 1000, bulletSize));
+    }
+                    //SHOOT METHOD END
+
+
+    private void spawnBossAmba(){
+        int bossWidth = getResources().getDimensionPixelSize(R.dimen.boss_width);
+        int spawnX = (screenWidth - bossWidth) / 2;
+        bossAmba = new BossAmba(getContext(), bossAmbaBitmap, spawnX, 0,  100);
+        isBossAmbaSpawned = true;
+    }
+
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return playerShip.handleTouch(event);
     }
 
+
+                    //COLLISION
+            //MONSTERS COLISSION
     public boolean checkCollision(Bullet bullet, MonsterMini monster) {
         return bullet.getX() < monster.getX() + monster.getSize() &&
                 bullet.getX() + bullet.getSize() > monster.getX() &&
                 bullet.getY() < monster.getY() + monster.getSize() &&
                 bullet.getY() + bullet.getSize() > monster.getY();
     }
+            //BOSS COLLISION
+    private boolean checkCollision(Bullet bullet, BossAmba boss) {
+        float bulletLeft = bullet.getX();
+        float bulletRight = bullet.getX() + bullet.getSize(); // Asumsikan peluru menggunakan size
+        float bulletTop = bullet.getY();
+        float bulletBottom = bullet.getY() + bullet.getSize();
+
+        float bossLeft = boss.getX();
+        float bossRight = boss.getX() + boss.getWidth();
+        float bossTop = boss.getY();
+        float bossBottom = boss.getY() + boss.getHeight();
+
+        return bulletRight > bossLeft && bulletLeft < bossRight &&
+                bulletBottom > bossTop && bulletTop < bossBottom;
+    }
+
+    private boolean checkCollision(MonsterMini monster, PlayerShip playerShip) {
+        return monster.getX() < playerShip.getShipX() + playerShip.getShipWidth() &&
+                monster.getX() + monster.getSize() > playerShip.getShipX() &&
+                monster.getY() < playerShip.getShipY() + playerShip.getShipHeight() &&
+                monster.getY() + monster.getSize() > playerShip.getShipY();
+    }
+                  //COLLISION END
+
+
 
     public void removeOffScreenMonsters() {
         List<MonsterMini> monstersToRemove = new ArrayList<>();
@@ -217,16 +315,21 @@ public class GameView extends View {
         bullets.removeAll(bulletsToRemove);
     }
 
+
+
+
     // Class PlayerShip
     class PlayerShip {
         private Bitmap playerShipBitmap;
         private float shipX, shipY;
         private int shipWidth, shipHeight;
+        private int hp;
 
         public PlayerShip(Context context, int playerShipResId) {
             playerShipBitmap = BitmapFactory.decodeResource(context.getResources(), playerShipResId);
             shipWidth = context.getResources().getDimensionPixelSize(R.dimen.player_ship_width);
             shipHeight = context.getResources().getDimensionPixelSize(R.dimen.player_ship_height);
+            this.hp = 3;
         }
 
         public void setShipPosition(int screenWidth, int screenHeight) {
@@ -236,6 +339,11 @@ public class GameView extends View {
 
         public void draw(Canvas canvas) {
             canvas.drawBitmap(Bitmap.createScaledBitmap(playerShipBitmap, shipWidth, shipHeight, false), shipX, shipY, paint);
+        }
+
+        public void reduceHp(){
+            hp--;
+            if(hp <= 0){}
         }
 
         public boolean handleTouch(MotionEvent event) {
@@ -261,6 +369,12 @@ public class GameView extends View {
             return true;
         }
 
+        public boolean isOffScreen(){
+            return hp <= 0;
+        }
+
+        public int getHp(){return hp;}
+
         public float getShipX() {
             return shipX;
         }
@@ -269,12 +383,20 @@ public class GameView extends View {
             return shipY;
         }
 
+        public int getShipHeight() {
+            return shipHeight;
+        }
+
         public int getShipWidth() {
             return shipWidth;
         }
     }
 
-    // Class MonsterMini
+
+
+
+
+                    // Class MonsterMini
     class MonsterMini {
         private Bitmap monsterMiniBitmap;
         private float x, y;
@@ -320,6 +442,7 @@ public class GameView extends View {
         private float x, y;
         private int size;
         private float velocity;
+        int damage;
 
         public Bullet(Context context, Bitmap bulletBitmap, float x, float y, float velocityY, int size) {
             this.bulletBitmap = bulletBitmap;
@@ -327,6 +450,7 @@ public class GameView extends View {
             this.y = y;
             this.velocity = velocityY;
             this.size = context.getResources().getDimensionPixelSize(R.dimen.bullet_size);
+            this.damage = 100;
         }
 
         public void updatePositionBullet(float deltaTime) {
@@ -336,6 +460,8 @@ public class GameView extends View {
         public void draw(Canvas canvas) {
             canvas.drawBitmap(Bitmap.createScaledBitmap(bulletBitmap, size, size, false), x, y, paint);
         }
+
+        public int getDamage(){return damage;}
 
         public float getX() {
             return x;
@@ -353,4 +479,54 @@ public class GameView extends View {
             return y < 0;
         }
     }
+
+
+    // CLASS BOSS AMBA
+
+    class BossAmba {
+        private Bitmap bossAmbaBitmap;
+        private float x, y;
+        private float velocityY;
+        private int width, height;
+        int hp;
+
+        public BossAmba(Context context, Bitmap bossAmbaBitmap, float x, float y, float velocityY) {
+            this.bossAmbaBitmap = bossAmbaBitmap;
+            this.x = x;
+            this.y = y;
+            this.velocityY = velocityY;
+            this.hp = 500;
+            width = context.getResources().getDimensionPixelSize(R.dimen.boss_width);
+            height = context.getResources().getDimensionPixelSize(R.dimen.boss_height);
+        }
+
+        public void updatePositionBoss(float deltaTime) {
+            // Gerakan jatuh bos dan berhenti ketika y = 500
+            if (y < 50) {
+                y += velocityY * deltaTime;
+            }
+        }
+
+        public void draw(Canvas canvas) {
+            canvas.drawBitmap(Bitmap.createScaledBitmap(bossAmbaBitmap, width, height, false), x, y, paint);
+        }
+
+
+
+        public void reduceHp(int damage){
+            hp -= damage;
+        }
+
+        public int getHp(){return hp;}
+
+        public float getX() {return x;}
+
+        public float getY() {return y;}
+
+        public int getWidth() {return width;}
+
+        public int getHeight() {return height;
+        }
+    }
 }
+
