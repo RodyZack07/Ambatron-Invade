@@ -123,5 +123,15 @@
         android:layout_marginLeft="85dp"
         android:layout_marginTop="700dp"
         android:textColor="@color/white"/>
+    <TextView
+        android:id="@+id/skinText"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:text="halo Selamat Datang"
+        android:fontFamily="@font/poppins"
+        android:gravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="750dp"
+        android:textColor="@color/white"/>
 
 </FrameLayout>

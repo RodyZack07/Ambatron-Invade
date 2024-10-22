@@ -34,9 +34,11 @@ android {
 
 dependencies {
     // Firebase
-    
+
     implementation("com.google.firebase:firebase-auth:21.0.6")
     implementation("com.google.firebase:firebase-database:20.0.5")
+
+
 
     // Library lainnya
     implementation(libs.appcompat)

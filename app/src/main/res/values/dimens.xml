@@ -27,5 +27,8 @@
     <dimen name = "boss_width">350dp</dimen>
     <dimen name = "boss_height">350dp</dimen>
 
+    <dimen name = "level_height">300dp</dimen>
+    <dimen name = "level_width">350dp</dimen>
+
 </resources>
 

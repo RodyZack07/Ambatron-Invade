@@ -24,6 +24,11 @@ public class GameView extends View {
     private Bitmap bulletsBitmap;
     private Bitmap bossAmbaBitmap;
 
+    private Bitmap scaledPlayerShipBitmap;
+    private Bitmap scaledMonsterMiniBitmap;
+    private Bitmap scaledBulletBitmap;
+    private Bitmap scaledBossAmbaBitmap;
+
     private List<MonsterMini> monsterMini;
     private List<Bullet> bullets;
     private List<Bullet> bossBullets;
@@ -80,10 +85,23 @@ public class GameView extends View {
         bossBullets = new ArrayList<>();
 
 
-        //Objek Bitmap
+        // Memuat bitmap dan mengubah ukurannya
         monsterMiniBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.monster_mini);
         bulletsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.beam_bullet);
         bossAmbaBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.boss_amba);
+
+        // Mengatur ukuran bitmap yang sudah di-scale
+        scaledMonsterMiniBitmap = Bitmap.createScaledBitmap(monsterMiniBitmap,
+                getResources().getDimensionPixelSize(R.dimen.mosnter_size),
+                getResources().getDimensionPixelSize(R.dimen.mosnter_size), false);
+
+        scaledBulletBitmap = Bitmap.createScaledBitmap(bulletsBitmap,
+                getResources().getDimensionPixelSize(R.dimen.bullet_size),
+                getResources().getDimensionPixelSize(R.dimen.bullet_size), false);
+
+        scaledBossAmbaBitmap = Bitmap.createScaledBitmap(bossAmbaBitmap,
+                getResources().getDimensionPixelSize(R.dimen.boss_width),
+                getResources().getDimensionPixelSize(R.dimen.boss_height), false);
 
 
         post(() -> {
@@ -314,6 +332,21 @@ public class GameView extends View {
         }
         bullets.removeAll(bulletsToRemove);
     }
+
+    public void onGameOver() {
+        // Pembersihan sumber daya bitmap yang tidak digunakan
+        if (scaledMonsterMiniBitmap != null) {
+            scaledMonsterMiniBitmap.recycle();
+        }
+        if (scaledBulletBitmap != null) {
+            scaledBulletBitmap.recycle();
+        }
+        if (scaledBossAmbaBitmap != null) {
+            scaledBossAmbaBitmap.recycle();
+        }
+        handler.removeCallbacksAndMessages(null);
+    }
+
 
 
 

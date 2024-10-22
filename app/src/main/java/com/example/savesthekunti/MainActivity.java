@@ -18,6 +18,12 @@ import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 public class MainActivity extends AppCompatActivity {
 
     private VideoView videoViewBackground;
@@ -51,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         welcomeText.setText(username != null ? "Selamat datang " + user + "!" : "Selamat datang!"); // Menampilkan pesan sambutan
 
         dbHelper = new DBHelper(this);  // Inisialisasi DBHelper
+
+        getSkinData(username);
 
         // Inisialisasi VideoView untuk background
         videoViewBackground = findViewById(R.id.videoViewBackground);
@@ -99,6 +107,39 @@ public class MainActivity extends AppCompatActivity {
         videoPosition = videoViewBackground.getCurrentPosition();
         videoViewBackground.pause();
     }
+
+    // Ambil data skin dari Firebase
+    private void getSkinData(String username) {
+        if (username == null) return;
+
+        DatabaseReference ambatronDB = FirebaseDatabase.getInstance().getReference("Akun").child(username).child("Koleksi_Skin");
+
+        ambatronDB.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    StringBuilder skins = new StringBuilder("Skin yang dimiliki:\n");
+                    for (DataSnapshot skinSnapshot : dataSnapshot.getChildren()) {
+                        String skinId = skinSnapshot.child("id_skin").getValue(String.class);
+                        Boolean isLocked = skinSnapshot.child("status_terkunci").getValue(Boolean.class);
+
+                        if (skinId != null) {
+                            skins.append("Skin ID: ").append(skinId).append(" - ").append(isLocked ? "Terkunci" : "Terbuka").append("\n");
+                        }
+                    }
+
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(MainActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     // Mengatur volume video
     private void setVolume(MediaPlayer mediaPlayer, float volume) {

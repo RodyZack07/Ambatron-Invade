@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -25,6 +24,8 @@ public class Login extends AppCompatActivity {
     private Button loginButton, registerButton;
     private ImageButton prevsBtn;
     private DatabaseReference ambatronDB;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,10 @@ public class Login extends AppCompatActivity {
         // Inisialisasi Firebase Database
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://ambatrondb-default-rtdb.asia-southeast1.firebasedatabase.app");
         ambatronDB = database.getReference("Akun");
+
+        // Inisialisasi SharedPreferences
+        sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
         // Inisialisasi UI
         prevsBtn = findViewById(R.id.prevsBtn3);
@@ -73,10 +78,12 @@ public class Login extends AppCompatActivity {
                         if (dbPassword != null) {
                             if (dbPassword.equals(password)) {
                                 // Simpan username ke SharedPreferences
-                                SharedPreferences sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putString("username", username);
                                 editor.apply();
+
+                                // Ambil data skin dari Firebase
+                                String userId = akunSnapshot.getKey(); // Ambil ID pengguna
+                                fetchSkinData(userId); // Ambil data skin
 
                                 // Berhasil login, pindah ke MainActivity
                                 Intent intent = new Intent(Login.this, MainActivity.class);
@@ -96,6 +103,39 @@ public class Login extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("FirebaseError", databaseError.getMessage());
+            }
+        });
+    }
+
+    // Fungsi untuk mengambil status skin dari Firebase
+    private void fetchSkinData(String userId) {
+        DatabaseReference skinRef = FirebaseDatabase.getInstance().getReference("Koleksi_Skin").child(userId);
+
+        skinRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot skinSnapshot : dataSnapshot.getChildren()) {
+                        String skinId = skinSnapshot.getKey();
+                        Boolean statusTerkunci = skinSnapshot.child("status_terkunci").getValue(Boolean.class);
+
+                        // Logika untuk menampilkan skin berdasarkan status
+                        if (statusTerkunci != null && !statusTerkunci) {
+                            Log.d("SkinData", "Skin ID: " + skinId + " | Status Terkunci: " + statusTerkunci);
+                            // Simpan informasi skin yang terunlock jika diperlukan
+                            // Misalnya: simpan ke SharedPreferences atau tampilkan di UI
+                        } else {
+                            Log.d("SkinData", "Skin ID: " + skinId + " masih terkunci.");
+                        }
+                    }
+                } else {
+                    Log.d("SkinData", "Tidak ada data skin untuk pengguna ini.");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("SkinData", "Error fetching skin data: " + databaseError.getMessage());
             }
         });
     }

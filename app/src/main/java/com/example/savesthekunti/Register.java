@@ -63,6 +63,7 @@ public class Register extends AppCompatActivity {
                         // Setelah pendaftaran sukses, tambahkan data Profile dan Achievement
                         createProfile(userRef);
                         createAchievements(userRef);
+                        createSkin(userRef); // Menambahkan skin default
 
                         // Tampilkan pesan sukses
                         Toast.makeText(getApplicationContext(), "Pendaftaran Berhasil", Toast.LENGTH_SHORT).show();
@@ -118,5 +119,24 @@ public class Register extends AppCompatActivity {
         achievement2.child("deskripsi_achievement").setValue("Complete your first game");
         achievement2.child("created_at").setValue(System.currentTimeMillis());
         achievement2.child("updated_at").setValue(System.currentTimeMillis());
+    }
+
+    // Method untuk membuat skin default di Firebase
+    private void createSkin(DatabaseReference userRef) {
+        DatabaseReference skinRef = userRef.child("Koleksi_Skin");
+
+        // Skin pertama (Blue Cosmos) - tidak terkunci
+        DatabaseReference skin1 = skinRef.child("blue_cosmos"); // Gunakan id_skin sebagai child
+        skin1.child("id_skin").setValue("blue_cosmos");
+        skin1.child("status_terkunci").setValue(false);  // Skin ini tidak terkunci
+        skin1.child("created_at").setValue(System.currentTimeMillis());
+        skin1.child("updated_at").setValue(System.currentTimeMillis());
+
+        // Skin kedua (Retro Sky) - terkunci
+        DatabaseReference skin2 = skinRef.child("retro_sky"); // Gunakan id_skin sebagai child
+        skin2.child("id_skin").setValue("retro_sky");
+        skin2.child("status_terkunci").setValue(true);  // Skin ini terkunci
+        skin2.child("created_at").setValue(System.currentTimeMillis());
+        skin2.child("updated_at").setValue(System.currentTimeMillis());
     }
 }

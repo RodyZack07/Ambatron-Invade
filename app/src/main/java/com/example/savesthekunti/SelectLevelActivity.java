@@ -4,148 +4,85 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.PopupWindow;
 import android.widget.VideoView;
 
 public class SelectLevelActivity extends AppCompatActivity {
 
     private VideoView backgroundVideo;
+    private PopupWindow popupWindow;
+    private View settingsView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.level_activity);
 
         ImageButton prevButton = findViewById(R.id.prevsBtn1);
-        prevButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish(); // Kembali ke Activity sebelumnya dan menghancurkannya
-            }
-        });
+        prevButton.setOnClickListener(v -> finish());
 
-        // Inisialisasi VideoView dan komponen lainnya
         backgroundVideo = findViewById(R.id.backgroundVideo);
         Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.raw_gameplay);
         backgroundVideo.setVideoURI(videoUri);
 
         backgroundVideo.setOnPreparedListener(mp -> {
-            mp.setVolume(0f, 0f);  // Volume di-mute
-            mp.setLooping(true);    // Set looping
+            mp.setVolume(0f, 0f);
+            mp.setLooping(true);
         });
-
         backgroundVideo.start();
 
         ImageView bgLevel1 = findViewById(R.id.bg_level_1_1);
-        ImageView bgLevel2 = findViewById(R.id.bg_level_2_1);
-        ImageView bgLevel3 = findViewById(R.id.bg_level_3_1);
-        ImageView bgLevel4 = findViewById(R.id.bg_level_4_1);
-        ImageView bgLevel5 = findViewById(R.id.bg_level_5_1);
-        ImageView bgLevel6 = findViewById(R.id.bg_level_6_1);
-        ImageView bgLevel7 = findViewById(R.id.bg_level_7_1);
-        ImageView bgLevel8 = findViewById(R.id.bg_level_8_1);
-        ImageView bgLevel9 = findViewById(R.id.bg_level_9_1);
-        ImageView bgLevel10 = findViewById(R.id.bg_level_10_1);
+        bgLevel1.setOnClickListener(this::showLevelPopup);  // Memanggil showLevelPopup saat level 1 dipilih
+
+        // Implementasi lainnya untuk level yang berbeda
+    }
+
+    private void showLevelPopup(View anchorView) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.game_info_1, null);
+
+        int popupWidth = getResources().getDimensionPixelSize(R.dimen.level_width);
+        int popupHeight = getResources().getDimensionPixelSize(R.dimen.level_height);
+        popupWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
+        popupWindow.setAnimationStyle(R.style.PopupAnimation);
+
+        settingsView = findViewById(R.id.setting_button);
+        if (settingsView != null) {
+            settingsView.setVisibility(View.GONE);  // Sembunyikan tombol setting saat popup muncul
+        }
+
+        popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+
+//        INISIALISASI BUTTON
+        ImageButton closeBtn = popupView.findViewById(R.id.silang);
+        ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
+        ImageButton playBtn = popupView.findViewById(R.id.playbtn);
+
+        playBtn.setOnClickListener(view -> showlevelActivity());
 
 
-        bgLevel1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Beralih ke GameActivity dan menghancurkan SelectLevelActivity
-                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-                intent.putExtra("selectedShipIndex", getIntent().getIntExtra("selectedShipIndex", 0));
-                startActivity(intent);
-                finish(); // Menghancurkan SelectLevelActivity untuk menghemat memori
-            }
+        homeBtn.setOnClickListener(view -> {
+            popupWindow.dismiss();
+        });
+        closeBtn.setOnClickListener(view -> {
+            popupWindow.dismiss();
         });
 
-        bgLevel2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Beralih ke GameActivity2 dan menghancurkan SelectLevelActivity
-                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-                startActivity(intent);
-                finish(); // Menghancurkan SelectLevelActivity untuk menghemat memori
-            }
-        });
 
-        // Uncomment jika diperlukan untuk level 3
+    }
 
-        bgLevel3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-                startActivity(intent);
-                finish(); // Menghancurkan SelectLevelActivity untuk menghemat memori
-            }
-        });
 
-        bgLevel4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        bgLevel5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        bgLevel6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        bgLevel7.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        bgLevel8.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        bgLevel9.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        bgLevel10.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+    private void showlevelActivity() {
+        Intent level1Intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        startActivity(level1Intent);
+        if (popupWindow != null) {
+            popupWindow.dismiss();  // Tutup popup setelah pindah ke GameActivity
+        }
     }
 
     @Override
@@ -164,8 +101,8 @@ public class SelectLevelActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (backgroundVideo != null) {
-            backgroundVideo.stopPlayback(); // Menghentikan video playback
-            backgroundVideo = null;        // Membersihkan referensi
+            backgroundVideo.stopPlayback();
+            backgroundVideo = null;
         }
     }
 }
