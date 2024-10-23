@@ -32,7 +32,7 @@ public class SelectFighterActivity extends AppCompatActivity {
 
     // PESAWAT
     private ImageView spaceShip;
-    private String[] fighterIDs = {"blue_cosmos", "retro_sky"}; // ID untuk setiap skin
+    private String[] fighterIDs = {"blue_cosmos", "retro_sky", "wing_of_justice"}; // ID untuk setiap skin
     private int currentSkinIndex = 0;
     private ArrayList<Boolean> userSkins = new ArrayList<>(); // Untuk menyimpan status terkunci dari setiap skin
 

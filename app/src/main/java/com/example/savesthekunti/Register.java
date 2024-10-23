@@ -10,8 +10,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class Register extends AppCompatActivity {
 
@@ -54,28 +60,45 @@ public class Register extends AppCompatActivity {
             } else if (!password.equals(confirmPassword)) {
                 Toast.makeText(getApplicationContext(), "Password dan Konfirmasi Password tidak cocok", Toast.LENGTH_SHORT).show();
             } else {
-                // Menyimpan data ke Firebase di bawah child "Akun" dengan username sebagai key
-                DatabaseReference userRef = ambatronDB.child(username);
-                userRef.child("username").setValue(username);
-                userRef.child("email").setValue(email);
-                userRef.child("password").setValue(password).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        // Setelah pendaftaran sukses, tambahkan data Profile dan Achievement
-                        createProfile(userRef);
-                        createAchievements(userRef);
-                        createSkin(userRef); // Menambahkan skin default
+                // Pengecekan apakah username sudah ada
+                ambatronDB.child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            Toast.makeText(getApplicationContext(), "Username sudah digunakan", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Menghash password sebelum menyimpannya
+                            String hashedPassword = hashPassword(password);
+                            // Menyimpan data ke Firebase di bawah child "Akun" dengan username sebagai key
+                            DatabaseReference userRef = ambatronDB.child(username);
+                            userRef.child("username").setValue(username);
+                            userRef.child("email").setValue(email);
+                            userRef.child("password").setValue(hashedPassword).addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    // Setelah pendaftaran sukses, tambahkan data Profile dan Achievement
+                                    createProfile(userRef);
+                                    createAchievements(userRef);
+                                    createSkin(userRef); // Menambahkan skin default
 
-                        // Tampilkan pesan sukses
-                        Toast.makeText(getApplicationContext(), "Pendaftaran Berhasil", Toast.LENGTH_SHORT).show();
+                                    // Tampilkan pesan sukses
+                                    Toast.makeText(getApplicationContext(), "Pendaftaran Berhasil", Toast.LENGTH_SHORT).show();
 
-                        // Kosongkan field setelah pendaftaran
-                        clearFields();
+                                    // Kosongkan field setelah pendaftaran
+                                    clearFields();
 
-                        // Redirect ke MainActivity setelah pendaftaran berhasil
-                        startActivity(new Intent(Register.this, MainActivity.class));
-                    } else {
-                        // Jika gagal, tampilkan error
-                        Toast.makeText(getApplicationContext(), "Gagal mendaftar, silakan coba lagi", Toast.LENGTH_SHORT).show();
+                                    // Redirect ke MainActivity setelah pendaftaran berhasil
+                                    startActivity(new Intent(Register.this, MainActivity.class));
+                                } else {
+                                    // Jika gagal, tampilkan error
+                                    Toast.makeText(getApplicationContext(), "Gagal mendaftar, silakan coba lagi", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Toast.makeText(getApplicationContext(), "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -88,6 +111,23 @@ public class Register extends AppCompatActivity {
         emailText.setText("");
         passwordText.setText("");
         confirmPasswordText.setText("");
+    }
+
+    // Method untuk meng-hash password
+    private String hashPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes());
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Method untuk membuat Profile di Firebase
@@ -138,5 +178,12 @@ public class Register extends AppCompatActivity {
         skin2.child("status_terkunci").setValue(true);  // Skin ini terkunci
         skin2.child("created_at").setValue(System.currentTimeMillis());
         skin2.child("updated_at").setValue(System.currentTimeMillis());
+
+        // Skin Ketiga (Wings of Justice)
+        DatabaseReference skin3 = skinRef.child("wing_of_justice");
+        skin3.child("id_skin").setValue("wing_of_justice");
+        skin3.child("status_terkunci").setValue(true);
+        skin3.child("created_at").setValue(System.currentTimeMillis());
+        skin3.child("updated_at").setValue(System.currentTimeMillis());
     }
 }

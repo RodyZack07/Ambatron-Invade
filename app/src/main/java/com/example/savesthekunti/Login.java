@@ -18,6 +18,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class Login extends AppCompatActivity {
 
     private EditText usernameField, passwordField;
@@ -59,12 +62,34 @@ public class Login extends AppCompatActivity {
         registerButton.setOnClickListener(v -> startActivity(new Intent(Login.this, Register.class)));
     }
 
+    // Fungsi untuk hash password menggunakan SHA-256
+    private String hashPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedHash = digest.digest(password.getBytes());
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : encodedHash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void loginUser(String username, String password) {
         // Validasi input
         if (username.isEmpty() || password.isEmpty()) {
             Toast.makeText(Login.this, "Username dan password harus diisi", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        // Hash password yang diinput pengguna
+        String hashedPassword = hashPassword(password);
 
         // Query untuk cek username dan password
         Query query = ambatronDB.orderByChild("username").equalTo(username);
@@ -76,7 +101,8 @@ public class Login extends AppCompatActivity {
                         String dbPassword = akunSnapshot.child("password").getValue(String.class);
 
                         if (dbPassword != null) {
-                            if (dbPassword.equals(password)) {
+                            // Bandingkan password yang di-hash
+                            if (dbPassword.equals(hashedPassword)) {
                                 // Simpan username ke SharedPreferences
                                 editor.putString("username", username);
                                 editor.apply();
@@ -122,8 +148,9 @@ public class Login extends AppCompatActivity {
                         // Logika untuk menampilkan skin berdasarkan status
                         if (statusTerkunci != null && !statusTerkunci) {
                             Log.d("SkinData", "Skin ID: " + skinId + " | Status Terkunci: " + statusTerkunci);
-                            // Simpan informasi skin yang terunlock jika diperlukan
-                            // Misalnya: simpan ke SharedPreferences atau tampilkan di UI
+                            // Simpan informasi skin yang terunlock ke SharedPreferences
+                            editor.putBoolean(skinId + "_unlocked", true);
+                            editor.apply();
                         } else {
                             Log.d("SkinData", "Skin ID: " + skinId + " masih terkunci.");
                         }
