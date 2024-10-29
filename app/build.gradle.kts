@@ -26,6 +26,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -33,15 +34,16 @@ android {
 }
 
 dependencies {
-    // Firebase
+    // Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:32.0.0"))
 
-    implementation("com.google.firebase:firebase-auth:21.0.6")
-    implementation("com.google.firebase:firebase-database:20.0.5")
+    // Firebase dependencies
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-messaging")
 
-
-
-
-    // Library lainnya
+    // Other libraries
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -52,6 +54,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 }
+
 
 // Apply plugin Google Services
 apply(plugin = "com.google.gms.google-services")

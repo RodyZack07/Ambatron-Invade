@@ -16,13 +16,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,52 +32,44 @@ public class MainActivity extends AppCompatActivity {
     private PopupWindow popupWindow;
     private PopupWindow exitPopupWindow;
     private int videoPosition;
-    private DBHelper dbHelper;
-    private View settingsView;
-
-    // Inisialisasi MediaPlayer
     private MediaPlayer mediaPlayer;
     private TextView welcomeText;
-    private View profilView;
-
+    private FirebaseFirestore db;
+    private String user; // ID pengguna untuk mengambil data
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String username = getIntent().getStringExtra("username");
-        String user = getIntent().getStringExtra("username");
+        // Inisialisasi Firebase Firestore
+        db = FirebaseFirestore.getInstance();
 
-
-        if (username != null) {
-            Toast.makeText(this, "Selamat datang, " + username + "!", Toast.LENGTH_SHORT).show();
-        }
+        // Mengambil user ID dari intent
+        user = getIntent().getStringExtra("username");
 
         // Inisialisasi TextView untuk menyambut pengguna
-        welcomeText = findViewById(R.id.welcomeText); // Pastikan ID ini ada di layout
-        welcomeText.setText(username != null ? "Selamat datang " + user + "!" : "Selamat datang!"); // Menampilkan pesan sambutan
-
-        dbHelper = new DBHelper(this);  // Inisialisasi DBHelper
-
-        getSkinData(username);
+        welcomeText = findViewById(R.id.welcomeText);
+        if (user != null) {
+            getUserData(user);
+        } else {
+            Toast.makeText(this, "Pengguna tidak dikenali.", Toast.LENGTH_SHORT).show();
+        }
 
         // Inisialisasi VideoView untuk background
         videoViewBackground = findViewById(R.id.videoViewBackground);
         Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.background_loop);
         videoViewBackground.setVideoURI(videoUri);
-
         videoViewBackground.setOnPreparedListener(mp -> {
             mp.setLooping(true);
             setVolume(mp, 0f);
         });
-
         videoViewBackground.start();
 
         // Inisialisasi MediaPlayer untuk audio
-        mediaPlayer = MediaPlayer.create(this, R.raw.galatic_idle); // Ganti dengan nama file audio kamu
-        mediaPlayer.setLooping(true); // Memutar audio berulang
-        mediaPlayer.start(); // Memulai pemutaran audio
+        mediaPlayer = MediaPlayer.create(this, R.raw.galatic_idle);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
 
         // Inisialisasi tombol
         ImageButton settingsBtn = findViewById(R.id.setting_button);
@@ -83,8 +77,6 @@ public class MainActivity extends AppCompatActivity {
         ImageButton playButton = findViewById(R.id.play_button);
         ImageButton profilMenu = findViewById(R.id.profile);
         ImageButton achievementMenu = findViewById(R.id.achievement);
-
-
 
         // Set onClickListener untuk masing-masing tombol
         settingsBtn.setOnClickListener(view -> showSettingsPopup(view));
@@ -108,47 +100,59 @@ public class MainActivity extends AppCompatActivity {
         videoViewBackground.pause();
     }
 
-    // Ambil data skin dari Firebase
-    private void getSkinData(String username) {
-        if (username == null) return;
-
-        DatabaseReference ambatronDB = FirebaseDatabase.getInstance().getReference("Akun").child(username).child("Koleksi_Skin");
-
-        ambatronDB.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    StringBuilder skins = new StringBuilder("Skin yang dimiliki:\n");
-                    for (DataSnapshot skinSnapshot : dataSnapshot.getChildren()) {
-                        String skinId = skinSnapshot.child("id_skin").getValue(String.class);
-                        Boolean isLocked = skinSnapshot.child("status_terkunci").getValue(Boolean.class);
-
-                        if (skinId != null) {
-                            skins.append("Skin ID: ").append(skinId).append(" - ").append(isLocked ? "Terkunci" : "Terbuka").append("\n");
+    // Mengambil data pengguna dari Firestore
+    private void getUserData(String userId) {
+        db.collection("Akun").document(userId).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            String username = document.getString("username");
+                            welcomeText.setText("Selamat datang, " + username + "!");
+                            getSkinData(userId);
+                        } else {
+                            Toast.makeText(MainActivity.this, "Data pengguna tidak ditemukan.", Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Toast.makeText(MainActivity.this, "Error: " + task.getException(), Toast.LENGTH_SHORT).show();
                     }
-
-                } else {
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(MainActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                });
     }
 
+    // Mengambil data skin dari Firestore
+    private void getSkinData(String userId) {
+        db.collection("Akun").document(userId).collection("Koleksi_Skin")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot result = task.getResult();
+                        if (result != null && !result.isEmpty()) {
+                            StringBuilder skins = new StringBuilder("Skin yang dimiliki:\n");
+                            for (QueryDocumentSnapshot document : result) {
+                                String skinId = document.getString("id_skin");
+                                Boolean isLocked = document.getBoolean("status_terkunci");
+
+                                if (skinId != null) {
+                                    skins.append("Skin ID: ").append(skinId).append(" - ").append(isLocked ? "Terkunci" : "Terbuka").append("\n");
+                                }
+                            }
+                            Toast.makeText(MainActivity.this, skins.toString(), Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Tidak ada skin yang ditemukan untuk pengguna ini.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "Error getting documents: " + task.getException(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 
     // Mengatur volume video
     private void setVolume(MediaPlayer mediaPlayer, float volume) {
         mediaPlayer.setVolume(volume, volume);
     }
 
-    // Menampilkan popup pengaturan (Settings)
+    // Menampilkan popup pengaturan
     private void showSettingsPopup(View anchorView) {
-        // Inflate layout popup Settings
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_layout, null);
 
@@ -158,85 +162,38 @@ public class MainActivity extends AppCompatActivity {
         popupWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
         popupWindow.setAnimationStyle(R.style.PopupAnimation);
 
-        // Hide the Settings button to avoid overlap
-        settingsView = findViewById(R.id.setting_button);
-        settingsView.setVisibility(View.GONE);
-
         // Show popup
         popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
 
         // Handle the Info button inside the popup
-        ImageButton infoButton = popupView.findViewById(R.id.info_button);
-        ImageButton closeBtn = popupView.findViewById(R.id.closebtn); // Perubahan: Mengakses dari popupView
+        ImageButton closeBtn = popupView.findViewById(R.id.closebtn);
 
         // Menangani klik tombol close untuk menutup popup
-        closeBtn.setOnClickListener(view -> {
-            popupWindow.dismiss(); // Menutup popup
-        });
-
-        infoButton.setOnClickListener(v -> {
-            // Show Info as a popup
-            showInfoPopup();
-            popupWindow.dismiss();
-        });
+        closeBtn.setOnClickListener(view -> popupWindow.dismiss());
 
         // Inisialisasi SeekBar untuk mengatur volume musik
         SeekBar seekBarVol = popupView.findViewById(R.id.seekBarVol);
         seekBarVol.setMax(100);
-        seekBarVol.setProgress(50); // Set default volume to 50%
-        setVolume(mediaPlayer, 0.5f); // Set initial volume to 50%
+        seekBarVol.setProgress(50);
+        setVolume(mediaPlayer, 0.5f);
 
         // Listener untuk mengubah volume saat SeekBar berubah
         seekBarVol.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float volume = progress / 100f; // Mengubah progress menjadi nilai antara 0.0 dan 1.0
-                setVolume(mediaPlayer, volume); // Mengatur volume MediaPlayer
+                float volume = progress / 100f;
+                setVolume(mediaPlayer, volume);
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // Tidak ada tindakan yang diperlukan di sini
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // Tidak ada tindakan yang diperlukan di sini
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
-
-        // Restore the Settings button when the popup is dismissed
-        popupWindow.setOnDismissListener(() -> settingsView.setVisibility(View.VISIBLE));
     }
 
-    // Menampilkan popup informasi (Info)
-    private void showInfoPopup() {
-        // Inflate the Info popup layout
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View infoPopupView = inflater.inflate(R.layout.info_menu, null);
-        View popupView = inflater.inflate(R.layout.profile_menu, null);
-
-        // Get width and height from dimens.xml
-        int popupWidth = getResources().getDimensionPixelSize(R.dimen.popup_width);
-        int popupHeight = getResources().getDimensionPixelSize(R.dimen.popup_height);
-
-        // Setup PopupWindow for Info menu with imported width and height
-        PopupWindow infoPopupWindow = new PopupWindow(infoPopupView, popupWidth, popupHeight, true);
-        infoPopupWindow.setAnimationStyle(R.style.PopupAnimation);
-        infoPopupWindow.showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
-
-
-
-        // Inisialisasi TextView untuk nickname dan achievement
-        TextView nicknameTextView = popupView.findViewById(R.id.nicknameTextView);
-        TextView achievementTextView = popupView.findViewById(R.id.achievementTextView);
-
-
-    }
-
-
-
-    // Menampilkan popup keluar (Exit)
+    // Menampilkan popup keluar
     private void showExitPopup(View anchorView) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.exit_layout, null);
@@ -251,27 +208,15 @@ public class MainActivity extends AppCompatActivity {
         ImageButton noBtn = popupView.findViewById(R.id.imageYes);
         ImageButton yesBtn = popupView.findViewById(R.id.imageExit);
 
-        int yesNoWidth = getResources().getDimensionPixelSize(R.dimen.yesno_width);
-        int yesNoHeight = getResources().getDimensionPixelSize(R.dimen.yesno_height);
-
-        ViewGroup.LayoutParams yesParams = yesBtn.getLayoutParams();
-        yesParams.width = yesNoWidth;
-        yesParams.height = yesNoHeight;
-        yesBtn.setLayoutParams(yesParams);
-
-        ViewGroup.LayoutParams noParams = noBtn.getLayoutParams();
-        noParams.width = yesNoWidth;
-        noParams.height = yesNoHeight;
-        noBtn.setLayoutParams(noParams);
-
-        yesBtn.setOnClickListener(view -> finish()); // Keluar dari aplikasi
-        noBtn.setOnClickListener(view -> exitPopupWindow.dismiss()); // Menutup popup
+        yesBtn.setOnClickListener(view -> finish());
+        noBtn.setOnClickListener(view -> exitPopupWindow.dismiss());
     }
 
     private void showAchievement() {
-        Intent showAchievement = new Intent (MainActivity.this, ProfilActivity.class);
+        Intent showAchievement = new Intent(MainActivity.this, ProfilActivity.class);
         startActivity(showAchievement);
     }
+
     // Membuka activity Login
     private void openLoginActivity() {
         Intent loginIntent = new Intent(MainActivity.this, Login.class);
@@ -288,8 +233,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (mediaPlayer != null) {
-            mediaPlayer.release(); // Melepaskan sumber daya MediaPlayer saat aktivitas dihancurkan
-            mediaPlayer = null; // Mengatur objek menjadi null
+            mediaPlayer.release();
+            mediaPlayer = null;
         }
     }
 }
