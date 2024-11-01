@@ -11,12 +11,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -26,7 +23,7 @@ public class Login extends AppCompatActivity {
     private EditText usernameField, passwordField;
     private Button loginButton, registerButton;
     private ImageButton prevsBtn;
-    private DatabaseReference ambatronDB;
+    private FirebaseFirestore firestore;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
@@ -35,9 +32,8 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
 
-        // Inisialisasi Firebase Database
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://ambatrondb-default-rtdb.asia-southeast1.firebasedatabase.app");
-        ambatronDB = database.getReference("Akun");
+        // Inisialisasi Firestore
+        firestore = FirebaseFirestore.getInstance();
 
         // Inisialisasi SharedPreferences
         sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
@@ -59,7 +55,14 @@ public class Login extends AppCompatActivity {
             loginUser(username, password);
         });
 
-        registerButton.setOnClickListener(v -> startActivity(new Intent(Login.this, Register.class)));
+        registerButton.setOnClickListener(v -> {
+            try {
+                startActivity(new Intent(Login.this, Register.class));
+            } catch (Exception e) {
+                Log.e("Login", "Error launching Register activity", e);
+                Toast.makeText(Login.this, "Terjadi kesalahan saat membuka halaman registrasi", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     // Fungsi untuk hash password menggunakan SHA-256
@@ -88,82 +91,63 @@ public class Login extends AppCompatActivity {
             return;
         }
 
-        // Hash password yang diinput pengguna
+        // Hash password
         String hashedPassword = hashPassword(password);
 
-        // Query untuk cek username dan password
-        Query query = ambatronDB.orderByChild("username").equalTo(username);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot akunSnapshot : dataSnapshot.getChildren()) {
-                        String dbPassword = akunSnapshot.child("password").getValue(String.class);
+        // Query ke Firestore untuk cek apakah username dan password cocok
+        CollectionReference akunRef = firestore.collection("Akun");
+        akunRef.whereEqualTo("username", username)
+                .whereEqualTo("password", hashedPassword) // Hash password yang dicari
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                        String userId = document.getId();
 
-                        if (dbPassword != null) {
-                            // Bandingkan password yang di-hash
-                            if (dbPassword.equals(hashedPassword)) {
-                                // Simpan username ke SharedPreferences
-                                editor.putString("username", username);
-                                editor.apply();
+                        // Simpan username ke SharedPreferences
+                        editor.putString("username", username);
+                        editor.putBoolean("isLoggedIn", true);
+                        editor.apply();
 
-                                // Ambil data skin dari Firebase
-                                String userId = akunSnapshot.getKey(); // Ambil ID pengguna
-                                fetchSkinData(userId); // Ambil data skin
+                        // Ambil status skin dari Firestore dan simpan ke SharedPreferences
+                        fetchUserSkins(username);
 
-                                // Berhasil login, pindah ke MainActivity
-                                Intent intent = new Intent(Login.this, MainActivity.class);
-                                intent.putExtra("username", username); // Kirim username ke MainActivity
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                Toast.makeText(Login.this, "Password salah", Toast.LENGTH_SHORT).show();
-                            }
-                        }
+                        // Pindah ke MainActivity
+                        Intent intent = new Intent(Login.this, MainActivity.class);
+                        intent.putExtra("username", username); // Kirim username ke MainActivity
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(Login.this, "Login gagal, username atau password salah", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(Login.this, "Username tidak ditemukan", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("FirebaseError", databaseError.getMessage());
-            }
-        });
+                });
     }
 
-    // Fungsi untuk mengambil status skin dari Firebase
-    private void fetchSkinData(String userId) {
-        DatabaseReference skinRef = FirebaseDatabase.getInstance().getReference("Koleksi_Skin").child(userId);
+    // Fungsi untuk mengambil status skin dari Firestore dan menyimpannya ke SharedPreferences
+    private void fetchUserSkins(String username) {
+        firestore.collection("Akun").document(username).collection("Koleksi_Skin")
+                .get()
+                .addOnCompleteListener(task -> {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        for (DocumentSnapshot document : task.getResult()) {
+                            String skinId = document.getString("id_skin");
+                            boolean isLocked = document.getBoolean("status_terkunci");
 
-        skinRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot skinSnapshot : dataSnapshot.getChildren()) {
-                        String skinId = skinSnapshot.getKey();
-                        Boolean statusTerkunci = skinSnapshot.child("status_terkunci").getValue(Boolean.class);
-
-                        // Logika untuk menampilkan skin berdasarkan status
-                        if (statusTerkunci != null && !statusTerkunci) {
-                            Log.d("SkinData", "Skin ID: " + skinId + " | Status Terkunci: " + statusTerkunci);
-                            // Simpan informasi skin yang terunlock ke SharedPreferences
-                            editor.putBoolean(skinId + "_unlocked", true);
-                            editor.apply();
-                        } else {
-                            Log.d("SkinData", "Skin ID: " + skinId + " masih terkunci.");
+                            // Simpan status skin ke SharedPreferences
+                            editor.putBoolean(skinId + "_locked", isLocked);
                         }
+                    } else {
+                        // Jika tidak ada skin yang ditemukan, set skin default ke unlocked
+                        editor.putBoolean("blue_cosmos_locked", false); // Set blue_cosmos sebagai skin default
                     }
-                } else {
-                    Log.d("SkinData", "Tidak ada data skin untuk pengguna ini.");
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("SkinData", "Error fetching skin data: " + databaseError.getMessage());
-            }
-        });
+                    editor.apply(); // Simpan perubahan
+                })
+                .addOnFailureListener(e -> {
+                    // Menangani kesalahan jika query gagal
+                    Log.e("Login", "Error fetching skins: " + e.getMessage());
+                    Toast.makeText(Login.this, "Error retrieving skin data.", Toast.LENGTH_SHORT).show();
+                });
     }
 }
+

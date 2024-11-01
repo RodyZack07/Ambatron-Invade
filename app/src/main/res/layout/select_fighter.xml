@@ -4,30 +4,22 @@
     android:layout_height="match_parent">
 
     <VideoView
+        android:id="@+id/selectBg"
         android:layout_width="500dp"
         android:layout_height="1000dp"
-        android:id="@+id/selectBg"
-        android:layout_gravity="center"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="0dp"
-        />
+        android:layout_gravity="center" />
 
-    <!-- PrevsButton -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_marginLeft="40dp">
 
-
         <FrameLayout
             android:layout_width="130dp"
             android:layout_height="50dp"
             android:layout_marginTop="95dp"
-            android:layout_marginLeft="-30dp"
-            >
-
-
+            android:layout_marginLeft="-30dp">
 
             <ImageButton
                 android:id="@+id/prevsBtn2"
@@ -36,8 +28,7 @@
                 android:src="@drawable/arrow_selector3"
                 android:layout_gravity="center"
                 android:scaleType="fitXY"
-                android:background="@android:color/transparent"
-                />
+                android:background="@android:color/transparent" />
         </FrameLayout>
         <Button
             android:id="@+id/skinUnlock"
@@ -50,9 +41,7 @@
             android:textColor="@color/black"/>
     </LinearLayout>
 
-
     <ImageView
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|center_horizontal"
@@ -67,9 +56,19 @@
 
         <ImageView
             android:id="@+id/ship_img"
+            android:src="@drawable/blue_cosmos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
+
+        <!-- Overlay Gembok -->
+        <ImageView
+            android:id="@+id/lockOverlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:visibility="gone" /> <!-- Sembunyikan overlay secara default -->
 
     </FrameLayout>
 
@@ -79,7 +78,6 @@
         android:layout_marginTop="600dp"
         android:layout_gravity="center_horizontal">
 
-
         <ImageButton
             android:id="@+id/selectBtn"
             android:layout_width="150dp"
@@ -88,14 +86,13 @@
             android:src="@drawable/select_level"
             android:scaleType="fitXY"
             android:layout_marginBottom="40dp"
-            android:background="@android:color/transparent"
-            />
+            android:background="@android:color/transparent" />
 
         <FrameLayout
             android:layout_width="350dp"
             android:layout_height="100dp"
-            android:layout_gravity="center_horizontal"
-            >
+            android:layout_gravity="center_horizontal">
+
             <ImageButton
                 android:id="@+id/prevsBtn"
                 android:layout_width="60dp"
@@ -104,9 +101,7 @@
                 android:layout_gravity="center"
                 android:scaleType="fitXY"
                 android:background="@android:color/transparent"
-                android:layout_marginRight="100dp"
-
-                />
+                android:layout_marginRight="100dp" />
 
             <ImageButton
                 android:id="@+id/nextBtn"
@@ -116,10 +111,7 @@
                 android:layout_gravity="center"
                 android:scaleType="fitXY"
                 android:background="@android:color/transparent"
-                android:layout_marginLeft="100dp"
-
-                />
-
+                android:layout_marginLeft="100dp" />
         </FrameLayout>
     </FrameLayout>
 
