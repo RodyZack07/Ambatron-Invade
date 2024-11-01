@@ -35,6 +35,7 @@ public class SelectFighterActivity extends AppCompatActivity {
     private String[] fighterIDs = {"blue_cosmos", "retro_sky", "wing_of_justice"}; // ID untuk setiap skin
     private int currentSkinIndex = 0;
     private ArrayList<Boolean> userSkins = new ArrayList<>(); // Untuk menyimpan status terkunci dari setiap skin
+    private boolean isCurrentSkinIndexUnlocked;
 
     // Gembok
     private int lockedSkinImage = R.drawable.skin_activity_key;
@@ -213,7 +214,6 @@ public class SelectFighterActivity extends AppCompatActivity {
     private void unlockCurrentSkin() {
         String selectedSkinID = fighterIDs[currentSkinIndex];
 
-        // Cek apakah skin terkunci
         if (!userSkins.get(currentSkinIndex)) { // Jika skin terkunci
             // Ubah status terkunci di Firebase menjadi false
             userSkinsRef.child(selectedSkinID).child("status_terkunci").setValue(false)

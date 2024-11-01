@@ -8,6 +8,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
+
         applicationId = "com.example.savesthekunti"
         minSdk = 29
         targetSdk = 34
@@ -15,6 +16,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {
@@ -46,6 +48,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+
 
     // Testing
     testImplementation(libs.junit)

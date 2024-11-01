@@ -23,19 +23,17 @@ public class GameView extends View {
     private Bitmap monsterMiniBitmap;
     private Bitmap bulletsBitmap;
     private Bitmap bossAmbaBitmap;
-
-    private Bitmap scaledPlayerShipBitmap;
-    private Bitmap scaledMonsterMiniBitmap;
-    private Bitmap scaledBulletBitmap;
-    private Bitmap scaledBossAmbaBitmap;
+    private Bitmap rudalAmba;
 
     private List<MonsterMini> monsterMini;
     private List<Bullet> bullets;
-    private List<Bullet> bossBullets;
+    private List<RudalAmba> rudalAmbas;
 
     private boolean isBossAmbaSpawned = false;
     private boolean isBossAmbaDefeated = false;
+    private boolean isPlayerAlive = true;
     private boolean isPlayerDefeated = false;
+
 
     private GameActivity gameActivity; // Referensi ke GameActivity
     private int screenWidth, screenHeight;
@@ -82,26 +80,16 @@ public class GameView extends View {
         playerShip = new PlayerShip(context, spaceShips[0]);
         monsterMini = new ArrayList<>();
         bullets = new ArrayList<>();
-        bossBullets = new ArrayList<>();
+        rudalAmbas = new ArrayList<>();
 
 
-        // Memuat bitmap dan mengubah ukurannya
+
+        //Objek Bitmap
         monsterMiniBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.monster_mini);
         bulletsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.beam_bullet);
         bossAmbaBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.boss_amba);
+        rudalAmba = BitmapFactory.decodeResource(getResources(), R.drawable.rudal_amba);
 
-        // Mengatur ukuran bitmap yang sudah di-scale
-        scaledMonsterMiniBitmap = Bitmap.createScaledBitmap(monsterMiniBitmap,
-                getResources().getDimensionPixelSize(R.dimen.mosnter_size),
-                getResources().getDimensionPixelSize(R.dimen.mosnter_size), false);
-
-        scaledBulletBitmap = Bitmap.createScaledBitmap(bulletsBitmap,
-                getResources().getDimensionPixelSize(R.dimen.bullet_size),
-                getResources().getDimensionPixelSize(R.dimen.bullet_size), false);
-
-        scaledBossAmbaBitmap = Bitmap.createScaledBitmap(bossAmbaBitmap,
-                getResources().getDimensionPixelSize(R.dimen.boss_width),
-                getResources().getDimensionPixelSize(R.dimen.boss_height), false);
 
 
         post(() -> {
@@ -117,7 +105,6 @@ public class GameView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        playerShip.draw(canvas);
 
         long currentTime = System.currentTimeMillis();
         if (lastFrameTime == 0) {
@@ -130,56 +117,85 @@ public class GameView extends View {
         List<MonsterMini> removeMonsters = new ArrayList<>();
         List<Bullet> removeBullets = new ArrayList<>();
 
+
+        if (isPlayerAlive && !isPlayerDefeated) {
+            playerShip.draw(canvas);
+        } else {
+            Log.d("GameView", "PlayerShip is defeated and will not be drawn.");
+        }
+
         //Panggil BosAmba
         if(isBossAmbaSpawned && bossAmba != null){
             bossAmba.updatePositionBoss(deltaTime);
             bossAmba.draw(canvas);
+
+        }
+
+        for (RudalAmba rudal : rudalAmbas) {
+            rudal.updatePositionRudal(deltaTime);
+            rudal.draw(canvas);
         }
 
         for (MonsterMini monster : monsterMini) {
             monster.updatePositionMonster(deltaTime);
             monster.draw(canvas);
+
+
+            if (!isPlayerDefeated && checkCollision(monster, playerShip)) {
+                playerShip.reduceHp(monster.getDamage());
+                removeMonsters.add(monster); // Hapus monster setelah tabrakan
+
+
+                if (playerShip.getHp() <= 0) {
+                    isPlayerDefeated = true;
+                    isPlayerAlive = false;
+                    bullets.clear();
+                }
+            }
         }
 
 
 
 
-        for (Bullet bullet : bullets) {
-            bullet.updatePositionBullet(deltaTime);
-            bullet.draw(canvas);
+        if(!isPlayerDefeated) {
+            for (Bullet bullet : bullets) {
+                bullet.updatePositionBullet(deltaTime);
+                bullet.draw(canvas);
 
-            for (MonsterMini monster : monsterMini) {
-                if (checkCollision(bullet, monster)) {
-                    removeBullets.add(bullet);
-                    removeMonsters.add(monster);
-                    score += 15;
-                    defeatedCount++;
+                for (MonsterMini monster : monsterMini) {
+                    if (checkCollision(bullet, monster)) {
+                        removeBullets.add(bullet);
+                        removeMonsters.add(monster);
+                        score += 15;
+                        defeatedCount++;
 
-                    // Menampilkan animasi ledakan di posisi monster
-                    Log.d("GameView", "Triggering explosion at: " + monster.getX() + ", " + monster.getY());
-                    gameActivity.triggerExplosion(monster.getX(), monster.getY());
+                        // Menampilkan animasi ledakan di posisi monster
+                        Log.d("GameView", "Triggering explosion at: " + monster.getX() + ", " + monster.getY());
+                        gameActivity.triggerExplosion(monster.getX(), monster.getY());
 
-                    if (scoreChangeListener != null) {
-                        scoreChangeListener.onScoreChange(score, defeatedCount);
+                        if (scoreChangeListener != null) {
+                            scoreChangeListener.onScoreChange(score, defeatedCount);
+                        }
                     }
                 }
-            }
 
-            if (isBossAmbaSpawned && checkCollision(bullet, bossAmba)) {
-                bossAmba.reduceHp(bullet.getDamage());
-                removeBullets.add(bullet);  // Hapus peluru setelah mengenai bos
+                if (isBossAmbaSpawned && checkCollision(bullet, bossAmba)) {
+                    bossAmba.reduceHp(bullet.getDamage());
+                    removeBullets.add(bullet);  // Hapus peluru setelah mengenai bos
 
 
-                if (bossAmba.getHp() <= 0) {
-                    isBossAmbaSpawned = false;
-                    isBossAmbaDefeated = true;
+                    if (bossAmba.getHp() <= 0) {
+                        isBossAmbaSpawned = false;
+                        isBossAmbaDefeated = true;
+                    }
                 }
-            }
 
+            }
         }
 
         monsterMini.removeAll(removeMonsters);
         bullets.removeAll(removeBullets);
+
 
         removeOffScreenMonsters();
         removeOffScreenBullets();
@@ -241,8 +257,23 @@ public class GameView extends View {
         }, 100);
     }
 
+    private void startShootingRudal(){
+        if (isBossAmbaSpawned && !isBossAmbaDefeated) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    shotRudalAmba(); // Menembakkan 1 rudal per kali eksekusi
+                    handler.postDelayed(this, 1000); // Ganti interval sesuai keinginan
+                }
+            }, 100);
+        }
+    }
 
-                    //SHOOT METHOD
+
+
+
+                        //SHOOT METHOD
+
     private void shootBullet() {
         int bulletSize = getResources().getDimensionPixelSize(R.dimen.bullet_size);
         float bulletX = playerShip.getShipX() + (playerShip.getShipWidth() / 2) - (bulletSize / 2);
@@ -250,19 +281,19 @@ public class GameView extends View {
         bullets.add(new Bullet(getContext(), bulletsBitmap, bulletX, bulletY, 2500, bulletSize));
     }
 
-    private void bossShootBullet() {
-        if (bossAmba == null) return;
+   private void shotRudalAmba(){
+        int rudalSize = getResources().getDimensionPixelSize(R.dimen.rudal_size);
+        float bossX = bossAmba.getX();
+        int bossWidth = bossAmba.getWidth();
 
-        int bulletSize = getResources().getDimensionPixelSize(R.dimen.bullet_size);
+        Random random = new Random();
+        float randomRudalX = bossX + random.nextInt(bossWidth - rudalSize);
+        float rudalY = bossAmba.getY() + bossAmba.getHeight();
 
-        // Posisi X acak di dalam lebar BossAmba
-        float bulletX = bossAmba.getX() + (new Random().nextFloat() * bossAmba.getWidth());
-        float bulletY = bossAmba.getY() + bossAmba.getHeight();
-
-        // Tambahkan peluru baru dengan velocity ke bawah
-        bossBullets.add(new Bullet(getContext(), bulletsBitmap, bulletX, bulletY, 1000, bulletSize));
-    }
-                    //SHOOT METHOD END
+        rudalAmbas.add(new RudalAmba(getContext(),rudalAmba, randomRudalX, rudalY, 2500, rudalSize));
+       Log.d("GameView", "New RudalAmba created at: " + randomRudalX + ", " + rudalY);
+   }
+                        //SHOOT METHOD END
 
 
     private void spawnBossAmba(){
@@ -270,6 +301,7 @@ public class GameView extends View {
         int spawnX = (screenWidth - bossWidth) / 2;
         bossAmba = new BossAmba(getContext(), bossAmbaBitmap, spawnX, 0,  100);
         isBossAmbaSpawned = true;
+        startShootingRudal();
     }
 
 
@@ -279,15 +311,25 @@ public class GameView extends View {
     }
 
 
-                    //COLLISION
-            //MONSTERS COLISSION
+                        //COLLISION
+
+    //MONSTERS COLISSION
     public boolean checkCollision(Bullet bullet, MonsterMini monster) {
         return bullet.getX() < monster.getX() + monster.getSize() &&
                 bullet.getX() + bullet.getSize() > monster.getX() &&
                 bullet.getY() < monster.getY() + monster.getSize() &&
                 bullet.getY() + bullet.getSize() > monster.getY();
     }
-            //BOSS COLLISION
+
+    //RUDAL COLLISION
+    private boolean checkCollision(Bullet bullet, RudalAmba rudalAmba){
+        return  bullet.getX() < rudalAmba.getX() + rudalAmba.getSize() &&
+                bullet.getX() + bullet.getSize() > rudalAmba.getX() &&
+                bullet.getY() < rudalAmba.getY() + rudalAmba.getSize() &&
+                bullet.getY() + bullet.getSize() > rudalAmba.getY();
+    }
+
+    //BOSS COLLISION
     private boolean checkCollision(Bullet bullet, BossAmba boss) {
         float bulletLeft = bullet.getX();
         float bulletRight = bullet.getX() + bullet.getSize(); // Asumsikan peluru menggunakan size
@@ -303,13 +345,17 @@ public class GameView extends View {
                 bulletBottom > bossTop && bulletTop < bossBottom;
     }
 
+
+
+
     private boolean checkCollision(MonsterMini monster, PlayerShip playerShip) {
         return monster.getX() < playerShip.getShipX() + playerShip.getShipWidth() &&
                 monster.getX() + monster.getSize() > playerShip.getShipX() &&
                 monster.getY() < playerShip.getShipY() + playerShip.getShipHeight() &&
                 monster.getY() + monster.getSize() > playerShip.getShipY();
     }
-                  //COLLISION END
+
+                        //COLLISION END
 
 
 
@@ -333,21 +379,6 @@ public class GameView extends View {
         bullets.removeAll(bulletsToRemove);
     }
 
-    public void onGameOver() {
-        // Pembersihan sumber daya bitmap yang tidak digunakan
-        if (scaledMonsterMiniBitmap != null) {
-            scaledMonsterMiniBitmap.recycle();
-        }
-        if (scaledBulletBitmap != null) {
-            scaledBulletBitmap.recycle();
-        }
-        if (scaledBossAmbaBitmap != null) {
-            scaledBossAmbaBitmap.recycle();
-        }
-        handler.removeCallbacksAndMessages(null);
-    }
-
-
 
 
 
@@ -362,7 +393,7 @@ public class GameView extends View {
             playerShipBitmap = BitmapFactory.decodeResource(context.getResources(), playerShipResId);
             shipWidth = context.getResources().getDimensionPixelSize(R.dimen.player_ship_width);
             shipHeight = context.getResources().getDimensionPixelSize(R.dimen.player_ship_height);
-            this.hp = 3;
+            this.hp = 1000;
         }
 
         public void setShipPosition(int screenWidth, int screenHeight) {
@@ -374,9 +405,8 @@ public class GameView extends View {
             canvas.drawBitmap(Bitmap.createScaledBitmap(playerShipBitmap, shipWidth, shipHeight, false), shipX, shipY, paint);
         }
 
-        public void reduceHp(){
-            hp--;
-            if(hp <= 0){}
+        public void reduceHp(int damage){
+            hp -= damage;
         }
 
         public boolean handleTouch(MotionEvent event) {
@@ -429,12 +459,14 @@ public class GameView extends View {
 
 
 
-                    // Class MonsterMini
+    // Class MonsterMini
     class MonsterMini {
         private Bitmap monsterMiniBitmap;
         private float x, y;
         private int size;
         private float velocity;
+        private int damage;
+        private int hp;
 
         public MonsterMini(Context context, Bitmap monsterMiniBitmap, float x, float y, float velocityY, int size) {
             this.monsterMiniBitmap = monsterMiniBitmap;
@@ -442,6 +474,8 @@ public class GameView extends View {
             this.y = y;
             this.velocity = velocityY;
             this.size = context.getResources().getDimensionPixelSize(R.dimen.mosnter_size);
+            this.damage = 100;
+            this.hp = 200;
         }
 
         public void updatePositionMonster(float deltaTime) {
@@ -452,24 +486,29 @@ public class GameView extends View {
             canvas.drawBitmap(Bitmap.createScaledBitmap(monsterMiniBitmap, size, size, false), x, y, paint);
         }
 
+        public void reduceHp(int damage){
+            hp -= damage;
+        }
+
+        public int getDamage(){return damage;}
+        public int getHp(){return hp;}
         public float getX() {
             return x;
         }
-
         public float getY() {
             return y;
         }
-
         public int getSize() {
             return size;
         }
-
         public boolean isOffScreen(int screenHeight) {
             return y > screenHeight;
         }
     }
 
-    // Class Bullet
+
+
+                        //CLASS BULLET
     class Bullet {
         private Bitmap bulletBitmap;
         private float x, y;
@@ -495,19 +534,15 @@ public class GameView extends View {
         }
 
         public int getDamage(){return damage;}
-
         public float getX() {
             return x;
         }
-
         public float getY() {
             return y;
         }
-
         public int getSize() {
             return size;
         }
-
         public boolean isOffScreen(int screenHeight) {
             return y < 0;
         }
@@ -515,7 +550,6 @@ public class GameView extends View {
 
 
     // CLASS BOSS AMBA
-
     class BossAmba {
         private Bitmap bossAmbaBitmap;
         private float x, y;
@@ -544,22 +578,54 @@ public class GameView extends View {
             canvas.drawBitmap(Bitmap.createScaledBitmap(bossAmbaBitmap, width, height, false), x, y, paint);
         }
 
-
-
         public void reduceHp(int damage){
             hp -= damage;
         }
-
         public int getHp(){return hp;}
-
         public float getX() {return x;}
-
         public float getY() {return y;}
-
         public int getWidth() {return width;}
-
         public int getHeight() {return height;
         }
     }
+
+                    //CLASS RUDAL AMBA
+        class RudalAmba {
+            private Bitmap rudalAmba;
+            private float x, y;
+            private float velocity;
+            private int size;
+            private int durability;
+            private int damage;
+
+                public RudalAmba (Context context,Bitmap rudalAmba, float x, float y, float velocityY, int size ){
+                this.rudalAmba = rudalAmba;
+                this.x = x;
+                this.y = y;
+                this.velocity = velocityY;
+                this.size = getResources().getDimensionPixelSize(R.dimen.rudal_size);
+                this.durability = 200;
+                this.damage = 300;
+                }
+
+                public void updatePositionRudal(float deltaTime){
+                    y += velocity * deltaTime;
+                }
+
+                public void draw(Canvas canvas){
+                    canvas.drawBitmap(Bitmap.createScaledBitmap(rudalAmba, size , size, false), x, y, paint);
+                }
+
+
+
+                public void reduceDurability(int damage){durability -= damage;}
+                public int getDamage(){return damage;}
+                public int getDurability(){return durability;}
+                public float getX(){return x;}
+                public float getY() {return y;}
+                public int getSize(){return size;}
+
+        }
+
 }
 
