@@ -1,14 +1,15 @@
-package com.example.savesthekunti;
+package com.example.savesthekunti.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.SeekBar;
@@ -16,11 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.savesthekunti.Database.Admin;
+import com.example.savesthekunti.Database.Login;
+import com.example.savesthekunti.R;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -35,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     private TextView welcomeText;
     private FirebaseFirestore db;
-    private String user; // ID pengguna untuk mengambil data
+    private String user;
+    private ImageButton adminButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         ImageButton playButton = findViewById(R.id.play_button);
         ImageButton profilMenu = findViewById(R.id.profile);
         ImageButton achievementMenu = findViewById(R.id.achievement);
+        adminButton = findViewById(R.id.Admin);  // Inisialisasi tombol Admin
 
         // Set onClickListener untuk masing-masing tombol
         settingsBtn.setOnClickListener(view -> showSettingsPopup(view));
@@ -84,6 +87,12 @@ public class MainActivity extends AppCompatActivity {
         playButton.setOnClickListener(v -> directSelectFighter());
         profilMenu.setOnClickListener(view -> openLoginActivity());
         achievementMenu.setOnClickListener(view -> showAchievement());
+
+        // Set onClickListener untuk tombol Admin
+        adminButton.setOnClickListener(view -> openAdminActivity());
+
+        // Sembunyikan tombol admin sebagai default
+        adminButton.setVisibility(View.GONE);
     }
 
     @Override
@@ -91,6 +100,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         videoViewBackground.seekTo(videoPosition);
         videoViewBackground.start();
+        int savedVolume = loadVolumePreference();
+        setVolume(mediaPlayer, savedVolume / 100f);
     }
 
     @Override
@@ -100,26 +111,34 @@ public class MainActivity extends AppCompatActivity {
         videoViewBackground.pause();
     }
 
-    // Mengambil data pengguna dari Firestore
     private void getUserData(String userId) {
-        db.collection("Akun").document(userId).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            String username = document.getString("username");
-                            welcomeText.setText("Selamat datang, " + username + "!");
-                            getSkinData(userId);
+        if (isInternetAvailable()) {
+            db.collection("Akun").document(userId).get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                String username = document.getString("username");
+                                welcomeText.setText("Selamat datang, " + username + "!");
+                                getSkinData(userId);
+
+                                // Cek apakah pengguna adalah admin
+                                Boolean isAdmin = document.getBoolean("isAdmin");
+                                if (isAdmin != null && isAdmin) {
+                                    adminButton.setVisibility(View.VISIBLE); // Hanya tampilkan tombol admin jika user adalah admin
+                                }
+                            } else {
+                                Toast.makeText(MainActivity.this, "Data pengguna tidak ditemukan.", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(MainActivity.this, "Data pengguna tidak ditemukan.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Error: " + task.getException(), Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        Toast.makeText(MainActivity.this, "Error: " + task.getException(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    });
+        } else {
+            Toast.makeText(MainActivity.this, "Tidak ada koneksi internet.", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    // Mengambil data skin dari Firestore
     private void getSkinData(String userId) {
         db.collection("Akun").document(userId).collection("Koleksi_Skin")
                 .get()
@@ -146,54 +165,51 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    // Mengatur volume video
     private void setVolume(MediaPlayer mediaPlayer, float volume) {
         mediaPlayer.setVolume(volume, volume);
     }
 
-    // Menampilkan popup pengaturan
+    private void saveVolumePreference(int volume) {
+        SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("volume", volume);
+        editor.apply();
+    }
+
+    private int loadVolumePreference() {
+        SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
+        return prefs.getInt("volume", 50); // default 50
+    }
+
     private void showSettingsPopup(View anchorView) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_layout, null);
 
-        // Popup size and animation
         int popupWidth = getResources().getDimensionPixelSize(R.dimen.popup_width);
         int popupHeight = getResources().getDimensionPixelSize(R.dimen.popup_height);
         popupWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
         popupWindow.setAnimationStyle(R.style.PopupAnimation);
-
-        // Show popup
         popupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
 
-        // Handle the Info button inside the popup
         ImageButton closeBtn = popupView.findViewById(R.id.closebtn);
-
-        // Menangani klik tombol close untuk menutup popup
         closeBtn.setOnClickListener(view -> popupWindow.dismiss());
 
-        // Inisialisasi SeekBar untuk mengatur volume musik
         SeekBar seekBarVol = popupView.findViewById(R.id.seekBarVol);
         seekBarVol.setMax(100);
-        seekBarVol.setProgress(50);
-        setVolume(mediaPlayer, 0.5f);
+        seekBarVol.setProgress(loadVolumePreference());
+        setVolume(mediaPlayer, loadVolumePreference() / 100f);
 
-        // Listener untuk mengubah volume saat SeekBar berubah
         seekBarVol.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float volume = progress / 100f;
-                setVolume(mediaPlayer, volume);
+                setVolume(mediaPlayer, progress / 100f);
+                saveVolumePreference(progress);
             }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
         });
     }
 
-    // Menampilkan popup keluar
     private void showExitPopup(View anchorView) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.exit_layout, null);
@@ -205,28 +221,38 @@ public class MainActivity extends AppCompatActivity {
         exitPopupWindow.setAnimationStyle(R.style.PopupAnimation);
         exitPopupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
 
-        ImageButton noBtn = popupView.findViewById(R.id.imageYes);
-        ImageButton yesBtn = popupView.findViewById(R.id.imageExit);
+        ImageButton confirmExit = popupView.findViewById(R.id.imageExit);
+        ImageButton cancelExit = popupView.findViewById(R.id.imageYes);
 
-        yesBtn.setOnClickListener(view -> finish());
-        noBtn.setOnClickListener(view -> exitPopupWindow.dismiss());
+        confirmExit.setOnClickListener(v -> finishAffinity());
+        cancelExit.setOnClickListener(v -> exitPopupWindow.dismiss());
+    }
+
+    private void openAdminActivity() {
+        Intent intent = new Intent(this, Admin.class);
+        startActivity(intent);
+    }
+
+    private void directSelectFighter() {
+        Intent intent = new Intent(this, SelectFighterActivity.class);
+        intent.putExtra("username", user); // Kirim username ke SelectFighterActivity
+        startActivity(intent);
+    }
+
+    private void openLoginActivity() {
+        Intent intent = new Intent(this, Login.class);
+        startActivity(intent);
     }
 
     private void showAchievement() {
-        Intent showAchievement = new Intent(MainActivity.this, ProfilActivity.class);
-        startActivity(showAchievement);
+        // Implementasi untuk menampilkan achievement
+        Toast.makeText(this, "Menampilkan achievement...", Toast.LENGTH_SHORT).show();
     }
 
-    // Membuka activity Login
-    private void openLoginActivity() {
-        Intent loginIntent = new Intent(MainActivity.this, Login.class);
-        startActivity(loginIntent);
-    }
-
-    // Direct ke Select Fighter
-    private void directSelectFighter() {
-        Intent intent = new Intent(MainActivity.this, SelectFighterActivity.class);
-        startActivity(intent);
+    private boolean isInternetAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
     }
 
     @Override

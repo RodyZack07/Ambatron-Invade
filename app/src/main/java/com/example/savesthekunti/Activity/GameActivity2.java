@@ -1,19 +1,12 @@
-package com.example.savesthekunti;
+package com.example.savesthekunti.Activity;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
+import com.example.savesthekunti.R;
 
 public class GameActivity2  extends AppCompatActivity {
     private VideoView backgroundVideo;

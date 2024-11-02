@@ -1,9 +1,6 @@
-package com.example.savesthekunti;
+package com.example.savesthekunti.Config;
 
 import android.widget.SeekBar;
-import android.widget.Toast;
-import android.view.View;
-import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.AudioManager;
 

@@ -1,4 +1,4 @@
-package com.example.savesthekunti;
+package com.example.savesthekunti.Database;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.savesthekunti.Activity.MainActivity;
+import com.example.savesthekunti.R;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -107,6 +109,14 @@ public class Login extends AppCompatActivity {
                         // Simpan username ke SharedPreferences
                         editor.putString("username", username);
                         editor.putBoolean("isLoggedIn", true);
+
+                        // Periksa status admin
+                        Boolean isAdmin = document.getBoolean("isAdmin");
+                        if (isAdmin != null && isAdmin) {
+                            editor.putBoolean("isAdmin", true);
+                        } else {
+                            editor.putBoolean("isAdmin", false);
+                        }
                         editor.apply();
 
                         // Ambil status skin dari Firestore dan simpan ke SharedPreferences

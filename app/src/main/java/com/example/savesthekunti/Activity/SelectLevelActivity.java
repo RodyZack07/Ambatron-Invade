@@ -1,4 +1,4 @@
-package com.example.savesthekunti;
+package com.example.savesthekunti.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.VideoView;
+
+import com.example.savesthekunti.R;
 
 public class SelectLevelActivity extends AppCompatActivity {
 

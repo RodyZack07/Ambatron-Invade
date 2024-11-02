@@ -1,10 +1,9 @@
-package com.example.savesthekunti;
+package com.example.savesthekunti.Activity;
 
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,7 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
-import android.widget.MediaController;
+
+import com.example.savesthekunti.R;
 
 
 public class GameActivity extends AppCompatActivity {

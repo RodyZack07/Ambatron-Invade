@@ -103,6 +103,19 @@
         android:outlineSpotShadowColor="@color/black"
         app:srcCompat="@drawable/profil_icon" />
 
+    <ImageButton
+        android:id="@+id/Admin"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        android:layout_marginLeft="300dp"
+        android:layout_marginTop="40dp"
+        android:outlineSpotShadowColor="@color/black"
+        app:srcCompat="@drawable/profil_icon"
+      
+        />
+
 
 
 <!--    <ImageView-->

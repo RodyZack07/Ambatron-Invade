@@ -1,7 +1,9 @@
-package com.example.savesthekunti;
+package com.example.savesthekunti.Activity;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.savesthekunti.R;
 
 public class InfoMenuActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.example.savesthekunti;
+package com.example.savesthekunti.Config;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+
+import com.example.savesthekunti.Activity.MainActivity;
+import com.example.savesthekunti.R;
 
 public class SplashActivity extends AppCompatActivity {
     private static final int SPLASH_DURATRION = 3500;

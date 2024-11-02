@@ -1,4 +1,4 @@
-package com.example.savesthekunti;
+package com.example.savesthekunti.Database;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.savesthekunti.Activity.MainActivity;
+import com.example.savesthekunti.R;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -93,6 +95,7 @@ public class Register extends AppCompatActivity {
         akunData.put("username", username);
         akunData.put("email", email);
         akunData.put("password", hashedPassword);
+        akunData.put("isAdmin", false);
         akunData.put("created_at", System.currentTimeMillis());
         akunData.put("updated_at", System.currentTimeMillis());
         akunData.put("score", 0); // Set default score untuk pengguna baru

@@ -1,11 +1,8 @@
-package com.example.savesthekunti;
+package com.example.savesthekunti.Config;
 
-import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.view.View;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 
 public class GameAudioManager {

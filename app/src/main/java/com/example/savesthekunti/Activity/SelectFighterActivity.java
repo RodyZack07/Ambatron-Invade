@@ -1,4 +1,4 @@
-package com.example.savesthekunti;
+package com.example.savesthekunti.Activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -16,6 +16,7 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.savesthekunti.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -61,16 +62,7 @@ public class SelectFighterActivity extends AppCompatActivity {
         unlockSkin = findViewById(R.id.skinUnlock); // Pastikan ID ini ada di layout XML
 
         username = getIntent().getStringExtra("username");
-        String koleksiSkin = getIntent().getStringExtra("koleksiSkin");
-        if (koleksiSkin == null) {
-            Log.d("SelectFighterActivity", "Skin tidak ada.");
-            koleksiSkin = "default_user";
-        }
-
-        if (username == null) {
-            Log.d("SelectFighterActivity", "Username tidak ditemukan.");
-            username = "default_user";
-        }
+        String koleksiSkin = username != null ? username : "default_user"; // Menggunakan username sebagai ID koleksi skin
 
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://ambatrondb-default-rtdb.asia-southeast1.firebasedatabase.app");
         userSkinsRef = database.getReference("Akun").child(koleksiSkin).child("Koleksi_Skin");
@@ -93,8 +85,7 @@ public class SelectFighterActivity extends AppCompatActivity {
         super.onResume();
         videoBackground.seekTo(videoPosition);
         videoBackground.start();
-
-        fetchUserSkins();
+        fetchUserSkins(); // Fetch skins setiap kali activity resume
     }
 
     @Override
@@ -116,8 +107,10 @@ public class SelectFighterActivity extends AppCompatActivity {
                         Boolean isLocked = skinSnapshot.child("status_terkunci").getValue(Boolean.class);
 
                         // Memastikan skinId dan isLocked tidak null
-                        if (skinId != null && isLocked != null && !isLocked) {
-                            ownedSkins.add(skinId);
+                        if (skinId != null && isLocked != null) {
+                            if (!isLocked) {
+                                ownedSkins.add(skinId); // Menambahkan skin yang tidak terkunci
+                            }
                         }
                     }
                 } else {
@@ -156,13 +149,14 @@ public class SelectFighterActivity extends AppCompatActivity {
             }
         } else {
             // Jika skin terkunci, tampilkan gambar gembok
-
+            spaceShip.setImageResource(R.drawable.skin_activity_key); // Set gambar gembok
             lockOverlay.setVisibility(View.VISIBLE); // Tampilkan overlay gembok
             Log.d("UpdateFighterView", "Menampilkan gembok untuk skin: " + currentSkinID);
         }
 
         spaceShip.invalidate();
     }
+
 
     private void nextFighter() {
         if (fighterIDs.length > 0) {
@@ -198,8 +192,7 @@ public class SelectFighterActivity extends AppCompatActivity {
         spaceShip.startAnimation(fadeOut);
         fadeOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-            }
+            public void onAnimationStart(Animation animation) {}
 
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -208,8 +201,7 @@ public class SelectFighterActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
+            public void onAnimationRepeat(Animation animation) {}
         });
     }
 

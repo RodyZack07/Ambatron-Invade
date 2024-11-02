@@ -3,18 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Video Background -->
     <VideoView
         android:id="@+id/selectBg"
         android:layout_width="500dp"
         android:layout_height="1000dp"
         android:layout_gravity="center" />
 
+    <!-- Konten utama -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_marginLeft="40dp">
 
+        <!-- Tombol navigasi sebelumnya -->
         <FrameLayout
             android:layout_width="130dp"
             android:layout_height="50dp"
@@ -30,6 +33,8 @@
                 android:scaleType="fitXY"
                 android:background="@android:color/transparent" />
         </FrameLayout>
+
+        <!-- Tombol unlock skin -->
         <Button
             android:id="@+id/skinUnlock"
             android:layout_width="wrap_content"
@@ -41,6 +46,7 @@
             android:textColor="@color/black"/>
     </LinearLayout>
 
+    <!-- Teks memilih fighter -->
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,6 +54,7 @@
         android:layout_marginTop="50dp"
         android:src="@drawable/chose_fighter_text" />
 
+    <!-- Frame untuk menampilkan skin fighter -->
     <FrameLayout
         android:layout_width="300dp"
         android:layout_height="300dp"
@@ -56,7 +63,6 @@
 
         <ImageView
             android:id="@+id/ship_img"
-            android:src="@drawable/blue_cosmos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
@@ -67,11 +73,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-
             android:visibility="gone" /> <!-- Sembunyikan overlay secara default -->
 
     </FrameLayout>
 
+    <!-- Frame untuk tombol select dan navigasi -->
     <FrameLayout
         android:layout_width="350dp"
         android:layout_height="180dp"
@@ -88,6 +94,7 @@
             android:layout_marginBottom="40dp"
             android:background="@android:color/transparent" />
 
+        <!-- Navigasi antara skin -->
         <FrameLayout
             android:layout_width="350dp"
             android:layout_height="100dp"

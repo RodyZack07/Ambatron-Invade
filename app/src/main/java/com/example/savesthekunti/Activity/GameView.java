@@ -1,4 +1,4 @@
-package com.example.savesthekunti;
+package com.example.savesthekunti.Activity;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,7 +10,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
+
+import com.example.savesthekunti.R;
 
 import java.util.ArrayList;
 import java.util.List;

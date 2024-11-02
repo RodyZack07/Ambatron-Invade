@@ -20,7 +20,7 @@
     <!-- GameView untuk menggambar game -->
 
 
-    <com.example.savesthekunti.GameView
+    <com.example.savesthekunti.Activity.GameView
         android:id="@+id/gameView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

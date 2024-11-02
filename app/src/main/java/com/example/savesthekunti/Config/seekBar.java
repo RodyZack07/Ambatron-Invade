@@ -1,4 +1,4 @@
-package com.example.savesthekunti;
+package com.example.savesthekunti.Config;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.widget.SeekBar;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.savesthekunti.R;
 
 public class seekBar extends AppCompatActivity {
 
@@ -18,10 +20,7 @@ public class seekBar extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.popup_layout);
 
-        // Inisialisasi MediaPlayer dengan audio dari raw
-        mediaPlayer = MediaPlayer.create(this, R.raw.galatic_idle);
-        mediaPlayer.setLooping(true); // Memutar audio berulang
-        mediaPlayer.start(); // Memulai pemutaran audio
+
 
         // Inisialisasi SeekBar
         seekBarVol = findViewById(R.id.seekBarVol); // Pastikan SeekBar ada di layout popup_layout
