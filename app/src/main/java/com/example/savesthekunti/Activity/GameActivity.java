@@ -78,4 +78,9 @@ public class GameActivity extends AppCompatActivity {
         explosionView.postDelayed(() -> explosionView.setVisibility(View.GONE),
                 explosionAnimation.getNumberOfFrames() * 7);
     }
+
+    @Override
+    public void onBackPressed (){
+
+    }
 }
