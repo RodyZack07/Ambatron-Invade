@@ -132,6 +132,7 @@ public class Register extends AppCompatActivity {
         Map<String, Object> defaultSkinData = new HashMap<>();
         defaultSkinData.put("id_skin", "blue_cosmos");
         defaultSkinData.put("status_terkunci", false); // Skin default tidak terkunci
+        defaultSkinData.put("isLocked", false); // Skin default tidak terkunci
         defaultSkinData.put("created_at", System.currentTimeMillis());
         defaultSkinData.put("updated_at", System.currentTimeMillis());
 
