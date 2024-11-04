@@ -48,6 +48,17 @@
             android:textColor="@color/white"
             android:textSize="20dp"/>
 
+        <ImageView
+            android:id="@+id/pausebtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="300dp"
+            android:src="@drawable/game_pausebtn"
+            android:textSize="20dp"
+
+            />
+
     </FrameLayout>
 
 

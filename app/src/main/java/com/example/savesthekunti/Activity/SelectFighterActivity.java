@@ -128,17 +128,15 @@ public class SelectFighterActivity extends AppCompatActivity {
     }
 
     private void updateFighterView() {
-        String currentSkinID = fighterIDs[currentSkinIndex];
+        String currentSkinID = fighterIDs[currentSkinIndex]; // Ambil ID skin saat ini
 
-        // Mendapatkan ID drawable berdasarkan nama skin
+        // Dapatkan ID drawable berdasarkan nama skin
         int skinDrawableId = getResources().getIdentifier(currentSkinID, "drawable", getPackageName());
+        spaceShip.setImageResource(skinDrawableId); // Set gambar pesawat
 
-        // Log untuk debug
-        Log.d("UpdateFighterView", "Current Skin ID: " + currentSkinID);
-        Log.d("UpdateFighterView", "Drawable ID: " + skinDrawableId);
-
-        // Check if the skin is unlocked
-        DocumentReference skinRef = firestore.collection("Akun").document(username).collection("Koleksi_Skin").document(currentSkinID);
+        // Ambil data skin dari Firestore untuk cek status terkunci
+        DocumentReference skinRef = firestore.collection("Akun").document(username)
+                .collection("Koleksi_Skin").document(currentSkinID);
         skinRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -146,29 +144,25 @@ public class SelectFighterActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Boolean isUnlocked = document.getBoolean("is_unlocked");
+                        Boolean isLocked = document.getBoolean("status_terkunci");
+
+                        // Tampilkan atau sembunyikan overlay gembok sesuai status terkunci
                         if (isUnlocked != null && isUnlocked) {
-                            if (skinDrawableId != 0) {
-                                spaceShip.setImageResource(skinDrawableId);
-                                lockOverlay.setVisibility(View.GONE); // Sembunyikan overlay gembok
-                                Log.d("UpdateFighterView", "Menampilkan skin: " + currentSkinID);
-                            } else {
-                                Log.e("UpdateFighterView", "Skin drawable " + currentSkinID + " tidak ditemukan di drawable resources.");
-                                Toast.makeText(SelectFighterActivity.this, "Skin " + currentSkinID + " tidak ditemukan!", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            // Jika skin terkunci, tampilkan gambar gembok
-                            lockOverlay.setVisibility(View.VISIBLE); // Tampilkan overlay gembok
-                            Log.d("UpdateFighterView", "Menampilkan gembok untuk skin: " + currentSkinID);
+                            lockOverlay.setVisibility(View.GONE); // Sembunyikan gembok
+                        } else if (isLocked != null && isLocked) {
+                            lockOverlay.setVisibility(View.VISIBLE); // Tampilkan gembok
                         }
                     } else {
-                        Log.d("UpdateFighterView", "Skin data not found for " + currentSkinID);
+                        lockOverlay.setVisibility(View.VISIBLE); // Tampilkan gembok jika data tidak ditemukan
                     }
                 } else {
-                    Log.d("UpdateFighterView", "Error getting documents: ", task.getException());
+                    lockOverlay.setVisibility(View.VISIBLE); // Tampilkan gembok jika ada error
                 }
             }
         });
     }
+
+
 
     private void nextFighter() {
         if (fighterIDs.length > 0) {
@@ -187,12 +181,14 @@ public class SelectFighterActivity extends AppCompatActivity {
     private void selectGame() {
         if (ownedSkins.contains(fighterIDs[currentSkinIndex])) {
             Intent intent = new Intent(SelectFighterActivity.this, SelectLevelActivity.class);
-            intent.putExtra("selectedShipIndex", currentSkinIndex);
+            intent.putExtra("selectedSkin", fighterIDs[currentSkinIndex]); // Kirim ID skin yang dipilih
             startActivity(intent);
         } else {
             Toast.makeText(this, "Skin ini terkunci!", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 
     private void FighterSwitchAnimation() {
         AlphaAnimation fadeOut = new AlphaAnimation(1, 0);

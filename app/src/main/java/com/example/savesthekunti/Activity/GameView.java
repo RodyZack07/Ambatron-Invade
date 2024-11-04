@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -19,6 +20,7 @@ import java.util.Random;
 
 public class GameView extends View {
     private PlayerShip playerShip;
+    private Drawable shipDrawable; // Menyimpan drawable pesawat
     private BossAmba bossAmba;
 
     private Bitmap monsterMiniBitmap;
@@ -102,6 +104,8 @@ public class GameView extends View {
             startShooting();
         });
     }
+
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -506,6 +510,7 @@ public class GameView extends View {
             return y > screenHeight;
         }
     }
+
 
 
 

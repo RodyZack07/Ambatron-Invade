@@ -19,11 +19,16 @@ public class SelectLevelActivity extends AppCompatActivity {
     private VideoView backgroundVideo;
     private PopupWindow popupWindow;
     private View settingsView;
+    private String selectedSkin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.level_activity);
+
+        // Ambil data skin yang dipilih dari SelectFighterActivity
+        selectedSkin = getIntent().getStringExtra("selectedSkin");
 
         ImageButton prevButton = findViewById(R.id.prevsBtn1);
         prevButton.setOnClickListener(v -> finish());
@@ -80,12 +85,11 @@ public class SelectLevelActivity extends AppCompatActivity {
 
 
     private void showlevelActivity() {
-        Intent level1Intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-        startActivity(level1Intent);
-        if (popupWindow != null) {
-            popupWindow.dismiss();  // Tutup popup setelah pindah ke GameActivity
-        }
+        Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
+        startActivity(intent);
     }
+
 
     @Override
     protected void onResume() {
