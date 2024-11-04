@@ -17,13 +17,20 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.savesthekunti.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SelectFighterActivity extends AppCompatActivity {
 
@@ -37,7 +44,7 @@ public class SelectFighterActivity extends AppCompatActivity {
     private int currentSkinIndex = 0;
     private Button unlockSkin;
 
-    private DatabaseReference userSkinsRef;
+    private FirebaseFirestore firestore;
     private String username;
 
     @Override
@@ -64,8 +71,7 @@ public class SelectFighterActivity extends AppCompatActivity {
         username = getIntent().getStringExtra("username");
         String koleksiSkin = username != null ? username : "default_user"; // Menggunakan username sebagai ID koleksi skin
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://ambatrondb-default-rtdb.asia-southeast1.firebasedatabase.app");
-        userSkinsRef = database.getReference("Akun").child(koleksiSkin).child("Koleksi_Skin");
+        firestore = FirebaseFirestore.getInstance();
 
         fetchUserSkins();
 
@@ -96,33 +102,27 @@ public class SelectFighterActivity extends AppCompatActivity {
     }
 
     private void fetchUserSkins() {
-        userSkinsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        CollectionReference skinRef = firestore.collection("Akun").document(username).collection("Koleksi_Skin");
+        skinRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 ownedSkins.clear();
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        String skinId = document.getString("id_skin");
+                        Boolean isLocked = document.getBoolean("status_terkunci");
+                        Boolean isUnlocked = document.getBoolean("is_unlocked");
 
-                if (snapshot.exists()) {
-                    for (DataSnapshot skinSnapshot : snapshot.getChildren()) {
-                        String skinId = skinSnapshot.child("id_skin").getValue(String.class);
-                        Boolean isLocked = skinSnapshot.child("status_terkunci").getValue(Boolean.class);
-
-                        // Memastikan skinId dan isLocked tidak null
-                        if (skinId != null && isLocked != null) {
-                            if (!isLocked) {
-                                ownedSkins.add(skinId); // Menambahkan skin yang tidak terkunci
+                        if (skinId != null && isLocked != null && isUnlocked != null) {
+                            if (!isLocked || isUnlocked) {
+                                ownedSkins.add(skinId);
                             }
                         }
                     }
                 } else {
-                    Log.d("FetchUserSkins", "Tidak ada skin ditemukan untuk pengguna ini.");
+                    Log.d("FetchUserSkins", "Error getting documents: ", task.getException());
                 }
                 updateFighterView();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("FetchUserSkins", "Gagal memuat skin: " + error.getMessage());
-                Toast.makeText(SelectFighterActivity.this, "Gagal memuat skin. Silakan coba lagi.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -137,26 +137,38 @@ public class SelectFighterActivity extends AppCompatActivity {
         Log.d("UpdateFighterView", "Current Skin ID: " + currentSkinID);
         Log.d("UpdateFighterView", "Drawable ID: " + skinDrawableId);
 
-        // Mengecek apakah skin tersedia di daftar ownedSkins
-        if (ownedSkins.contains(currentSkinID)) {
-            if (skinDrawableId != 0) {
-                spaceShip.setImageResource(skinDrawableId);
-                lockOverlay.setVisibility(View.GONE); // Sembunyikan overlay gembok
-                Log.d("UpdateFighterView", "Menampilkan skin: " + currentSkinID);
-            } else {
-                Log.e("UpdateFighterView", "Skin drawable " + currentSkinID + " tidak ditemukan di drawable resources.");
-                Toast.makeText(this, "Skin " + currentSkinID + " tidak ditemukan!", Toast.LENGTH_SHORT).show();
+        // Check if the skin is unlocked
+        DocumentReference skinRef = firestore.collection("Akun").document(username).collection("Koleksi_Skin").document(currentSkinID);
+        skinRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Boolean isUnlocked = document.getBoolean("is_unlocked");
+                        if (isUnlocked != null && isUnlocked) {
+                            if (skinDrawableId != 0) {
+                                spaceShip.setImageResource(skinDrawableId);
+                                lockOverlay.setVisibility(View.GONE); // Sembunyikan overlay gembok
+                                Log.d("UpdateFighterView", "Menampilkan skin: " + currentSkinID);
+                            } else {
+                                Log.e("UpdateFighterView", "Skin drawable " + currentSkinID + " tidak ditemukan di drawable resources.");
+                                Toast.makeText(SelectFighterActivity.this, "Skin " + currentSkinID + " tidak ditemukan!", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            // Jika skin terkunci, tampilkan gambar gembok
+                            lockOverlay.setVisibility(View.VISIBLE); // Tampilkan overlay gembok
+                            Log.d("UpdateFighterView", "Menampilkan gembok untuk skin: " + currentSkinID);
+                        }
+                    } else {
+                        Log.d("UpdateFighterView", "Skin data not found for " + currentSkinID);
+                    }
+                } else {
+                    Log.d("UpdateFighterView", "Error getting documents: ", task.getException());
+                }
             }
-        } else {
-            // Jika skin terkunci, tampilkan gambar gembok
-            spaceShip.setImageResource(R.drawable.skin_activity_key); // Set gambar gembok
-            lockOverlay.setVisibility(View.VISIBLE); // Tampilkan overlay gembok
-            Log.d("UpdateFighterView", "Menampilkan gembok untuk skin: " + currentSkinID);
-        }
-
-        spaceShip.invalidate();
+        });
     }
-
 
     private void nextFighter() {
         if (fighterIDs.length > 0) {
@@ -209,11 +221,24 @@ public class SelectFighterActivity extends AppCompatActivity {
         String selectedSkinID = fighterIDs[currentSkinIndex];
         Log.d("UnlockSkin", "Selected Skin ID: " + selectedSkinID); // Log untuk memeriksa ID yang dipilih
 
-        userSkinsRef.child(selectedSkinID).child("status_terkunci").setValue(false)
+        DocumentReference skinRef = firestore.collection("Akun").document(username).collection("Koleksi_Skin").document(selectedSkinID);
+
+        // Update status terkunci menjadi false
+        skinRef.update("status_terkunci", false)
                 .addOnSuccessListener(aVoid -> {
                     Log.d("UnlockSkin", "Skin " + selectedSkinID + " berhasil dibuka.");
                     Toast.makeText(this, "Skin berhasil dibuka!", Toast.LENGTH_SHORT).show();
-                    fetchUserSkins();
+
+                    // Update is_unlocked field to true
+                    skinRef.update("is_unlocked", true)
+                            .addOnSuccessListener(aVoid2 -> {
+                                Log.d("UnlockSkin", "is_unlocked field updated to true for " + selectedSkinID);
+                                fetchUserSkins(); // Refresh the skin list
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("UnlockSkin", "Error updating is_unlocked field: " + e.getMessage());
+                                Toast.makeText(this, "Gagal memperbarui status skin: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
                 })
                 .addOnFailureListener(e -> {
                     Log.e("UnlockSkin", "Error: " + e.getMessage()); // Log kesalahan

@@ -132,7 +132,7 @@ public class Register extends AppCompatActivity {
         Map<String, Object> defaultSkinData = new HashMap<>();
         defaultSkinData.put("id_skin", "blue_cosmos");
         defaultSkinData.put("status_terkunci", false); // Skin default tidak terkunci
-        defaultSkinData.put("isLocked", false); // Skin default tidak terkunci
+        defaultSkinData.put("is_unlocked", true); // Skin default tidak terkunci
         defaultSkinData.put("created_at", System.currentTimeMillis());
         defaultSkinData.put("updated_at", System.currentTimeMillis());
 
@@ -147,7 +147,8 @@ public class Register extends AppCompatActivity {
         // Skin lainnya yang terkunci
         Map<String, Object> lockedSkinData1 = new HashMap<>();
         lockedSkinData1.put("id_skin", "retro_sky");
-        lockedSkinData1.put("status_terkunci", true); // Skin terkunci
+        lockedSkinData1.put("status_terkunci", true);
+        lockedSkinData1.put("is_unlocked", false);
         lockedSkinData1.put("created_at", System.currentTimeMillis());
         lockedSkinData1.put("updated_at", System.currentTimeMillis());
 
@@ -157,6 +158,7 @@ public class Register extends AppCompatActivity {
         Map<String, Object> lockedSkinData2 = new HashMap<>();
         lockedSkinData2.put("id_skin", "wing_of_justice");
         lockedSkinData2.put("status_terkunci", true);
+        lockedSkinData1.put("is_unlocked", false);
         lockedSkinData2.put("created_at", System.currentTimeMillis());
         lockedSkinData2.put("updated_at", System.currentTimeMillis());
 
