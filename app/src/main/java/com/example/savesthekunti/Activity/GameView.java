@@ -289,9 +289,9 @@ public class GameView extends View {
 
         Random random = new Random();
         float randomRudalX = bossX + random.nextInt(bossWidth - rudalSize);
-        float rudalY = bossAmba.getY() + bossAmba.getHeight();
+        float rudalY = bossAmba.getY() + (bossAmba.getHeight() / 2) - (rudalSize / 2);
 
-        rudalAmbas.add(new RudalAmba(getContext(),rudalAmba, randomRudalX, rudalY, 2500, rudalSize));
+        rudalAmbas.add(new RudalAmba(getContext(),rudalAmba, randomRudalX, rudalY, 1500, rudalSize));
        Log.d("GameView", "New RudalAmba created at: " + randomRudalX + ", " + rudalY);
    }
                         //SHOOT METHOD END
