@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         if (user != null) {
             getUserData(user);
         } else {
-            Toast.makeText(this, "Pengguna tidak dikenali.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Anda Harus Login Untuk Bermain", Toast.LENGTH_SHORT).show();
         }
 
         // Inisialisasi VideoView untuk background
@@ -93,6 +93,23 @@ public class MainActivity extends AppCompatActivity {
 
         // Sembunyikan tombol admin sebagai default
         adminButton.setVisibility(View.GONE);
+
+        // Cek apakah user sudah login atau belum
+        if (user == null) {
+            playButton.setEnabled(false); // Nonaktifkan tombol play jika user belum login
+        }
+
+// Set onClickListener untuk tombol Play
+        playButton.setOnClickListener(v -> {
+            if (user == null) {
+                // Tampilkan Toast jika user belum login
+                Toast.makeText(MainActivity.this, "Anda harus login terlebih dahulu.", Toast.LENGTH_SHORT).show();
+            } else {
+                // Jika user sudah login, lanjutkan ke SelectFighterActivity
+                directSelectFighter();
+            }
+        });
+
     }
 
     @Override
@@ -245,7 +262,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showAchievement() {
-        // Implementasi untuk menampilkan achievement
+
+        Intent intent = new Intent(this, ProfilActivity.class);
+        startActivity(intent);
         Toast.makeText(this, "Menampilkan achievement...", Toast.LENGTH_SHORT).show();
     }
 
