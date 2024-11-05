@@ -53,8 +53,8 @@ public class GameActivity extends AppCompatActivity {
         gameplayBg.start(); // Menggunakan gameplayBg
 
         // ============================ FUNCTION SELECT PESAWAT =================================
-        int selectedShipIndex = getIntent().getIntExtra("selectedShipIndex", 0);
-        gameView.setSelectedShipIndex(selectedShipIndex);
+        String selectedSkin = getIntent().getStringExtra("selectedSkin");
+        gameView.setSelectedShipIndex(selectedSkin);
 
         // ============================ FUNCTION SCORE =================================
         gameView.setOnChangeScoreListener(new GameView.OnChangeScoreListener() {

@@ -8,9 +8,6 @@
     android:padding="25dp"
     android:background="@android:color/transparent">
 
-
-
-
     <ImageView
         android:id="@+id/background_image"
         android:layout_width="match_parent"
@@ -131,7 +128,4 @@
         tools:layout_editor_absoluteX="190dp"
         tools:layout_editor_absoluteY="203dp"
         tools:ignore="MissingConstraints" />
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

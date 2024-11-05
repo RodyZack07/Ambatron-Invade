@@ -59,11 +59,12 @@ public class GameView extends View {
         void onScoreChange(int score, int defeatedCount);
     }
 
-    public void setSelectedShipIndex(int selectedShipIndex) {
-        if (selectedShipIndex < 0 || selectedShipIndex >= spaceShips.length) {
-            throw new IllegalArgumentException("Invalid ship index");
-        }
-        playerShip = new PlayerShip(getContext(), spaceShips[selectedShipIndex]);
+    public void setSelectedShipIndex(String selectedSkin) {
+        // Get the drawable resource ID based on the selectedSkin
+        int shipDrawableId = getResources().getIdentifier(selectedSkin, "drawable", getContext().getPackageName());
+
+        // Create the PlayerShip object using the correct drawable
+        playerShip = new PlayerShip(getContext(), shipDrawableId);
         playerShip.setShipPosition(screenWidth, screenHeight); // Mengatur posisi pesawat setelah diganti
     }
 
@@ -121,6 +122,7 @@ public class GameView extends View {
 
         List<MonsterMini> removeMonsters = new ArrayList<>();
         List<Bullet> removeBullets = new ArrayList<>();
+        List<RudalAmba> removeRudal = new ArrayList<>();
 
 
         if (isPlayerAlive && !isPlayerDefeated) {
@@ -136,9 +138,11 @@ public class GameView extends View {
 
         }
 
-        for (RudalAmba rudal : rudalAmbas) {
-            rudal.updatePositionRudal(deltaTime);
-            rudal.draw(canvas);
+        if(isBossAmbaSpawned && !isBossAmbaDefeated) {
+            for (RudalAmba rudal : rudalAmbas) {
+                rudal.updatePositionRudal(deltaTime);
+                rudal.draw(canvas);
+            }
         }
 
         for (MonsterMini monster : monsterMini) {
@@ -192,6 +196,18 @@ public class GameView extends View {
                     if (bossAmba.getHp() <= 0) {
                         isBossAmbaSpawned = false;
                         isBossAmbaDefeated = true;
+                        rudalAmbas.clear();
+                    }
+                }
+
+                for (RudalAmba rudal : rudalAmbas){
+                    if(checkCollision(bullet, rudal)){
+                        rudal.reduceDurability(bullet.getDamage());
+                        removeBullets.add(bullet);
+
+                        if(rudal.getDurability() <= 0){
+                            removeRudal.add(rudal);
+                        }
                     }
                 }
 
@@ -200,6 +216,7 @@ public class GameView extends View {
 
         monsterMini.removeAll(removeMonsters);
         bullets.removeAll(removeBullets);
+        rudalAmbas.removeAll(removeBullets);
 
 
         removeOffScreenMonsters();
