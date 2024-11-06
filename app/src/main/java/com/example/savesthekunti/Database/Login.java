@@ -124,7 +124,8 @@ public class Login extends AppCompatActivity {
 
                         // Pindah ke MainActivity
                         Intent intent = new Intent(Login.this, MainActivity.class);
-                        intent.putExtra("username", username); // Kirim username ke MainActivity
+                        intent.putExtra("username", username);
+                        intent.putExtra("isAdmin", true);
                         startActivity(intent);
                         finish();
                     } else {

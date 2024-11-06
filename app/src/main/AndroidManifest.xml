@@ -37,6 +37,8 @@
         <activity android:name=".Activity.ProfilActivity"/>
         <activity android:name=".Database.Admin"/>
 
+        <activity android:name=".Model.EditAsAdminActivity"/>
+
     </application>
 
 </manifest>

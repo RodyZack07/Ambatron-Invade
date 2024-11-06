@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.savesthekunti.Database.Admin;
 import com.example.savesthekunti.Database.Login;
+import com.example.savesthekunti.Model.EditAsAdminActivity;
 import com.example.savesthekunti.R;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -139,11 +140,11 @@ public class MainActivity extends AppCompatActivity {
                                 welcomeText.setText("Selamat datang, " + username + "!");
                                 getSkinData(userId);
 
-                                // Cek apakah pengguna adalah admin
                                 Boolean isAdmin = document.getBoolean("isAdmin");
                                 if (isAdmin != null && isAdmin) {
-                                    adminButton.setVisibility(View.VISIBLE); // Hanya tampilkan tombol admin jika user adalah admin
+                                    adminButton.setVisibility(View.VISIBLE); // Tampilkan tombol admin jika user adalah admin
                                 }
+
                             } else {
                                 Toast.makeText(MainActivity.this, "Data pengguna tidak ditemukan.", Toast.LENGTH_SHORT).show();
                             }
@@ -246,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openAdminActivity() {
-        Intent intent = new Intent(this, Admin.class);
+        Intent intent = new Intent(this, EditAsAdminActivity.class);
         startActivity(intent);
     }
 

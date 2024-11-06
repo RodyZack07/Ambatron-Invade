@@ -1,24 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center">
+    android:layout_height="match_parent">
 
+    <!-- ImageView sebagai background fullscreen -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/admin_background"
+         />
+
+    <!-- ImageButton di kiri atas -->
+    <ImageButton
+        android:id="@+id/prevsBtn3"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:src="@drawable/arrow_selector3"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:scaleType="fitXY"
+        android:background="@android:color/transparent" />
+
+    <!-- Button Update Data Akun -->
     <Button
         android:id="@+id/updateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
+        android:layout_below="@id/prevsBtn3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
         android:padding="10dp"
         android:text="Update Data Akun" />
 
+    <!-- Button Delete Akun -->
     <Button
         android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete Akun"
-        android:padding="10dp"/>
+        android:layout_below="@id/updateButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:text="Delete Akun" />
 
-</LinearLayout>
+</RelativeLayout>
