@@ -21,6 +21,24 @@ public class SelectLevelActivity extends AppCompatActivity {
     private View settingsView;
     private String selectedSkin;
 
+    private Level[] levels = {
+            new Level(1, 100, 30, 500, 10, 30),
+            new Level(2, 130, 60, 1000, 20, 60),
+            new Level(3, 160, 90, 1500, 30, 90),
+            new Level(4, 190, 110, 2000, 40, 110),
+            new Level(5, 210, 140, 2500, 50, 140),
+            new Level(6, 240, 170, 3000, 60, 170),
+            new Level(7, 270, 200, 3500, 70, 200),
+            new Level(8, 300, 230, 4000, 80, 220),
+            new Level(9, 160, 260, 5000, 90, 240),
+            new Level(10, 190, 290, 6000, 100, 260),
+            new Level(11, 230, 300, 8000, 110, 280),
+            new Level(12, 260, 310, 1000, 120, 300),
+            new Level(13, 290, 320, 12000, 140, 310),
+            new Level(14, 310, 340, 15000, 160, 320),
+            new Level(15, 320, 360, 25000, 250, 330),
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +111,7 @@ public class SelectLevelActivity extends AppCompatActivity {
     }
 
 
-//    =============== FUNCTION SHOW LEVEL POPUP ===================
+    //    =============== FUNCTION SHOW LEVEL POPUP ===================
     private void showLevelPopup(View anchorView) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.game_info_1, null);
@@ -604,95 +622,126 @@ public class SelectLevelActivity extends AppCompatActivity {
 
     }
 
-// =============== FUNCTION BUTTON LEVEL START =======================
+    // =============== FUNCTION BUTTON LEVEL START =======================
     private void showlevelActivity() {
         Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-        intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
+        intent.putExtra("selectedSkin", selectedSkin);
+        Level levelData = levels[0];
+        intent.putExtra("levelData", levelData);
         startActivity(intent);
     }
 
     private void showlevelActivity2() {
         Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
         intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
+        Level levelData = levels[1];
+        intent.putExtra("levelData", levelData);
         startActivity(intent);
     }
 
     private void showlevelActivity3() {
         Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-        intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
+        intent.putExtra("selectedSkin", selectedSkin);
+        Level levelData = levels[2];
+        intent.putExtra("levelData", levelData);
         startActivity(intent);
     }
 
     private void showlevelActivity4() {
         Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-        intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
+        intent.putExtra("selectedSkin", selectedSkin);
+        Level levelData = levels[3];
+        intent.putExtra("levelData", levelData);
         startActivity(intent);
     }
 
     private void showlevelActivity5() {
         Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-        intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
+        intent.putExtra("selectedSkin", selectedSkin);
+        Level levelData = levels[4];
+        intent.putExtra("levelData", levelData);
         startActivity(intent);
     }
 
     private void showlevelActivity6() {
         Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-        intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
+        intent.putExtra("selectedSkin", selectedSkin);
+        Level levelData = levels[5];
+        intent.putExtra("levelData", levelData);
         startActivity(intent);
     }
 
     private void showlevelActivity7() {
         Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-        intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
+        intent.putExtra("selectedSkin", selectedSkin);
+        Level levelData = levels[6];
+        intent.putExtra("levelData", levelData);
         startActivity(intent);
     }
 
     private void showlevelActivity8() {
         Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-        intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
+        intent.putExtra("selectedSkin", selectedSkin);
+        Level levelData = levels[7];
+        intent.putExtra("levelData", levelData);
         startActivity(intent);
     }
 
     private void showlevelActivity9() {
         Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-        intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
+        intent.putExtra("selectedSkin", selectedSkin);
+        Level levelData = levels[8];
+        intent.putExtra("levelData", levelData);
         startActivity(intent);
     }
 
     private void showlevelActivity10() {
         Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-        intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
+        intent.putExtra("selectedSkin", selectedSkin);
+        Level levelData = levels[9];
+        intent.putExtra("levelData", levelData);
         startActivity(intent);
     }
 
     private void showlevelActivity11() {
         Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-        intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
+        intent.putExtra("selectedSkin", selectedSkin);
+        Level levelData = levels[10];
+        intent.putExtra("levelData", levelData);
         startActivity(intent);
     }
 
     private void showlevelActivity12() {
         Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-        intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
+        intent.putExtra("selectedSkin", selectedSkin);
+        Level levelData = levels[11];
+        intent.putExtra("levelData", levelData);
         startActivity(intent);
     }
 
     private void showlevelActivity13() {
         Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-        intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
+        intent.putExtra("selectedSkin", selectedSkin);
+        Level levelData = levels[12];
+        intent.putExtra("levelData", levelData);
         startActivity(intent);
     }
 
     private void showlevelActivity14() {
         Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-        intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
+        intent.putExtra("selectedSkin", selectedSkin);
+        Level levelData = levels[13];
+        intent.putExtra("levelData", levelData);
         startActivity(intent);
     }
 
     private void showlevelActivity15() {
         Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
-        intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
+        intent.putExtra("selectedSkin", selectedSkin);
+        Level levelData = levels[14];
+        intent.putExtra("levelData", levelData);
         startActivity(intent);
+
     }
 
 

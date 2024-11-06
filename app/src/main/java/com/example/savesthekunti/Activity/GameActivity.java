@@ -20,6 +20,7 @@ public class GameActivity extends AppCompatActivity {
     private VideoView gameplayBg;
     private TextView scoreTxt, defeatedTxt;
     private ImageView explosionView;
+    private Level levelData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,16 +47,18 @@ public class GameActivity extends AppCompatActivity {
         gameplayBg.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                mp.setLooping(true); // Mengatur video agar looping
+                mp.setLooping(true);
                 mp.setVideoScalingMode(MediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING); // Menyesuaikan skala video
             }
         });
-        gameplayBg.start(); // Menggunakan gameplayBg
+        gameplayBg.start();
 
         // ============================ FUNCTION SELECT PESAWAT =================================
         String selectedSkin = getIntent().getStringExtra("selectedSkin");
         gameView.setSelectedShipIndex(selectedSkin);
 
+        levelData = (Level) getIntent().getSerializableExtra("levelData");
+        gameView.setLevelData(levelData);
         // ============================ FUNCTION SCORE =================================
         gameView.setOnChangeScoreListener(new GameView.OnChangeScoreListener() {
             @Override

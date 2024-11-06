@@ -22,6 +22,7 @@ public class GameView extends View {
     private PlayerShip playerShip;
     private Drawable shipDrawable; // Menyimpan drawable pesawat
     private BossAmba bossAmba;
+    private Level levelData;
 
     private Bitmap monsterMiniBitmap;
     private Bitmap bulletsBitmap;
@@ -36,6 +37,12 @@ public class GameView extends View {
     private boolean isBossAmbaDefeated = false;
     private boolean isPlayerAlive = true;
     private boolean isPlayerDefeated = false;
+
+    private int monsterMiniDamage;
+    private int monsterMiniHp;
+    private int bossAmbaHp;
+    private int rudalDurability;
+    private int rudalDamage;
 
 
     private GameActivity gameActivity; // Referensi ke GameActivity
@@ -77,6 +84,15 @@ public class GameView extends View {
         super(context, attrs);
         this.gameActivity = (GameActivity) context; // Mendapatkan referensi ke GameActivity
         init(context);
+    }
+
+    public void setLevelData(Level levelData) {
+        this.levelData = levelData;
+        this.monsterMiniHp = levelData.getMonsterMiniHp();
+        this.monsterMiniDamage = levelData.getMonsterMiniDamage();
+        this.bossAmbaHp = levelData.getBossAmbaHp();
+        this.rudalDurability = levelData.getRudalDurability();
+        this.rudalDamage = levelData.getRudalDamage();
     }
 
     private void init(Context context) {
@@ -294,7 +310,7 @@ public class GameView extends View {
 
 
 
-                        //SHOOT METHOD
+    //SHOOT METHOD
 
     private void shootBullet() {
         int bulletSize = getResources().getDimensionPixelSize(R.dimen.bullet_size);
@@ -303,7 +319,7 @@ public class GameView extends View {
         bullets.add(new Bullet(getContext(), bulletsBitmap, bulletX, bulletY, 2500, bulletSize));
     }
 
-   private void shotRudalAmba(){
+    private void shotRudalAmba(){
         int rudalSize = getResources().getDimensionPixelSize(R.dimen.rudal_size);
         float bossX = bossAmba.getX();
         int bossWidth = bossAmba.getWidth();
@@ -313,9 +329,9 @@ public class GameView extends View {
         float rudalY = bossAmba.getY() + (bossAmba.getHeight() / 2) - (rudalSize / 2);
 
         rudalAmbas.add(new RudalAmba(getContext(),rudalAmba, randomRudalX, rudalY, 1500, rudalSize));
-       Log.d("GameView", "New RudalAmba created at: " + randomRudalX + ", " + rudalY);
-   }
-                        //SHOOT METHOD END
+        Log.d("GameView", "New RudalAmba created at: " + randomRudalX + ", " + rudalY);
+    }
+    //SHOOT METHOD END
 
 
     private void spawnBossAmba(){
@@ -333,7 +349,7 @@ public class GameView extends View {
     }
 
 
-                        //COLLISION
+    //COLLISION
 
     //MONSTERS COLISSION
     public boolean checkCollision(Bullet bullet, MonsterMini monster) {
@@ -377,7 +393,7 @@ public class GameView extends View {
                 monster.getY() + monster.getSize() > playerShip.getShipY();
     }
 
-                        //COLLISION END
+    //COLLISION END
 
 
 
@@ -496,8 +512,8 @@ public class GameView extends View {
             this.y = y;
             this.velocity = velocityY;
             this.size = context.getResources().getDimensionPixelSize(R.dimen.mosnter_size);
-            this.damage = 100;
-            this.hp = 200;
+            this.damage = levelData.getMonsterMiniDamage();
+            this.hp = levelData.getMonsterMiniHp();
         }
 
         public void updatePositionMonster(float deltaTime) {
@@ -531,7 +547,7 @@ public class GameView extends View {
 
 
 
-                        //CLASS BULLET
+    //CLASS BULLET
     class Bullet {
         private Bitmap bulletBitmap;
         private float x, y;
@@ -585,7 +601,7 @@ public class GameView extends View {
             this.x = x;
             this.y = y;
             this.velocityY = velocityY;
-            this.hp = 500;
+            this.hp = levelData.getBossAmbaHp();
             width = context.getResources().getDimensionPixelSize(R.dimen.boss_width);
             height = context.getResources().getDimensionPixelSize(R.dimen.boss_height);
         }
@@ -612,43 +628,43 @@ public class GameView extends View {
         }
     }
 
-                    //CLASS RUDAL AMBA
-        class RudalAmba {
-            private Bitmap rudalAmba;
-            private float x, y;
-            private float velocity;
-            private int size;
-            private int durability;
-            private int damage;
+    //CLASS RUDAL AMBA
+    class RudalAmba {
+        private Bitmap rudalAmba;
+        private float x, y;
+        private float velocity;
+        private int size;
+        private int durability;
+        private int damage;
 
-                public RudalAmba (Context context,Bitmap rudalAmba, float x, float y, float velocityY, int size ){
-                this.rudalAmba = rudalAmba;
-                this.x = x;
-                this.y = y;
-                this.velocity = velocityY;
-                this.size = getResources().getDimensionPixelSize(R.dimen.rudal_size);
-                this.durability = 200;
-                this.damage = 300;
-                }
-
-                public void updatePositionRudal(float deltaTime){
-                    y += velocity * deltaTime;
-                }
-
-                public void draw(Canvas canvas){
-                    canvas.drawBitmap(Bitmap.createScaledBitmap(rudalAmba, size , size, false), x, y, paint);
-                }
-
-
-
-                public void reduceDurability(int damage){durability -= damage;}
-                public int getDamage(){return damage;}
-                public int getDurability(){return durability;}
-                public float getX(){return x;}
-                public float getY() {return y;}
-                public int getSize(){return size;}
-
+        public RudalAmba (Context context,Bitmap rudalAmba, float x, float y, float velocityY, int size ){
+            this.rudalAmba = rudalAmba;
+            this.x = x;
+            this.y = y;
+            this.velocity = velocityY;
+            this.size = getResources().getDimensionPixelSize(R.dimen.rudal_size);
+            this.durability = levelData.getRudalDurability();
+            this.damage = levelData.getRudalDamage();
         }
+
+        public void updatePositionRudal(float deltaTime){
+            y += velocity * deltaTime;
+        }
+
+        public void draw(Canvas canvas){
+            canvas.drawBitmap(Bitmap.createScaledBitmap(rudalAmba, size , size, false), x, y, paint);
+        }
+
+
+
+        public void reduceDurability(int damage){durability -= damage;}
+        public int getDamage(){return damage;}
+        public int getDurability(){return durability;}
+        public float getX(){return x;}
+        public float getY() {return y;}
+        public int getSize(){return size;}
+
+    }
 
 }
 
