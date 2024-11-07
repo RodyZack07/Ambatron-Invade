@@ -4,9 +4,13 @@ import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -21,6 +25,7 @@ public class GameActivity extends AppCompatActivity {
     private TextView scoreTxt, defeatedTxt;
     private ImageView explosionView;
     private Level levelData;
+    public PopupWindow gameOverWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +85,19 @@ public class GameActivity extends AppCompatActivity {
 
         explosionView.postDelayed(() -> explosionView.setVisibility(View.GONE),
                 explosionAnimation.getNumberOfFrames() * 7);
+    }
+
+    public void showGameOver(View anchorView){
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.game_over, null);
+
+        int popupWidth = getResources().getDimensionPixelSize(R.dimen.popup_width);
+        int popupHeight = getResources().getDimensionPixelSize(R.dimen.popup_height);
+
+        gameOverWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
+        gameOverWindow.setAnimationStyle(R.style.PopupAnimation);
+        gameOverWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+
     }
 
     @Override

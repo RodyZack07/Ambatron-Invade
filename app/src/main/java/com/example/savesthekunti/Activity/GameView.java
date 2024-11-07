@@ -37,6 +37,7 @@ public class GameView extends View {
     private boolean isBossAmbaDefeated = false;
     private boolean isPlayerAlive = true;
     private boolean isPlayerDefeated = false;
+    private boolean gameOver = false;
 
     private int monsterMiniDamage;
     private int monsterMiniHp;
@@ -147,6 +148,10 @@ public class GameView extends View {
             Log.d("GameView", "PlayerShip is defeated and will not be drawn.");
         }
 
+        if(gameOver){
+            return;
+        }
+
         //Panggil BosAmba
         if(isBossAmbaSpawned && bossAmba != null){
             bossAmba.updatePositionBoss(deltaTime);
@@ -175,6 +180,8 @@ public class GameView extends View {
                     isPlayerDefeated = true;
                     isPlayerAlive = false;
                     bullets.clear();
+                    gameOver = true; // Set game over flag
+                    gameActivity.showGameOver(this);
                 }
             }
         }
