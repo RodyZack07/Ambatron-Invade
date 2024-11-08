@@ -1,5 +1,6 @@
 package com.example.savesthekunti.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
@@ -10,7 +11,9 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -39,7 +42,10 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private String user;
     private ImageButton adminButton;
+    private TextView warningText; // Declare warning TextView
+    private ImageView borderText;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +58,17 @@ public class MainActivity extends AppCompatActivity {
         user = getIntent().getStringExtra("username");
 
         // Inisialisasi TextView untuk menyambut pengguna
+        warningText = findViewById(R.id.warning); // Link to warning TextView in XML
+        borderText = findViewById(R.id.borderText);
+
+        if (user != null) {
+            getUserData(user);
+        } else {
+            // Display warning text if user is not logged in
+            warningText.setVisibility(View.VISIBLE);
+            Toast.makeText(this, "Anda Harus Login Untuk Bermain", Toast.LENGTH_SHORT).show();
+        }
+
         welcomeText = findViewById(R.id.welcomeText);
         if (user != null) {
             getUserData(user);
@@ -80,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         ImageButton playButton = findViewById(R.id.play_button);
         ImageButton profilMenu = findViewById(R.id.profile);
         ImageButton achievementMenu = findViewById(R.id.achievement);
+        ImageButton LoginButton = findViewById(R.id.play_button);
         adminButton = findViewById(R.id.Admin);  // Inisialisasi tombol Admin
 
         // Set onClickListener untuk masing-masing tombol
@@ -95,25 +113,30 @@ public class MainActivity extends AppCompatActivity {
         // Sembunyikan tombol admin sebagai default
         adminButton.setVisibility(View.GONE);
 
+
+
         // Cek apakah user sudah login atau belum
         if (user == null) {
             playButton.setEnabled(false); // Nonaktifkan tombol play jika user belum login
         }
 
-// Set onClickListener untuk tombol Play
-        playButton.setOnClickListener(v -> {
-            if (user == null) {
-                // Tampilkan Toast jika user belum login
-                Toast.makeText(MainActivity.this, "Anda harus login terlebih dahulu.", Toast.LENGTH_SHORT).show();
-            } else {
-                // Jika user sudah login, lanjutkan ke SelectFighterActivity
-                directSelectFighter();
-            }
-        });
-
+        // Cek apakah user sudah login atau belum
+        if (user == null) {
+            // Sembunyikan tombol play jika user belum login
+            borderText.setVisibility(View.VISIBLE);
+            playButton.setVisibility(View.GONE);
+            warningText.setVisibility(View.VISIBLE);
+            Toast.makeText(this, "Anda Harus Login Untuk Bermain", Toast.LENGTH_SHORT).show();
+        } else {
+            // Tampilkan tombol play jika user sudah login
+            borderText.setVisibility(View.GONE);
+            playButton.setVisibility(View.VISIBLE);
+            playButton.setOnClickListener(v -> directSelectFighter());
+            getUserData(user);
+        }
     }
 
-    @Override
+        @Override
     protected void onResume() {
         super.onResume();
         videoViewBackground.seekTo(videoPosition);

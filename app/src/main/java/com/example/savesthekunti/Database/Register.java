@@ -8,12 +8,17 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.savesthekunti.Activity.MainActivity;
 import com.example.savesthekunti.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.MessageDigest;
@@ -26,6 +31,7 @@ public class Register extends AppCompatActivity {
     private EditText usernameField, emailField, passwordField, passwordConfirmField;
     private Button registerButton;
     private ImageButton prevsBtn;
+    private FirebaseAuth auth;
     private FirebaseFirestore firestore;
 
     @Override
@@ -33,7 +39,8 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_layout);
 
-        // Inisialisasi Firestore
+        // Inisialisasi Firebase Authentication dan Firestore
+        auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
         // Inisialisasi UI
@@ -46,7 +53,7 @@ public class Register extends AppCompatActivity {
         passwordConfirmField = findViewById(R.id.passwordTextConfirm);
         registerButton = findViewById(R.id.regisnow);
 
-        // Set OnClickListener untuk tombol register
+        // Klik listener untuk tombol registrasi
         registerButton.setOnClickListener(v -> {
             String username = usernameField.getText().toString().trim();
             String email = emailField.getText().toString().trim();
@@ -76,9 +83,13 @@ public class Register extends AppCompatActivity {
     }
 
     private void registerUser(String username, String email, String password, String confirmPassword) {
-        // Validasi input
         if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             Toast.makeText(Register.this, "Semua field harus diisi", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (password.length() < 6) {
+            Toast.makeText(Register.this, "Password minimal 6 karakter", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -87,10 +98,35 @@ public class Register extends AppCompatActivity {
             return;
         }
 
-        // Hash password
-        String hashedPassword = hashPassword(password);
+        // Daftar pengguna menggunakan Firebase Authentication
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = auth.getCurrentUser();
+                        if (user != null) {
+                            user.sendEmailVerification().addOnCompleteListener(verificationTask -> {
+                                if (verificationTask.isSuccessful()) {
+                                    Toast.makeText(Register.this, "Verifikasi email telah dikirim. Silakan cek email Anda.", Toast.LENGTH_SHORT).show();
 
-        // Buat struktur data akun baru
+                                    auth.signOut();
+
+                                    saveUserToFirestore(username, email, hashPassword(password));
+
+                                    Intent intent = new Intent(Register.this, Login.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    Toast.makeText(Register.this, "Gagal mengirim verifikasi email: " + verificationTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    } else {
+                        Toast.makeText(Register.this, "Registrasi gagal: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void saveUserToFirestore(String username, String email, String hashedPassword) {
         Map<String, Object> akunData = new HashMap<>();
         akunData.put("username", username);
         akunData.put("email", email);
@@ -98,90 +134,71 @@ public class Register extends AppCompatActivity {
         akunData.put("isAdmin", false);
         akunData.put("created_at", System.currentTimeMillis());
         akunData.put("updated_at", System.currentTimeMillis());
-        akunData.put("score", 0); // Set default score untuk pengguna baru
+        akunData.put("score", 0);
 
-        // Simpan data akun dengan username sebagai ID
         firestore.collection("Akun").document(username)
                 .set(akunData)
                 .addOnSuccessListener(aVoid -> {
-                    // Jika berhasil disimpan
-                    Log.d("Register", "Akun berhasil didaftarkan dengan username sebagai ID");
-                    Toast.makeText(Register.this, "Registrasi berhasil", Toast.LENGTH_SHORT).show();
-
-                    // Set skin default untuk pengguna baru
                     setDefaultSkin(username);
+                    setDefaultAchievements(username);
 
-                    // Berhasil register, pindah ke MainActivity
-                    Intent intent = new Intent(Register.this, MainActivity.class);
-                    intent.putExtra("username", username);
-                    startActivity(intent);
-                    finish();
+                    Log.d("Register", "Akun berhasil didaftarkan dengan username sebagai ID");
+                    Toast.makeText(Register.this, "Registrasi berhasil, silakan verifikasi email Anda", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
-                    // Jika ada kesalahan saat menyimpan
                     Log.e("Register", "Gagal menyimpan akun", e);
                     Toast.makeText(Register.this, "Registrasi gagal: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
-    // Fungsi untuk mengatur skin default saat registrasi
+    private void setDefaultAchievements(String userId) {
+        CollectionReference achievementRef = firestore.collection("Akun").document(userId).collection("Achievement");
+
+        Map<String, Object> achievement1 = new HashMap<>();
+        achievement1.put("id", "achv_001");
+        achievement1.put("name", "Monster Hunter");
+        achievement1.put("desc", "Defeat 50 monsters.");
+        achievement1.put("rules", "Defeat at least 50 monsters to unlock.");
+        achievement1.put("isGet", false);
+        achievement1.put("monster_defeated", 0);
+        achievement1.put("highscore", 0);
+        achievementRef.document("achv_001").set(achievement1);
+
+        Map<String, Object> achievement2 = new HashMap<>();
+        achievement2.put("id", "achv_002");
+        achievement2.put("name", "Score Master");
+        achievement2.put("desc", "Reach a highscore of 1000.");
+        achievement2.put("rules", "Get a score of 1000 or higher to unlock.");
+        achievement2.put("isGet", false);
+        achievement2.put("monster_defeated", 0);
+        achievement2.put("highscore", 0);
+        achievementRef.document("achv_002").set(achievement2);
+    }
+
     private void setDefaultSkin(String userId) {
         CollectionReference skinRef = firestore.collection("Akun").document(userId).collection("Koleksi_Skin");
 
-        // Skin default yang tidak terkunci
         Map<String, Object> defaultSkinData = new HashMap<>();
         defaultSkinData.put("id_skin", "blue_cosmos");
-        defaultSkinData.put("status_terkunci", false); // Skin default tidak terkunci
-        defaultSkinData.put("is_unlocked", true); // Skin default tidak terkunci
+        defaultSkinData.put("status_terkunci", false);
+        defaultSkinData.put("is_unlocked", true);
         defaultSkinData.put("created_at", System.currentTimeMillis());
         defaultSkinData.put("updated_at", System.currentTimeMillis());
 
-        // Tambahkan skin default
-        skinRef.document("blue_cosmos").set(defaultSkinData)
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Toast.makeText(Register.this, "Gagal mengatur skin default: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        skinRef.document("blue_cosmos").set(defaultSkinData);
 
-        // Skin lainnya yang terkunci
-        Map<String, Object> lockedSkinData1 = new HashMap<>();
-        lockedSkinData1.put("id_skin", "retro_sky");
-        lockedSkinData1.put("status_terkunci", true);
-        lockedSkinData1.put("is_unlocked", false);
-        lockedSkinData1.put("created_at", System.currentTimeMillis());
-        lockedSkinData1.put("updated_at", System.currentTimeMillis());
-
-        skinRef.document("retro_sky").set(lockedSkinData1);
-
-        // Tambahkan skin lain yang terkunci, contoh untuk skin kedua
-        Map<String, Object> lockedSkinData2 = new HashMap<>();
-        lockedSkinData2.put("id_skin", "wing_of_justice");
-        lockedSkinData2.put("status_terkunci", true);
-        lockedSkinData1.put("is_unlocked", false);
-        lockedSkinData2.put("created_at", System.currentTimeMillis());
-        lockedSkinData2.put("updated_at", System.currentTimeMillis());
-
-        skinRef.document("wing_of_justice").set(lockedSkinData2);
+        addLockedSkin(skinRef, "retro_sky");
+        addLockedSkin(skinRef, "wing_of_justice");
     }
 
-    // Fungsi untuk meng-unlock skin
-    public void unlockSkin(String skinId) {
-        String username = usernameField.getText().toString(); // Dapatkan username dari input
+    private void addLockedSkin(CollectionReference skinRef, String skinId) {
+        Map<String, Object> lockedSkinData = new HashMap<>();
+        lockedSkinData.put("id_skin", skinId);
+        lockedSkinData.put("status_terkunci", true);
+        lockedSkinData.put("is_unlocked", false);
+        lockedSkinData.put("created_at", System.currentTimeMillis());
+        lockedSkinData.put("updated_at", System.currentTimeMillis());
 
-        // Referensi ke koleksi skin untuk pengguna
-        DocumentReference skinRef = firestore.collection("Akun").document(username)
-                .collection("Koleksi_Skin").document(skinId);
-
-        // Update status terkunci menjadi false
-        skinRef.update("status_terkunci", false)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("UnlockSkin", "Skin berhasil di-unlock");
-                    Toast.makeText(this, "Skin berhasil di-unlock!", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("UnlockSkin", "Gagal meng-unlock skin", e);
-                    Toast.makeText(this, "Gagal meng-unlock skin: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+        skinRef.document(skinId).set(lockedSkinData);
     }
 }
