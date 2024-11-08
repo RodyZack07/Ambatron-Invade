@@ -195,9 +195,13 @@ public class GameView extends View {
                 for (MonsterMini monster : monsterMini) {
                     if (checkCollision(bullet, monster)) {
                         removeBullets.add(bullet);
-                        removeMonsters.add(monster);
+                        monster.reduceHp(bullet.getDamage());
                         score += 15;
                         defeatedCount++;
+
+                        if(monster.getHp() <= 0){
+                            removeMonsters.add(monster);
+                        }
 
                         // Menampilkan animasi ledakan di posisi monster
                         Log.d("GameView", "Triggering explosion at: " + monster.getX() + ", " + monster.getY());
@@ -218,11 +222,12 @@ public class GameView extends View {
                         isBossAmbaSpawned = false;
                         isBossAmbaDefeated = true;
                         rudalAmbas.clear();
+
                     }
                 }
 
                 for (RudalAmba rudal : rudalAmbas){
-                    if(checkCollision(bullet, rudal)){
+                    if(isBossAmbaSpawned && !isBossAmbaDefeated && checkCollision(bullet, rudal)){
                         rudal.reduceDurability(bullet.getDamage());
                         removeBullets.add(bullet);
 
@@ -240,8 +245,10 @@ public class GameView extends View {
         rudalAmbas.removeAll(removeBullets);
 
 
+
         removeOffScreenMonsters();
         removeOffScreenBullets();
+        removeOffScreenRudal();
 
         if(score >= 200 && !isBossAmbaSpawned && !isBossAmbaDefeated){
             spawnBossAmba();
@@ -295,7 +302,7 @@ public class GameView extends View {
             @Override
             public void run() {
                 shootBullet();
-                handler.postDelayed(this, 350); // Menembak setiap 100 ms
+                handler.postDelayed(this, 100); // Menembak setiap 100 ms
             }
         }, 100);
     }
@@ -420,6 +427,16 @@ public class GameView extends View {
             }
         }
         bullets.removeAll(bulletsToRemove);
+    }
+
+    public void removeOffScreenRudal(){
+       List<RudalAmba> rudalToRemove = new ArrayList<>();
+       for (RudalAmba rudal : rudalAmbas){
+            if(rudal.isOffScreen(screenHeight)){
+                rudalToRemove.add(rudal);
+            }
+       }
+       rudalAmbas.removeAll(rudalToRemove);
     }
 
 
@@ -600,6 +617,8 @@ public class GameView extends View {
         private float velocityY;
         private int width, height;
         int hp;
+        private float velocityX;
+        private boolean isMovingRight;
 
         public BossAmba(Context context, Bitmap bossAmbaBitmap, float x, float y, float velocityY) {
             this.bossAmbaBitmap = bossAmbaBitmap;
@@ -609,6 +628,8 @@ public class GameView extends View {
             this.hp = levelData.getBossAmbaHp();
             width = context.getResources().getDimensionPixelSize(R.dimen.boss_width);
             height = context.getResources().getDimensionPixelSize(R.dimen.boss_height);
+            this.velocityX = 200f;
+            this.isMovingRight = true;
         }
 
         public void updatePositionBoss(float deltaTime) {
@@ -616,6 +637,17 @@ public class GameView extends View {
             if (y < 50) {
                 y += velocityY * deltaTime;
             }
+
+            if(isMovingRight){
+                x += velocityX * deltaTime;
+                if(x + width >= screenWidth){
+                    isMovingRight = false;
+                }
+            }else{
+                x -= velocityX * deltaTime;
+                if(x <= 0){
+                    isMovingRight = true;
+                }}
         }
 
         public void draw(Canvas canvas) {
@@ -642,6 +674,7 @@ public class GameView extends View {
         private int durability;
         private int damage;
 
+
         public RudalAmba (Context context,Bitmap rudalAmba, float x, float y, float velocityY, int size ){
             this.rudalAmba = rudalAmba;
             this.x = x;
@@ -650,6 +683,7 @@ public class GameView extends View {
             this.size = getResources().getDimensionPixelSize(R.dimen.rudal_size);
             this.durability = levelData.getRudalDurability();
             this.damage = levelData.getRudalDamage();
+
         }
 
         public void updatePositionRudal(float deltaTime){
@@ -668,7 +702,9 @@ public class GameView extends View {
         public float getX(){return x;}
         public float getY() {return y;}
         public int getSize(){return size;}
-
+        public boolean isOffScreen(int screenHeight) {
+            return y > screenHeight;
+        }
     }
 
 }
