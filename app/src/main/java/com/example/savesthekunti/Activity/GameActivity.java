@@ -1,5 +1,6 @@
 package com.example.savesthekunti.Activity;
 
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -91,12 +92,33 @@ public class GameActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.game_over, null);
 
+        ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
+        ImageButton replayBtn = popupView.findViewById(R.id.replayBtn);
+        ImageButton nextBtn = popupView.findViewById(R.id.nextBtn);
+
         int popupWidth = getResources().getDimensionPixelSize(R.dimen.popup_width);
         int popupHeight = getResources().getDimensionPixelSize(R.dimen.popup_height);
 
         gameOverWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
         gameOverWindow.setAnimationStyle(R.style.PopupAnimation);
         gameOverWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+
+        homeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(GameActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+       replayBtn.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               gameOverWindow.dismiss();
+               recreate();
+           }
+       });
 
     }
 

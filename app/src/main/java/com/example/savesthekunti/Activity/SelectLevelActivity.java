@@ -23,7 +23,7 @@ public class SelectLevelActivity extends AppCompatActivity {
 
     private Level[] levels = {
             new Level(1, 100, 30, 500, 10, 30, R.drawable.boss_amba),
-            new Level(2, 130, 60, 1000, 20, 60, R.drawable.boss_amba),
+            new Level(2, 130, 60, 100000, 20, 60, R.drawable.boss_amba),
             new Level(3, 160, 90, 1500, 30, 90, R.drawable.bos_astronout),
             new Level(4, 190, 110, 2000, 40, 110, R.drawable.bos_astronout),
             new Level(5, 210, 140, 2500, 50, 140, R.drawable.bos_blackarmor),

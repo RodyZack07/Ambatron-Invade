@@ -227,7 +227,7 @@ public class GameView extends View {
                 }
 
                 for (RudalAmba rudal : rudalAmbas){
-                    if(isBossAmbaSpawned && !isBossAmbaDefeated && checkCollision(bullet, rudal)){
+                    if(checkCollision(bullet, rudal)){
                         rudal.reduceDurability(bullet.getDamage());
                         removeBullets.add(bullet);
 
@@ -372,27 +372,33 @@ public class GameView extends View {
     }
 
     //RUDAL COLLISION
-    private boolean checkCollision(Bullet bullet, RudalAmba rudalAmba){
-        return  bullet.getX() < rudalAmba.getX() + rudalAmba.getSize() &&
-                bullet.getX() + bullet.getSize() > rudalAmba.getX() &&
-                bullet.getY() < rudalAmba.getY() + rudalAmba.getSize() &&
-                bullet.getY() + bullet.getSize() > rudalAmba.getY();
+    private boolean checkCollision(Bullet bullet, RudalAmba rudalAmba) {
+        if (isBossAmbaSpawned && !isBossAmbaDefeated) {
+            return bullet.getX() < rudalAmba.getX() + rudalAmba.getSize() &&
+                    bullet.getX() + bullet.getSize() > rudalAmba.getX() &&
+                    bullet.getY() < rudalAmba.getY() + rudalAmba.getSize() &&
+                    bullet.getY() + bullet.getSize() > rudalAmba.getY();
+        }
+        return false;
     }
 
     //BOSS COLLISION
     private boolean checkCollision(Bullet bullet, BossAmba boss) {
-        float bulletLeft = bullet.getX();
-        float bulletRight = bullet.getX() + bullet.getSize(); // Asumsikan peluru menggunakan size
-        float bulletTop = bullet.getY();
-        float bulletBottom = bullet.getY() + bullet.getSize();
+        if(!isBossAmbaDefeated) {
+            float bulletLeft = bullet.getX();
+            float bulletRight = bullet.getX() + bullet.getSize(); // Asumsikan peluru menggunakan size
+            float bulletTop = bullet.getY();
+            float bulletBottom = bullet.getY() + bullet.getSize();
 
-        float bossLeft = boss.getX();
-        float bossRight = boss.getX() + boss.getWidth();
-        float bossTop = boss.getY();
-        float bossBottom = boss.getY() + boss.getHeight();
+            float bossLeft = boss.getX();
+            float bossRight = boss.getX() + boss.getWidth();
+            float bossTop = boss.getY();
+            float bossBottom = boss.getY() + boss.getHeight();
 
-        return bulletRight > bossLeft && bulletLeft < bossRight &&
-                bulletBottom > bossTop && bulletTop < bossBottom;
+            return bulletRight > bossLeft && bulletLeft < bossRight &&
+                    bulletBottom > bossTop && bulletTop < bossBottom;
+        }
+            return false;
     }
 
 
@@ -583,7 +589,7 @@ public class GameView extends View {
             this.y = y;
             this.velocity = velocityY;
             this.size = context.getResources().getDimensionPixelSize(R.dimen.bullet_size);
-            this.damage = 100;
+            this.damage = 200;
         }
 
         public void updatePositionBullet(float deltaTime) {
