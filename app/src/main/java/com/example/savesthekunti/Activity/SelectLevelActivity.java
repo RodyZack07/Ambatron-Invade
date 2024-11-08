@@ -22,21 +22,21 @@ public class SelectLevelActivity extends AppCompatActivity {
     private String selectedSkin;
 
     private Level[] levels = {
-            new Level(1, 100, 30, 500, 10, 30),
-            new Level(2, 130, 60, 1000, 20, 60),
-            new Level(3, 160, 90, 1500, 30, 90),
-            new Level(4, 190, 110, 2000, 40, 110),
-            new Level(5, 210, 140, 2500, 50, 140),
-            new Level(6, 240, 170, 3000, 60, 170),
-            new Level(7, 270, 200, 3500, 70, 200),
-            new Level(8, 300, 230, 4000, 80, 220),
-            new Level(9, 160, 260, 5000, 90, 240),
-            new Level(10, 190, 290, 6000, 100, 260),
-            new Level(11, 230, 300, 8000, 110, 280),
-            new Level(12, 260, 310, 1000, 120, 300),
-            new Level(13, 290, 320, 12000, 140, 310),
-            new Level(14, 310, 340, 15000, 160, 320),
-            new Level(15, 320, 360, 25000, 250, 330),
+            new Level(1, 100, 30, 500, 10, 30, R.drawable.boss_amba),
+            new Level(2, 130, 60, 1000, 20, 60, R.drawable.boss_amba),
+            new Level(3, 160, 90, 1500, 30, 90, R.drawable.bos_astronout),
+            new Level(4, 190, 110, 2000, 40, 110, R.drawable.bos_astronout),
+            new Level(5, 210, 140, 2500, 50, 140, R.drawable.bos_blackarmor),
+            new Level(6, 240, 170, 3000, 60, 170, R.drawable.bos_blackarmor),
+            new Level(7, 270, 200, 3500, 70, 200, R.drawable.bos_jawa),
+            new Level(8, 300, 230, 4000, 80, 220, R.drawable.bos_jawa),
+            new Level(9, 160, 260, 5000, 90, 240, R.drawable.bos_claw),
+            new Level(10, 190, 290, 6000, 100, 260, R.drawable.bos_claw),
+            new Level(11, 230, 300, 8000, 110, 280, R.drawable.bos_crab),
+            new Level(12, 260, 310, 1000, 120, 300, R.drawable.bos_crab),
+            new Level(13, 290, 320, 12000, 140, 310, R.drawable.bos_punk),
+            new Level(14, 310, 340, 15000, 160, 320, R.drawable.bos_punk),
+            new Level(15, 320, 360, 25000, 250, 330, R.drawable.bos_punk),
     };
 
 

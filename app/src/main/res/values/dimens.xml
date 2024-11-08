@@ -18,7 +18,7 @@
     <dimen name ="player_ship_width">140dp</dimen>
     <dimen name ="player_ship_height">140dp</dimen>
 
-    <dimen name ="mosnter_size">50dp</dimen>
+    <dimen name ="mosnter_size">100dp</dimen>
     <dimen name ="bullet_size">50dp</dimen>
     <dimen name ="rudal_size">200dp</dimen>
 

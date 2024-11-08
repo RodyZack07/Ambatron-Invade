@@ -94,6 +94,7 @@ public class GameView extends View {
         this.bossAmbaHp = levelData.getBossAmbaHp();
         this.rudalDurability = levelData.getRudalDurability();
         this.rudalDamage = levelData.getRudalDamage();
+        bossAmbaBitmap = BitmapFactory.decodeResource(getResources(), levelData.getBossImageSrc());
     }
 
     private void init(Context context) {
@@ -108,7 +109,6 @@ public class GameView extends View {
         //Objek Bitmap
         monsterMiniBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.monster_mini);
         bulletsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.beam_bullet);
-        bossAmbaBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.boss_amba);
         rudalAmba = BitmapFactory.decodeResource(getResources(), R.drawable.rudal_amba);
 
 
@@ -185,8 +185,6 @@ public class GameView extends View {
                 }
             }
         }
-
-
 
 
         if(!isPlayerDefeated) {
