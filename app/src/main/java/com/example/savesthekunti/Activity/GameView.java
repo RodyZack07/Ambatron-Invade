@@ -129,6 +129,10 @@ public class GameView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        if(gameOver){
+            Log.d("GameView", "GameView draw stopped");
+            return;
+        }
         long currentTime = System.currentTimeMillis();
         if (lastFrameTime == 0) {
             lastFrameTime = currentTime;
@@ -255,6 +259,24 @@ public class GameView extends View {
         }
 
         invalidate();
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
+    public void destroy() {// Stop any ongoing tasks
+        handler.removeCallbacksAndMessages(null);
+        monsterMiniBitmap.recycle();
+        bulletsBitmap.recycle();
+        bossAmbaBitmap.recycle();
+        rudalAmba.recycle();
+
+        monsterMini.clear();
+        bullets.clear();
+        rudalAmbas.clear();
+
+        gameOver = true;
     }
 
     private void spawnMonsterMini() {
@@ -398,7 +420,7 @@ public class GameView extends View {
             return bulletRight > bossLeft && bulletLeft < bossRight &&
                     bulletBottom > bossTop && bulletTop < bossBottom;
         }
-            return false;
+        return false;
     }
 
 
@@ -436,13 +458,13 @@ public class GameView extends View {
     }
 
     public void removeOffScreenRudal(){
-       List<RudalAmba> rudalToRemove = new ArrayList<>();
-       for (RudalAmba rudal : rudalAmbas){
+        List<RudalAmba> rudalToRemove = new ArrayList<>();
+        for (RudalAmba rudal : rudalAmbas){
             if(rudal.isOffScreen(screenHeight)){
                 rudalToRemove.add(rudal);
             }
-       }
-       rudalAmbas.removeAll(rudalToRemove);
+        }
+        rudalAmbas.removeAll(rudalToRemove);
     }
 
 

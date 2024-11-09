@@ -103,6 +103,8 @@ public class GameActivity extends AppCompatActivity {
         gameOverWindow.setAnimationStyle(R.style.PopupAnimation);
         gameOverWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
 
+        gameView.destroy();
+
         homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,13 +114,13 @@ public class GameActivity extends AppCompatActivity {
             }
         });
 
-       replayBtn.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               gameOverWindow.dismiss();
-               recreate();
-           }
-       });
+        replayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gameOverWindow.dismiss();
+                recreate();
+            }
+        });
 
     }
 

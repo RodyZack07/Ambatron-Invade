@@ -103,7 +103,8 @@ public class MainActivity extends AppCompatActivity {
         // Set onClickListener untuk masing-masing tombol
         settingsBtn.setOnClickListener(view -> showSettingsPopup(view));
         quitButton.setOnClickListener(view -> showExitPopup(view));
-        playButton.setOnClickListener(v -> directSelectFighter());
+        playButton.setOnClickListener(v -> {directSelectFighter();
+                                            finish();});
         profilMenu.setOnClickListener(view -> openLoginActivity());
         achievementMenu.setOnClickListener(view -> showAchievement());
 

@@ -133,7 +133,8 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
-        playBtn.setOnClickListener(view -> showlevelActivity());
+        playBtn.setOnClickListener(view -> {showlevelActivity();
+                                            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -167,7 +168,8 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
-        playBtn.setOnClickListener(view -> showlevelActivity2());
+        playBtn.setOnClickListener(view -> {showlevelActivity2();
+                                            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -201,7 +203,8 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
-        playBtn.setOnClickListener(view -> showlevelActivity3());
+        playBtn.setOnClickListener(view -> {showlevelActivity3();
+                                            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -235,7 +238,8 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
-        playBtn.setOnClickListener(view -> showlevelActivity4());
+        playBtn.setOnClickListener(view -> {showlevelActivity4();
+                                            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -269,7 +273,8 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
-        playBtn.setOnClickListener(view -> showlevelActivity5());
+        playBtn.setOnClickListener(view -> {showlevelActivity5();
+            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -303,7 +308,8 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
-        playBtn.setOnClickListener(view -> showlevelActivity6());
+        playBtn.setOnClickListener(view -> {showlevelActivity6();
+                                            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -337,7 +343,8 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
-        playBtn.setOnClickListener(view -> showlevelActivity7());
+        playBtn.setOnClickListener(view -> {showlevelActivity7();
+                                            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -371,7 +378,8 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
-        playBtn.setOnClickListener(view -> showlevelActivity8());
+        playBtn.setOnClickListener(view -> {showlevelActivity8();
+                                            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -405,7 +413,8 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
-        playBtn.setOnClickListener(view -> showlevelActivity9());
+        playBtn.setOnClickListener(view -> {showlevelActivity9();
+                                            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -439,7 +448,8 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
-        playBtn.setOnClickListener(view -> showlevelActivity10());
+        playBtn.setOnClickListener(view -> {showlevelActivity10();
+                                            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -473,7 +483,8 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
-        playBtn.setOnClickListener(view -> showlevelActivity11());
+        playBtn.setOnClickListener(view -> {showlevelActivity11();
+                                            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -507,7 +518,8 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
-        playBtn.setOnClickListener(view -> showlevelActivity12());
+        playBtn.setOnClickListener(view -> {showlevelActivity12();
+                                            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -541,8 +553,8 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
-        playBtn.setOnClickListener(view -> showlevelActivity13());
-
+        playBtn.setOnClickListener(view -> {showlevelActivity13();
+                                            finish();});
 
         homeBtn.setOnClickListener(view -> {
             popupWindow.dismiss();
@@ -575,7 +587,8 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
-        playBtn.setOnClickListener(view -> showlevelActivity14());
+        playBtn.setOnClickListener(view -> {showlevelActivity14();
+                                            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -609,7 +622,8 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
-        playBtn.setOnClickListener(view -> showlevelActivity15());
+        playBtn.setOnClickListener(view -> {showlevelActivity15();
+                                            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
