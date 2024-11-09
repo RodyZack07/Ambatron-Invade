@@ -59,6 +59,7 @@ public class GameActivity extends AppCompatActivity {
         });
         gameplayBg.start();
 
+
         // ============================ FUNCTION SELECT PESAWAT =================================
         String selectedSkin = getIntent().getStringExtra("selectedSkin");
         gameView.setSelectedShipIndex(selectedSkin);
@@ -103,13 +104,12 @@ public class GameActivity extends AppCompatActivity {
         gameOverWindow.setAnimationStyle(R.style.PopupAnimation);
         gameOverWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
 
-        gameView.destroy();
-
         homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(GameActivity.this, MainActivity.class);
                 startActivity(intent);
+                gameView.destroy();
                 finish();
             }
         });
@@ -121,7 +121,6 @@ public class GameActivity extends AppCompatActivity {
                 recreate();
             }
         });
-
     }
 
     @Override

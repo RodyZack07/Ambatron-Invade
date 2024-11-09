@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -57,8 +58,7 @@ public class GameView extends View {
     private int defeatedCount = 0;
 
     private OnChangeScoreListener scoreChangeListener;
-
-
+    private MediaPlayer laserSFX;
 
     //LOGIC
 
@@ -103,15 +103,11 @@ public class GameView extends View {
         monsterMini = new ArrayList<>();
         bullets = new ArrayList<>();
         rudalAmbas = new ArrayList<>();
-
-
-
         //Objek Bitmap
         monsterMiniBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.monster_mini);
         bulletsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.beam_bullet);
         rudalAmba = BitmapFactory.decodeResource(getResources(), R.drawable.rudal_amba);
-
-
+        laserSFX = MediaPlayer.create(context, R.raw.laser_sfx);
 
         post(() -> {
             screenWidth = getWidth();
@@ -122,9 +118,6 @@ public class GameView extends View {
             startShooting();
         });
     }
-
-
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -170,10 +163,10 @@ public class GameView extends View {
             }
         }
 
+
         for (MonsterMini monster : monsterMini) {
             monster.updatePositionMonster(deltaTime);
             monster.draw(canvas);
-
 
             if (!isPlayerDefeated && checkCollision(monster, playerShip)) {
                 playerShip.reduceHp(monster.getDamage());
@@ -204,16 +197,13 @@ public class GameView extends View {
                         defeatedCount++;
 
                         if(monster.getHp() <= 0){
-                            removeMonsters.add(monster);
-                        }
-
+                            removeMonsters.add(monster);}
                         // Menampilkan animasi ledakan di posisi monster
                         Log.d("GameView", "Triggering explosion at: " + monster.getX() + ", " + monster.getY());
                         gameActivity.triggerExplosion(monster.getX(), monster.getY());
 
                         if (scoreChangeListener != null) {
-                            scoreChangeListener.onScoreChange(score, defeatedCount);
-                        }
+                            scoreChangeListener.onScoreChange(score, defeatedCount);}
                     }
                 }
 
@@ -221,13 +211,10 @@ public class GameView extends View {
                     bossAmba.reduceHp(bullet.getDamage());
                     removeBullets.add(bullet);  // Hapus peluru setelah mengenai bos
 
-
                     if (bossAmba.getHp() <= 0) {
                         isBossAmbaSpawned = false;
                         isBossAmbaDefeated = true;
-                        rudalAmbas.clear();
-
-                    }
+                        rudalAmbas.clear();}
                 }
 
                 for (RudalAmba rudal : rudalAmbas){
@@ -237,10 +224,7 @@ public class GameView extends View {
 
                         if(rudal.getDurability() <= 0){
                             removeRudal.add(rudal);
-                        }
-                    }
-                }
-
+                        }}}
             }
         }
 
@@ -266,7 +250,7 @@ public class GameView extends View {
     }
 
     public void destroy() {// Stop any ongoing tasks
-        handler.removeCallbacksAndMessages(null);
+
         monsterMiniBitmap.recycle();
         bulletsBitmap.recycle();
         bossAmbaBitmap.recycle();
@@ -276,7 +260,10 @@ public class GameView extends View {
         bullets.clear();
         rudalAmbas.clear();
 
-        gameOver = true;
+        if (laserSFX != null) {
+            laserSFX.release();laserSFX = null;
+        }
+
     }
 
     private void spawnMonsterMini() {
@@ -324,7 +311,7 @@ public class GameView extends View {
             @Override
             public void run() {
                 shootBullet();
-                handler.postDelayed(this, 100); // Menembak setiap 100 ms
+                handler.postDelayed(this, 250); // Menembak setiap 100 ms
             }
         }, 100);
     }
@@ -351,6 +338,7 @@ public class GameView extends View {
         float bulletX = playerShip.getShipX() + (playerShip.getShipWidth() / 2) - (bulletSize / 2);
         float bulletY = playerShip.getShipY();
         bullets.add(new Bullet(getContext(), bulletsBitmap, bulletX, bulletY, 2500, bulletSize));
+        laserSFX.start();
     }
 
     private void shotRudalAmba(){
@@ -383,7 +371,7 @@ public class GameView extends View {
     }
 
 
-    //COLLISION
+    //COLLISIONa
 
     //MONSTERS COLISSION
     public boolean checkCollision(Bullet bullet, MonsterMini monster) {
@@ -702,7 +690,6 @@ public class GameView extends View {
         private int durability;
         private int damage;
 
-
         public RudalAmba (Context context,Bitmap rudalAmba, float x, float y, float velocityY, int size ){
             this.rudalAmba = rudalAmba;
             this.x = x;
@@ -713,7 +700,6 @@ public class GameView extends View {
             this.damage = levelData.getRudalDamage();
 
         }
-
         public void updatePositionRudal(float deltaTime){
             y += velocity * deltaTime;
         }
@@ -721,9 +707,6 @@ public class GameView extends View {
         public void draw(Canvas canvas){
             canvas.drawBitmap(Bitmap.createScaledBitmap(rudalAmba, size , size, false), x, y, paint);
         }
-
-
-
         public void reduceDurability(int damage){durability -= damage;}
         public int getDamage(){return damage;}
         public int getDurability(){return durability;}

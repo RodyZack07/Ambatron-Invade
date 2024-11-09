@@ -77,7 +77,8 @@ public class SelectFighterActivity extends AppCompatActivity {
 
         prevsBtn.setOnClickListener(v -> prevsFighter());
         nextBtn.setOnClickListener(v -> nextFighter());
-        selectBtn.setOnClickListener(v -> selectGame());
+        selectBtn.setOnClickListener(v -> {selectGame();
+            finish();});
         prevsBtn1.setOnClickListener(view -> finish());
 
         unlockSkin.setOnClickListener(v -> {
