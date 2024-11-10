@@ -27,6 +27,7 @@ public class GameActivity extends AppCompatActivity {
     private ImageView explosionView;
     private Level levelData;
     public PopupWindow gameOverWindow;
+    public PopupWindow gameWinWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class GameActivity extends AppCompatActivity {
         defeatedTxt = findViewById(R.id.MonsterDefeated);
 
         // Memuat video dari sumber yang diinginkan
-        Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.raw_gameplay); // Ganti dengan nama file video yang benar
+        Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.background_test); // Ganti dengan nama file video yang benar
 
         gameplayBg.setVideoURI(videoUri); // Menggunakan gameplayBg
         gameplayBg.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -107,9 +108,8 @@ public class GameActivity extends AppCompatActivity {
         homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(GameActivity.this, MainActivity.class);
+                Intent intent = new Intent(GameActivity.this, SelectFighterActivity.class);
                 startActivity(intent);
-                gameView.destroy();
                 finish();
             }
         });
@@ -123,8 +123,50 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
+    public void showGameWin(View anchorView){
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.game_win, null);
+
+        ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
+        ImageButton replayBtn = popupView.findViewById(R.id.replayBtn);
+        ImageButton nextBtn = popupView.findViewById(R.id.nextBtn);
+
+        int popupWidth = getResources().getDimensionPixelSize(R.dimen.popup_width);
+        int popupHeight = getResources().getDimensionPixelSize(R.dimen.popup_height);
+
+        gameWinWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
+        gameWinWindow.setAnimationStyle(R.style.PopupAnimation);
+        gameWinWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+
+        homeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(GameActivity.this, SelectFighterActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        replayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                gameWinWindow.dismiss();
+                recreate();
+            }
+        });
+    }
+
     @Override
     public void onBackPressed (){
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Release any remaining resources
+        if (gameView != null) {
+            gameView.destroy();
+        }
     }
 }

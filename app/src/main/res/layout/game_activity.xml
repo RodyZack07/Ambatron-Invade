@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:gravity="top|end"
             android:layout_marginTop="30dp"
+            android:fontFamily="@font/poppins"
             android:text="Score : 0"
             android:textColor="@color/white"
             android:textSize="20dp"/>
@@ -46,6 +47,7 @@
             android:layout_marginTop="57dp"
             android:text="Monster Defeated : 0"
             android:textColor="@color/white"
+            android:fontFamily="@font/poppins"
             android:textSize="20dp"/>
 
         <ImageView

@@ -58,7 +58,8 @@ public class GameView extends View {
     private int defeatedCount = 0;
 
     private OnChangeScoreListener scoreChangeListener;
-    private MediaPlayer laserSFX;
+    private MediaPlayer bossExplodeSFX;
+    private MediaPlayer monsterExplodeSFX;
 
     //LOGIC
 
@@ -107,7 +108,8 @@ public class GameView extends View {
         monsterMiniBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.monster_mini);
         bulletsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.beam_bullet);
         rudalAmba = BitmapFactory.decodeResource(getResources(), R.drawable.rudal_amba);
-        laserSFX = MediaPlayer.create(context, R.raw.laser_sfx);
+        bossExplodeSFX = MediaPlayer.create(context, R.raw.boss_explode);
+        monsterExplodeSFX = MediaPlayer.create(context, R.raw.monster_sfx);
 
         post(() -> {
             screenWidth = getWidth();
@@ -197,7 +199,8 @@ public class GameView extends View {
                         defeatedCount++;
 
                         if(monster.getHp() <= 0){
-                            removeMonsters.add(monster);}
+                            removeMonsters.add(monster);
+                            monsterExplodeSFX.start();}
                         // Menampilkan animasi ledakan di posisi monster
                         Log.d("GameView", "Triggering explosion at: " + monster.getX() + ", " + monster.getY());
                         gameActivity.triggerExplosion(monster.getX(), monster.getY());
@@ -214,7 +217,8 @@ public class GameView extends View {
                     if (bossAmba.getHp() <= 0) {
                         isBossAmbaSpawned = false;
                         isBossAmbaDefeated = true;
-                        rudalAmbas.clear();}
+                        rudalAmbas.clear();
+                        bossExplodeSFX.start();}
                 }
 
                 for (RudalAmba rudal : rudalAmbas){
@@ -260,10 +264,15 @@ public class GameView extends View {
         bullets.clear();
         rudalAmbas.clear();
 
-        if (laserSFX != null) {
-            laserSFX.release();laserSFX = null;
-        }
 
+        if (bossExplodeSFX != null) {
+            bossExplodeSFX.release();
+            bossExplodeSFX = null;
+        }
+        if (monsterExplodeSFX != null) {
+            monsterExplodeSFX.release();
+            monsterExplodeSFX = null;
+        }
     }
 
     private void spawnMonsterMini() {
@@ -338,7 +347,6 @@ public class GameView extends View {
         float bulletX = playerShip.getShipX() + (playerShip.getShipWidth() / 2) - (bulletSize / 2);
         float bulletY = playerShip.getShipY();
         bullets.add(new Bullet(getContext(), bulletsBitmap, bulletX, bulletY, 2500, bulletSize));
-        laserSFX.start();
     }
 
     private void shotRudalAmba(){
