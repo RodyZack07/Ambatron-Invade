@@ -22,6 +22,7 @@ import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.savesthekunti.Database.AccountCenter;
 import com.example.savesthekunti.Database.Admin;
 import com.example.savesthekunti.Database.Login;
 import com.example.savesthekunti.Model.EditAsAdminActivity;
@@ -46,12 +47,15 @@ public class MainActivity extends AppCompatActivity {
     private ImageView borderText;
     private SharedPreferences sharedPreferences;
     private ImageButton infomenu;
+    private  ImageButton akunbtn;
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
@@ -66,12 +70,14 @@ public class MainActivity extends AppCompatActivity {
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
 
+
         // Check if user is logged in
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
         if (isLoggedIn) {
             // Retrieve username and admin status from SharedPreferences
             user = sharedPreferences.getString("username", "");
             boolean isAdmin = sharedPreferences.getBoolean("isAdmin", false);
+            String email = getIntent().getStringExtra("email"); // Retrieve the email
 
             // Update UI based on login status
             if (user != null) {
@@ -163,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()) {
                                 String username = document.getString("username");
+
                                 welcomeText.setText("Selamat datang, " + username + "!");
                                 getSkinData(userId);
 
@@ -246,6 +253,13 @@ public class MainActivity extends AppCompatActivity {
         ImageButton infomenu = popupView.findViewById(R.id.info_button);
         infomenu.setOnClickListener(view -> {
             Intent intent = new Intent(this, InfoMenuActivity.class);
+            startActivity(intent);
+        });
+
+        // Inisialisasi akun dari popupView
+        ImageButton akunbtn = popupView.findViewById(R.id.AkunCenter);
+        akunbtn.setOnClickListener(view -> {
+            Intent intent = new Intent(this, AccountCenter.class);
             startActivity(intent);
         });
 

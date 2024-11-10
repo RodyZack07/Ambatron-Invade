@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.savesthekunti.Activity.MainActivity;
-import com.example.savesthekunti.Database.Register;
 import com.example.savesthekunti.R;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -55,6 +54,7 @@ public class Login extends AppCompatActivity {
         loginButton.setOnClickListener(v -> {
             String username = usernameField.getText().toString().trim();
             String password = passwordField.getText().toString().trim();
+
             loginUser(username, password);
         });
 
@@ -110,6 +110,7 @@ public class Login extends AppCompatActivity {
 
                             // Save username to SharedPreferences
                             editor.putString("username", username);
+
                             editor.putBoolean("isLoggedIn", true);
 
                             // Check admin status

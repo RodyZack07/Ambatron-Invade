@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/background">
+
+
+    <ImageButton
+        android:layout_marginTop="30dp"
+        android:id="@+id/backbutton"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:src="@drawable/arrow_selector3"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        />
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/account_settings_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Account Center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:layout_gravity="center"
+        android:paddingBottom="24dp"
+        android:fontFamily="@font/neuropol"/>
+
+    <!-- Info Akun -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_shadow"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+    >
+
+
+
+        <TextView
+            android:id="@+id/username_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:fontFamily="@font/neuropol"
+            android:text="Your Account"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/username_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/white"
+            android:paddingBottom="16dp"
+            android:text="admin"
+
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/email_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textColor="@color/white"
+            android:fontFamily="@font/neuropol"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/email_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:text="shinoa@example.com"
+            android:textColor="@color/white"
+            android:fontFamily="@font/poppins"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <!-- Tombol Logout -->
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:layout_marginTop="24dp"
+
+        android:textColor="@android:color/white"/>
+
+    <!-- Tombol Hapus Akun -->
+    <Button
+        android:id="@+id/btn_delete_account"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hapus Akun"
+        android:layout_marginTop="16dp"
+
+        android:textColor="@android:color/white"/>
+</LinearLayout>
