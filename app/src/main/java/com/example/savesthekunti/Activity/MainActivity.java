@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private PopupWindow exitPopupWindow;
     private int videoPosition;
     private MediaPlayer mediaPlayer;
+    private MediaPlayer buttonSFX;
     private TextView welcomeText;
     private FirebaseFirestore db;
     private String user;
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         borderText = findViewById(R.id.borderText);
         adminButton = findViewById(R.id.Admin);
         infomenu = findViewById(R.id.info_button);
-
+        buttonSFX = MediaPlayer.create(this, R.raw.button_sfx);
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
 
@@ -234,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
     private void showSettingsPopup(View anchorView) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.popup_layout, null);
+        buttonSFX.start();
 
         int popupWidth = getResources().getDimensionPixelSize(R.dimen.popup_width);
         int popupHeight = getResources().getDimensionPixelSize(R.dimen.popup_height);
@@ -286,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
     private void showExitPopup(View anchorView) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.exit_layout, null);
-
+        buttonSFX.start();
         int popupWidth = getResources().getDimensionPixelSize(R.dimen.popup_width);
         int popupHeight = getResources().getDimensionPixelSize(R.dimen.popup_height);
 
@@ -310,17 +312,20 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SelectFighterActivity.class);
         intent.putExtra("username", user); // Kirim username ke SelectFighterActivity
         startActivity(intent);
+        buttonSFX.start();
     }
 
     private void openLoginActivity() {
         Intent intent = new Intent(this, Login.class);
         startActivity(intent);
+        buttonSFX.start();
     }
 
     private void showAchievement() {
         Intent intent = new Intent(this, ProfilActivity.class);
         startActivity(intent);
         Toast.makeText(this, "Menampilkan achievement...", Toast.LENGTH_SHORT).show();
+        buttonSFX.start();
     }
 
     private boolean isInternetAvailable() {
@@ -335,6 +340,11 @@ public class MainActivity extends AppCompatActivity {
         if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
+        }
+
+        if (buttonSFX != null) {
+            buttonSFX.release();
+            buttonSFX = null;
         }
     }
 }

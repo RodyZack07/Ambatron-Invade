@@ -48,7 +48,7 @@ public class GameActivity extends AppCompatActivity {
         defeatedTxt = findViewById(R.id.MonsterDefeated);
 
         // Memuat video dari sumber yang diinginkan
-        Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.background_test); // Ganti dengan nama file video yang benar
+        Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.raw_gameplay); // Ganti dengan nama file video yang benar
 
         gameplayBg.setVideoURI(videoUri); // Menggunakan gameplayBg
         gameplayBg.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {

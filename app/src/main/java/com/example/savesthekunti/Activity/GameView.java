@@ -236,8 +236,6 @@ public class GameView extends View {
         bullets.removeAll(removeBullets);
         rudalAmbas.removeAll(removeBullets);
 
-
-
         removeOffScreenMonsters();
         removeOffScreenBullets();
         removeOffScreenRudal();
@@ -263,7 +261,6 @@ public class GameView extends View {
         monsterMini.clear();
         bullets.clear();
         rudalAmbas.clear();
-
 
         if (bossExplodeSFX != null) {
             bossExplodeSFX.release();
@@ -338,10 +335,7 @@ public class GameView extends View {
     }
 
 
-
-
     //SHOOT METHOD
-
     private void shootBullet() {
         int bulletSize = getResources().getDimensionPixelSize(R.dimen.bullet_size);
         float bulletX = playerShip.getShipX() + (playerShip.getShipWidth() / 2) - (bulletSize / 2);
@@ -379,7 +373,7 @@ public class GameView extends View {
     }
 
 
-    //COLLISIONa
+    //COLLISION
 
     //MONSTERS COLISSION
     public boolean checkCollision(Bullet bullet, MonsterMini monster) {

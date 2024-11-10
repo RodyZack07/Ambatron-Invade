@@ -2,6 +2,7 @@ package com.example.savesthekunti.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -20,6 +21,7 @@ public class SelectLevelActivity extends AppCompatActivity {
     private PopupWindow popupWindow;
     private View settingsView;
     private String selectedSkin;
+    private MediaPlayer buttonSFX;
 
     private Level[] levels = {
             new Level(1, 100, 30, 500, 10, 30, R.drawable.boss_amba),
@@ -47,6 +49,7 @@ public class SelectLevelActivity extends AppCompatActivity {
 
         // Ambil data skin yang dipilih dari SelectFighterActivity
         selectedSkin = getIntent().getStringExtra("selectedSkin");
+        buttonSFX = MediaPlayer.create(this, R.raw.button_sfx);
 
         ImageButton prevButton = findViewById(R.id.prevsBtn1);
         prevButton.setOnClickListener(v -> finish());
@@ -643,6 +646,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         Level levelData = levels[0];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        buttonSFX.start();
     }
 
     private void showlevelActivity2() {
@@ -651,6 +655,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         Level levelData = levels[1];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        buttonSFX.start();
     }
 
     private void showlevelActivity3() {
@@ -659,6 +664,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         Level levelData = levels[2];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        buttonSFX.start();
     }
 
     private void showlevelActivity4() {
@@ -667,6 +673,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         Level levelData = levels[3];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        buttonSFX.start();
     }
 
     private void showlevelActivity5() {
@@ -675,6 +682,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         Level levelData = levels[4];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        buttonSFX.start();
     }
 
     private void showlevelActivity6() {
@@ -683,6 +691,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         Level levelData = levels[5];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        buttonSFX.start();
     }
 
     private void showlevelActivity7() {
@@ -691,6 +700,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         Level levelData = levels[6];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        buttonSFX.start();
     }
 
     private void showlevelActivity8() {
@@ -699,6 +709,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         Level levelData = levels[7];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        buttonSFX.start();
     }
 
     private void showlevelActivity9() {
@@ -707,6 +718,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         Level levelData = levels[8];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        buttonSFX.start();
     }
 
     private void showlevelActivity10() {
@@ -715,6 +727,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         Level levelData = levels[9];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        buttonSFX.start();
     }
 
     private void showlevelActivity11() {
@@ -723,6 +736,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         Level levelData = levels[10];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        buttonSFX.start();
     }
 
     private void showlevelActivity12() {
@@ -731,6 +745,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         Level levelData = levels[11];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        buttonSFX.start();
     }
 
     private void showlevelActivity13() {
@@ -739,6 +754,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         Level levelData = levels[12];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        buttonSFX.start();
     }
 
     private void showlevelActivity14() {
@@ -747,6 +763,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         Level levelData = levels[13];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        buttonSFX.start();
     }
 
     private void showlevelActivity15() {
@@ -755,6 +772,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         Level levelData = levels[14];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        buttonSFX.start();
 
     }
 
@@ -777,6 +795,11 @@ public class SelectLevelActivity extends AppCompatActivity {
         if (backgroundVideo != null) {
             backgroundVideo.stopPlayback();
             backgroundVideo = null;
+        }
+
+        if (buttonSFX != null) {
+            buttonSFX.release();
+            buttonSFX = null;
         }
     }
 }

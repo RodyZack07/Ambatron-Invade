@@ -1,6 +1,7 @@
 package com.example.savesthekunti.Activity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +37,7 @@ public class SelectFighterActivity extends AppCompatActivity {
 
     private VideoView videoBackground;
     private int videoPosition;
+    private MediaPlayer buttonSFX;
 
     private ImageView spaceShip;
     private ImageView lockOverlay; // Overlay untuk gembok
@@ -64,6 +66,8 @@ public class SelectFighterActivity extends AppCompatActivity {
         ImageButton prevsBtn = findViewById(R.id.prevsBtn);
         ImageButton nextBtn = findViewById(R.id.nextBtn);
         ImageButton selectBtn = findViewById(R.id.selectBtn);
+
+        buttonSFX = MediaPlayer.create(this, R.raw.button_sfx);
 
         // Inisialisasi tombol unlockSkin
         unlockSkin = findViewById(R.id.skinUnlock); // Pastikan ID ini ada di layout XML
@@ -187,7 +191,7 @@ public class SelectFighterActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Skin ini terkunci!", Toast.LENGTH_SHORT).show();
         }
-    }
+        buttonSFX.start();}
 
 
 
