@@ -39,6 +39,7 @@ public class GameView extends View {
     private boolean isPlayerAlive = true;
     private boolean isPlayerDefeated = false;
     private boolean gameOver = false;
+    private boolean gameWin = false;
 
     private int monsterMiniDamage;
     private int monsterMiniHp;
@@ -126,6 +127,10 @@ public class GameView extends View {
 
         if(gameOver){
             Log.d("GameView", "GameView draw stopped");
+            return;
+        }
+        if(gameWin){
+            Log.d("GameView", "GameView draw stopped player wins");
             return;
         }
         long currentTime = System.currentTimeMillis();
@@ -218,7 +223,9 @@ public class GameView extends View {
                         isBossAmbaSpawned = false;
                         isBossAmbaDefeated = true;
                         rudalAmbas.clear();
-                        bossExplodeSFX.start();}
+                        bossExplodeSFX.start();
+                        gameWin = true; // Set game over flag
+                        gameActivity.showGameWin(this);}
                 }
 
                 for (RudalAmba rudal : rudalAmbas){
@@ -721,4 +728,3 @@ public class GameView extends View {
     }
 
 }
-
