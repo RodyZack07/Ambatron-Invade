@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton adminButton;
     private TextView warningText; // Declare warning TextView
     private ImageView borderText;
+    private SharedPreferences sharedPreferences;
+    private ImageButton infomenu;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -51,32 +53,41 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Inisialisasi Firebase Firestore
+        // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
 
-        // Mengambil user ID dari intent
-        user = getIntent().getStringExtra("username");
-
-        // Inisialisasi TextView untuk menyambut pengguna
-        warningText = findViewById(R.id.warning); // Link to warning TextView in XML
-        borderText = findViewById(R.id.borderText);
-
-        if (user != null) {
-            getUserData(user);
-        } else {
-            // Display warning text if user is not logged in
-            warningText.setVisibility(View.VISIBLE);
-            Toast.makeText(this, "Anda Harus Login Untuk Bermain", Toast.LENGTH_SHORT).show();
-        }
-
+        // Initialize UI elements
         welcomeText = findViewById(R.id.welcomeText);
-        if (user != null) {
-            getUserData(user);
+        warningText = findViewById(R.id.warning);
+        borderText = findViewById(R.id.borderText);
+        adminButton = findViewById(R.id.Admin);
+        infomenu = findViewById(R.id.info_button);
+
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
+
+        // Check if user is logged in
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+        if (isLoggedIn) {
+            // Retrieve username and admin status from SharedPreferences
+            user = sharedPreferences.getString("username", "");
+            boolean isAdmin = sharedPreferences.getBoolean("isAdmin", false);
+
+            // Update UI based on login status
+            if (user != null) {
+                welcomeText.setText("Selamat datang, " + user + "!");
+                if (isAdmin) {
+                    adminButton.setVisibility(View.VISIBLE);
+                }
+            }
         } else {
+            // Display warning message if user is not logged in
+            warningText.setVisibility(View.VISIBLE);
+            borderText.setVisibility(View.VISIBLE);
             Toast.makeText(this, "Anda Harus Login Untuk Bermain", Toast.LENGTH_SHORT).show();
         }
 
-        // Inisialisasi VideoView untuk background
+        // Initialize VideoView for background
         videoViewBackground = findViewById(R.id.videoViewBackground);
         Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.background_loop);
         videoViewBackground.setVideoURI(videoUri);
@@ -86,58 +97,49 @@ public class MainActivity extends AppCompatActivity {
         });
         videoViewBackground.start();
 
-        // Inisialisasi MediaPlayer untuk audio
+        // Initialize MediaPlayer for audio
         mediaPlayer = MediaPlayer.create(this, R.raw.galatic_idle);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
 
-        // Inisialisasi tombol
+        // Initialize buttons
         ImageButton settingsBtn = findViewById(R.id.setting_button);
         ImageButton quitButton = findViewById(R.id.btn_quit);
         ImageButton playButton = findViewById(R.id.play_button);
         ImageButton profilMenu = findViewById(R.id.profile);
         ImageButton achievementMenu = findViewById(R.id.achievement);
-        ImageButton LoginButton = findViewById(R.id.play_button);
-        adminButton = findViewById(R.id.Admin);  // Inisialisasi tombol Admin
 
-        // Set onClickListener untuk masing-masing tombol
+        // Set onClickListener for each button
         settingsBtn.setOnClickListener(view -> showSettingsPopup(view));
         quitButton.setOnClickListener(view -> showExitPopup(view));
-        playButton.setOnClickListener(v -> {directSelectFighter();
-                                            finish();});
+        playButton.setOnClickListener(v -> {
+            directSelectFighter();
+            finish();
+        });
         profilMenu.setOnClickListener(view -> openLoginActivity());
         achievementMenu.setOnClickListener(view -> showAchievement());
 
-        // Set onClickListener untuk tombol Admin
+        // Set onClickListener for Admin button
         adminButton.setOnClickListener(view -> openAdminActivity());
 
-        // Sembunyikan tombol admin sebagai default
+        // Hide Admin button by default
         adminButton.setVisibility(View.GONE);
 
-
-
-        // Cek apakah user sudah login atau belum
+        // Check if user is logged in and enable/disable Play button accordingly
         if (user == null) {
-            playButton.setEnabled(false); // Nonaktifkan tombol play jika user belum login
-        }
-
-        // Cek apakah user sudah login atau belum
-        if (user == null) {
-            // Sembunyikan tombol play jika user belum login
+            playButton.setEnabled(false);
             borderText.setVisibility(View.VISIBLE);
             playButton.setVisibility(View.GONE);
             warningText.setVisibility(View.VISIBLE);
             Toast.makeText(this, "Anda Harus Login Untuk Bermain", Toast.LENGTH_SHORT).show();
         } else {
-            // Tampilkan tombol play jika user sudah login
-            borderText.setVisibility(View.GONE);
             playButton.setVisibility(View.VISIBLE);
             playButton.setOnClickListener(v -> directSelectFighter());
             getUserData(user);
         }
     }
 
-        @Override
+    @Override
     protected void onResume() {
         super.onResume();
         videoViewBackground.seekTo(videoPosition);
@@ -166,9 +168,8 @@ public class MainActivity extends AppCompatActivity {
 
                                 Boolean isAdmin = document.getBoolean("isAdmin");
                                 if (isAdmin != null && isAdmin) {
-                                    adminButton.setVisibility(View.VISIBLE); // Tampilkan tombol admin jika user adalah admin
+                                    adminButton.setVisibility(View.VISIBLE);
                                 }
-
                             } else {
                                 Toast.makeText(MainActivity.this, "Data pengguna tidak ditemukan.", Toast.LENGTH_SHORT).show();
                             }
@@ -241,16 +242,32 @@ public class MainActivity extends AppCompatActivity {
         seekBarVol.setProgress(loadVolumePreference());
         setVolume(mediaPlayer, loadVolumePreference() / 100f);
 
+        // Inisialisasi infomenu dari popupView
+        ImageButton infomenu = popupView.findViewById(R.id.info_button);
+        infomenu.setOnClickListener(view -> {
+            Intent intent = new Intent(this, InfoMenuActivity.class);
+            startActivity(intent);
+        });
+
         seekBarVol.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 setVolume(mediaPlayer, progress / 100f);
                 saveVolumePreference(progress);
             }
-            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
-            @Override public void onStopTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Tidak perlu diisi jika tidak diperlukan
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Tidak perlu diisi jika tidak diperlukan
+            }
         });
     }
+
 
     private void showExitPopup(View anchorView) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -287,7 +304,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showAchievement() {
-
         Intent intent = new Intent(this, ProfilActivity.class);
         startActivity(intent);
         Toast.makeText(this, "Menampilkan achievement...", Toast.LENGTH_SHORT).show();

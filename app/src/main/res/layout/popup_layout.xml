@@ -186,9 +186,22 @@
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:background="@android:color/transparent"
-        app:srcCompat="@drawable/info_button"
-        app:layout_constraintTop_toBottomOf="@id/frameLayoutControls"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.073"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/frameLayoutControls"
+        app:srcCompat="@drawable/info_button" />
+
+    <ImageButton
+        android:id="@+id/AkunCenter"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.900"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/frameLayoutControls"
+        app:srcCompat="@drawable/game_win_account" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

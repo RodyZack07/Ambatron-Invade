@@ -110,7 +110,8 @@
         android:layout_marginLeft="35dp"
         android:layout_marginTop="40dp"
         android:outlineSpotShadowColor="@color/black"
-        app:srcCompat="@drawable/preset_profil_button" />
+        app:srcCompat="@drawable/preset_profil_button"
+        android:outlineAmbientShadowColor="@color/black"/>
 
     <ImageButton
         android:id="@+id/Admin"
@@ -122,6 +123,7 @@
         android:layout_marginTop="40dp"
         android:outlineSpotShadowColor="@color/black"
         app:srcCompat="@drawable/preset_pause_button"
+        android:outlineAmbientShadowColor="@color/black"
       
         />
 
