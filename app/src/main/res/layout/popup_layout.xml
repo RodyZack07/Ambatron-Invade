@@ -43,6 +43,7 @@
             android:layout_gravity="center"
             android:elevation="50dp"
             android:text="SETTINGS"
+            android:fontFamily="@font/neuropol"
             android:textColor="#FFFFFF"
             android:textSize="20sp" />
     </FrameLayout>
