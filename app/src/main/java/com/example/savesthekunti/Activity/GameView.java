@@ -12,6 +12,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ImageView;
 
 import com.example.savesthekunti.R;
 
@@ -33,6 +35,7 @@ public class GameView extends View {
     private List<MonsterMini> monsterMini;
     private List<Bullet> bullets;
     private List<RudalAmba> rudalAmbas;
+    private List<ImageView> healthBarSegments = new ArrayList<>();
 
     private boolean isBossAmbaSpawned = false;
     private boolean isBossAmbaDefeated = false;
@@ -143,6 +146,15 @@ public class GameView extends View {
         float deltaTime = (currentTime - lastFrameTime) / 1000f;
         lastFrameTime = currentTime;
 
+        int visibleSegments = playerShip.getHp() / 100; // Calculate visible segments
+        for (int i = 0; i < healthBarSegments.size(); i++) { // Accessing healthBarSegments here
+            if (i < visibleSegments - 1) {
+                healthBarSegments.get(i).setImageResource(R.drawable.hp_bar); // Show filled segment
+            } else {
+                healthBarSegments.get(i).setImageResource(R.drawable.gray);// Hide segment
+            }
+        }
+
         List<MonsterMini> removeMonsters = new ArrayList<>();
         List<Bullet> removeBullets = new ArrayList<>();
         List<RudalAmba> removeRudal = new ArrayList<>();
@@ -191,6 +203,8 @@ public class GameView extends View {
                 }
             }
         }
+
+
 
 
         if(!isPlayerDefeated) {
@@ -255,6 +269,8 @@ public class GameView extends View {
 
         invalidate();
     }
+
+
 
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;

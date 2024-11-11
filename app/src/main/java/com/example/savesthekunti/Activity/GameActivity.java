@@ -29,6 +29,7 @@ public class GameActivity extends AppCompatActivity {
     public PopupWindow gameOverWindow;
     public PopupWindow gameWinWindow;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

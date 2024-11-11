@@ -23,45 +23,124 @@
     <com.example.savesthekunti.Activity.GameView
         android:id="@+id/gameView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+    </com.example.savesthekunti.Activity.GameView>
+
+
+
 
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
+
         <TextView
             android:id="@+id/scoreText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="top|end"
             android:layout_marginTop="30dp"
             android:fontFamily="@font/poppins"
+            android:gravity="top|end"
             android:text="Score : 0"
             android:textColor="@color/white"
-            android:textSize="20dp"/>
+            android:textSize="20dp" />
 
         <TextView
             android:id="@+id/MonsterDefeated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="top|end"
             android:layout_marginTop="57dp"
+            android:fontFamily="@font/poppins"
+            android:gravity="top|end"
             android:text="Monster Defeated : 0"
             android:textColor="@color/white"
-            android:fontFamily="@font/poppins"
-            android:textSize="20dp"/>
+            android:textSize="20dp" />
 
         <ImageView
             android:id="@+id/pausebtn"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="40dp"
             android:layout_marginLeft="300dp"
+            android:layout_marginTop="40dp"
             android:src="@drawable/game_pausebtn"
             android:textSize="20dp"
 
             />
 
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="60dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/gray" />
+
     </FrameLayout>
+    <LinearLayout
+        android:id="@+id/healthBarLayout"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="700dp"
+        android:layout_marginLeft="5dp"
+        android:paddingLeft="2dp">
+
+        <ImageView
+            android:id="@+id/HPtext"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/hp_bar"/>
+        <ImageView
+            android:id="@+id/OneBarLeft"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/gray"/>
+
+        <ImageView
+            android:id="@+id/TwoBarLeft"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/gray"/>
+
+        <ImageView
+            android:id="@+id/ThreebarLeft"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/gray" />
+
+        <ImageView
+            android:id="@+id/FourbarLeft"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/gray"/>
+        <ImageView
+            android:id="@+id/FiveBarLeft"
+            android:layout_width="30dp"
+            android:layout_height="60dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/gray"/>
+        <ImageView
+            android:id="@+id/SixBarLeft"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/gray"/>
+        <ImageView
+            android:id="@+id/SevnBarLeft"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/gray"/>
+        <ImageView
+            android:id="@+id/EightBarLeft"
+            android:layout_width="30dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/gray"/>
+    </LinearLayout>
+
 
 
 
