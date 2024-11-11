@@ -20,6 +20,8 @@
 
     <color name="gray">#808080</color>
     <color name="light_blue">#A4D3FF</color>
+    <color name="red">#ad1717</color>
+    <color name="dark_blue">#4f13d1</color>
 
 
 </resources>

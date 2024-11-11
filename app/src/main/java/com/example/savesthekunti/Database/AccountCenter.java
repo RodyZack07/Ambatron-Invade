@@ -33,45 +33,41 @@ public class AccountCenter extends AppCompatActivity {
     private String username;
     private String email;
     private ImageButton prevsbtn;
-    private Button logoutBtn;
-    private FirebaseAuth mAuth; // Add FirebaseAuth instance
-
-
+    private Button logoutBtn, deleteAccountBtn;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_center);
 
-        // Initialize Firebase Auth
+        // Inisialisasi Firebase Auth dan Firestore
         mAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
-        // Inisialisasi tombol kembali
+        // Inisialisasi elemen UI
+
         prevsbtn = findViewById(R.id.backbutton);
+        logoutBtn = findViewById(R.id.logout_button);
+        deleteAccountBtn = findViewById(R.id.btn_delete_account);
+
+        // Tombol kembali
         prevsbtn.setOnClickListener(view -> finish());
 
-        // Inisialisasi tombol logout
-        logoutBtn = findViewById(R.id.logout_button);
-        logoutBtn.setOnClickListener(view ->  showExitPopup(view));
-//        logoutBtn.setOnClickListener(view -> signOut()); // Call signOut method on click
+        // Tombol logout
+        logoutBtn.setOnClickListener(view -> showExitPopup(view));
 
-
-
-        // Inisialisasi Firestore
-        firestore = FirebaseFirestore.getInstance();
+        // Tombol delete account
+        deleteAccountBtn.setOnClickListener(view -> showDeleteAccountPopup(view));
 
         // Ambil username dan email dari SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
         username = sharedPreferences.getString("username", null);
-        email = sharedPreferences.getString("email", null);  // Ambil email dari SharedPreferences
+        email = sharedPreferences.getString("email", null);
 
         if (username != null && email != null) {
-            // Set email ke TextView
-            createdAtTextView.setText(email);  // Tampilkan email di createdAtTextView
-
-            // Panggil metode untuk load profil
+            createdAtTextView.setText(email);
             loadUserProfile();
-            loadUserEmail();
         } else {
             Toast.makeText(AccountCenter.this, "Username atau email tidak ditemukan!", Toast.LENGTH_SHORT).show();
         }
@@ -91,22 +87,58 @@ public class AccountCenter extends AppCompatActivity {
         ImageButton confirmExit = popupView.findViewById(R.id.imageExit);
         ImageButton cancelExit = popupView.findViewById(R.id.imageYes);
         confirmExit.setOnClickListener(v -> signOut());
-
         cancelExit.setOnClickListener(v -> exitPopupWindow.dismiss());
     }
 
+    private void showDeleteAccountPopup(View anchorView) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.account_center_delete, null);
+
+        int popupWidth = getResources().getDimensionPixelSize(R.dimen.popup_width);
+        int popupHeight = getResources().getDimensionPixelSize(R.dimen.popup_height);
+
+        exitPopupWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
+        exitPopupWindow.setAnimationStyle(R.style.PopupAnimation);
+        exitPopupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
+
+        Button confirmDelete = popupView.findViewById(R.id.imageExit);
+        Button cancelDelete = popupView.findViewById(R.id.imageYes);
+
+        confirmDelete.setOnClickListener(v -> deleteAccount());
+        cancelDelete.setOnClickListener(v -> exitPopupWindow.dismiss());
+    }
+
+    private void deleteAccount() {
+        // Hapus data pengguna dari Firestore
+        DocumentReference userRef = firestore.collection("Akun").document(username);
+        userRef.delete()
+                .addOnSuccessListener(aVoid -> {
+                    if (mAuth.getCurrentUser() != null) {
+                        mAuth.getCurrentUser().delete()
+                                .addOnSuccessListener(aVoid1 -> {
+                                    Toast.makeText(AccountCenter.this, "Akun berhasil dihapus.", Toast.LENGTH_SHORT).show();
+                                    signOut();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(AccountCenter.this, "Error deleting account: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                    } else {
+                        Toast.makeText(AccountCenter.this, "Pengguna tidak masuk.", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(AccountCenter.this, "Error deleting account: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
     private void loadUserProfile() {
-        // Ambil data dari Firestore berdasarkan username sebagai ID
         DocumentReference akunRef = firestore.collection("Akun").document(username);
         akunRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    // Mengambil data profil
                     String username = document.getString("username");
                     String email = document.getString("email");
-
-                    // Tampilkan data di TextView
                     nicknameTextView.setText(username);
                     createdAtTextView.setText(email);
                 } else {
@@ -118,33 +150,14 @@ public class AccountCenter extends AppCompatActivity {
         });
     }
 
-    private void loadUserEmail() {
-        // Ambil data dari Firestore berdasarkan username sebagai ID
-        DocumentReference akunRef = firestore.collection("Akun").document(email);
-        akunRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    // Mengambil data profil
-                    // Tampilkan data di TextView
-                    createdAtTextView.setText(email);
-                }
-            }
-        });
-    }
-
     private void signOut() {
-        mAuth.signOut(); // Sign out from Firebase Authentication
-        // Clear SharedPreferences
+        mAuth.signOut();
         SharedPreferences sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
-
-        // Navigate to the login activity
         Intent intent = new Intent(AccountCenter.this, MainActivity.class);
         startActivity(intent);
-        finish(); // Close the current activity
+        finish();
     }
 }
-
