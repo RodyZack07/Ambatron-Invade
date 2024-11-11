@@ -28,6 +28,7 @@ public class GameActivity extends AppCompatActivity {
     private Level levelData;
     public PopupWindow gameOverWindow;
     public PopupWindow gameWinWindow;
+    private PlayerShip playerShip;
 
 
     @Override
@@ -47,6 +48,7 @@ public class GameActivity extends AppCompatActivity {
         gameplayBg = findViewById(R.id.videoView); // Menggunakan gameplayBg
         scoreTxt = findViewById(R.id.scoreText);
         defeatedTxt = findViewById(R.id.MonsterDefeated);
+        playerShip = new PlayerShip();
 
         // Memuat video dari sumber yang diinginkan
         Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.raw_gameplay); // Ganti dengan nama file video yang benar
@@ -155,6 +157,7 @@ public class GameActivity extends AppCompatActivity {
                 recreate();
             }
         });
+
     }
 
     @Override
