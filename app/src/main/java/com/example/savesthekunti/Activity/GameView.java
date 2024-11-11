@@ -61,6 +61,7 @@ public class GameView extends View {
     private OnChangeScoreListener scoreChangeListener;
     private MediaPlayer bossExplodeSFX;
     private MediaPlayer monsterExplodeSFX;
+    private MediaPlayer laserSFX;
 
     //LOGIC
 
@@ -111,6 +112,7 @@ public class GameView extends View {
         rudalAmba = BitmapFactory.decodeResource(getResources(), R.drawable.rudal_amba);
         bossExplodeSFX = MediaPlayer.create(context, R.raw.boss_explode);
         monsterExplodeSFX = MediaPlayer.create(context, R.raw.monster_sfx);
+        laserSFX = MediaPlayer.create(context, R.raw.laser_sfx);
 
         post(() -> {
             screenWidth = getWidth();
@@ -314,7 +316,7 @@ public class GameView extends View {
             public void run() {
                 spawnMonsterMini();
                 invalidate();
-                handler.postDelayed(this, 400); // Spawn setiap 400 ms
+                handler.postDelayed(this, 600); // Spawn setiap 400 ms
             }
         }, 400);
     }
@@ -323,8 +325,10 @@ public class GameView extends View {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                laserSFX.setLooping(true);
+                laserSFX.start();
                 shootBullet();
-                handler.postDelayed(this, 250); // Menembak setiap 100 ms
+                handler.postDelayed(this, 120); // Menembak setiap 100 ms
             }
         }, 100);
     }
@@ -335,7 +339,7 @@ public class GameView extends View {
                 @Override
                 public void run() {
                     shotRudalAmba(); // Menembakkan 1 rudal per kali eksekusi
-                    handler.postDelayed(this, 1000); // Ganti interval sesuai keinginan
+                    handler.postDelayed(this, 2000); // Ganti interval sesuai keinginan
                 }
             }, 100);
         }
@@ -359,7 +363,7 @@ public class GameView extends View {
         float randomRudalX = bossX + random.nextInt(bossWidth - rudalSize);
         float rudalY = bossAmba.getY() + (bossAmba.getHeight() / 2) - (rudalSize / 2);
 
-        rudalAmbas.add(new RudalAmba(getContext(),rudalAmba, randomRudalX, rudalY, 1500, rudalSize));
+        rudalAmbas.add(new RudalAmba(getContext(),rudalAmba, randomRudalX, rudalY, 3000, rudalSize));
         Log.d("GameView", "New RudalAmba created at: " + randomRudalX + ", " + rudalY);
     }
     //SHOOT METHOD END
