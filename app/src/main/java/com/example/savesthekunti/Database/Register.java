@@ -11,7 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.savesthekunti.Activity.MainActivity;
+import com.example.savesthekunti.Database.Login;
 import com.example.savesthekunti.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -104,17 +104,12 @@ public class Register extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = auth.getCurrentUser();
                         if (user != null) {
+                            // Kirim email verifikasi
                             user.sendEmailVerification().addOnCompleteListener(verificationTask -> {
                                 if (verificationTask.isSuccessful()) {
                                     Toast.makeText(Register.this, "Verifikasi email telah dikirim. Silakan cek email Anda.", Toast.LENGTH_SHORT).show();
-
-                                    auth.signOut();
-
+                                    // Simpan data pengguna ke Firestore
                                     saveUserToFirestore(username, email, hashPassword(password));
-
-                                    Intent intent = new Intent(Register.this, Login.class);
-                                    startActivity(intent);
-                                    finish();
                                 } else {
                                     Toast.makeText(Register.this, "Gagal mengirim verifikasi email: " + verificationTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
@@ -144,6 +139,10 @@ public class Register extends AppCompatActivity {
 
                     Log.d("Register", "Akun berhasil didaftarkan dengan username sebagai ID");
                     Toast.makeText(Register.this, "Registrasi berhasil, silakan verifikasi email Anda", Toast.LENGTH_SHORT).show();
+                    // Logout untuk mencegah akses tanpa verifikasi dan arahkan ke Login
+                    auth.signOut();
+                    startActivity(new Intent(Register.this, Login.class));
+                    finish();
                 })
                 .addOnFailureListener(e -> {
                     Log.e("Register", "Gagal menyimpan akun", e);

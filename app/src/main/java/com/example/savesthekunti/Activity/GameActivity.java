@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.savesthekunti.Model.Score;
 import com.example.savesthekunti.R;
 
 
@@ -35,6 +36,10 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_activity);
+
+
+
+
 
         // Inisialisasi komponen UI
         explosionView = new ImageView(this);
@@ -79,6 +84,28 @@ public class GameActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void onGameOver(int score) {
+        int stars = calculateStars(score); // Calculate stars based on score
+
+        // Send score and stars to Score.java for storage in Firestore
+        Intent intent = new Intent(GameActivity.this, Score.class);
+        intent.putExtra("score", score);
+        intent.putExtra("stars", stars);
+        startActivity(intent); // Move to Score Activity
+    }
+
+
+    private int calculateStars(int score) {
+        if (score > 1000) {
+            return 3; // 3 stars for scores over 1000
+        } else if (score > 500) {
+            return 2; // 2 stars for scores over 500
+        } else {
+            return 1; // 1 star for scores under 500
+        }
+    }
+
 
     public void triggerExplosion(float x, float y) {
         explosionView.setX(x);

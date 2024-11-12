@@ -41,7 +41,7 @@ public class Login extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
-        // Initialize UI
+        // Initialize UI elements
         prevsBtn = findViewById(R.id.prevsBtn3);
         prevsBtn.setOnClickListener(view -> finish());
 
@@ -50,14 +50,14 @@ public class Login extends AppCompatActivity {
         loginButton = findViewById(R.id.Login);
         registerButton = findViewById(R.id.createAccountButton);
 
-        // Set OnClickListener for login and register buttons
+        // Set OnClickListener for login button
         loginButton.setOnClickListener(v -> {
             String username = usernameField.getText().toString().trim();
             String password = passwordField.getText().toString().trim();
-
             loginUser(username, password);
         });
 
+        // Set OnClickListener for register button
         registerButton.setOnClickListener(v -> {
             try {
                 startActivity(new Intent(Login.this, Register.class));
@@ -87,6 +87,7 @@ public class Login extends AppCompatActivity {
         }
     }
 
+    // Function to log in the user
     private void loginUser(String username, String password) {
         // Validate input
         if (username.isEmpty() || password.isEmpty()) {
@@ -94,7 +95,7 @@ public class Login extends AppCompatActivity {
             return;
         }
 
-        // Hash password
+        // Hash the password
         String hashedPassword = hashPassword(password);
 
         // Query Firestore to check if username and password match
@@ -108,12 +109,11 @@ public class Login extends AppCompatActivity {
                             DocumentSnapshot document = task.getResult().getDocuments().get(0);
                             String userId = document.getId();
 
-                            // Save username to SharedPreferences
+                            // Save username and login status to SharedPreferences
                             editor.putString("username", username);
-
                             editor.putBoolean("isLoggedIn", true);
 
-                            // Check admin status
+                            // Check admin status and save it
                             Boolean isAdmin = document.getBoolean("isAdmin");
                             if (isAdmin != null && isAdmin) {
                                 editor.putBoolean("isAdmin", true);
@@ -122,10 +122,10 @@ public class Login extends AppCompatActivity {
                             }
                             editor.apply();
 
-                            // Fetch skin status from Firestore and save to SharedPreferences
+                            // Fetch skin status and save it
                             fetchUserSkins(username);
 
-                            // Move to MainActivity
+                            // Navigate to MainActivity
                             Intent intent = new Intent(Login.this, MainActivity.class);
                             intent.putExtra("username", username);
                             intent.putExtra("isAdmin", true);
@@ -157,7 +157,7 @@ public class Login extends AppCompatActivity {
                             editor.putBoolean(skinId + "_locked", isLocked);
                         }
                     } else {
-                        // If no skins are found, set default skin to unlocked
+                        // If no skins are found, set the default skin to unlocked
                         editor.putBoolean("blue_cosmos_locked", false); // Set blue_cosmos as default skin
                     }
                     editor.apply(); // Save changes

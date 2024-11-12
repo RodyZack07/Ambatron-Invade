@@ -12,12 +12,20 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.savesthekunti.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+
+import com.example.savesthekunti.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class GameView extends View {
     private PlayerShip playerShip;
@@ -59,9 +67,15 @@ public class GameView extends View {
     private int defeatedCount = 0;
 
     private OnChangeScoreListener scoreChangeListener;
+    private int scoreThresholdForStar = 100; // Skor minimal untuk memunculkan bintang baru
+
     private MediaPlayer bossExplodeSFX;
     private MediaPlayer monsterExplodeSFX;
     private MediaPlayer laserSFX;
+
+    private FirebaseFirestore firestore;
+    private FirebaseAuth auth;
+    private String userID;
 
     //LOGIC
 
@@ -101,6 +115,17 @@ public class GameView extends View {
     }
 
     private void init(Context context) {
+
+        // ========================================  Inisialisasi Firebase dan Auth =============================================================
+        firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+
+        // Mendapatkan user ID dari pengguna yang sedang login
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+            userID = user.getUid();
+        }
+
         paint = new Paint();
         playerShip = new PlayerShip(context, spaceShips[0]);
         monsterMini = new ArrayList<>();
@@ -123,16 +148,43 @@ public class GameView extends View {
             startShooting();
         });
     }
+
+    //    ============================== DATABASE SCORE NOT READY YET ========================================================
+    private void saveScoreToFirestore() {
+        if (userID == null) {
+            Log.e("GameView", "User belum login, tidak bisa menyimpan skor");
+            return;
+        }
+
+        Map<String, Object> scoreData = new HashMap<>();
+        scoreData.put("score", score);
+        scoreData.put("defeatedCount", defeatedCount);
+        scoreData.put("timestamp", System.currentTimeMillis());
+
+        firestore.collection("Akun").document(userID).collection("Score").add(scoreData)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("GameView", "Skor berhasil disimpan");
+                    Toast.makeText(getContext(), "Skor berhasil disimpan", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("GameView", "Gagal menyimpan skor", e);
+                    Toast.makeText(getContext(), "Gagal menyimpan skor", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+//    ============================== DATABASE SCORE NOT READY YET ========================================================
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
         if(gameOver){
+            saveScoreToFirestore();
             Log.d("GameView", "GameView draw stopped");
             return;
         }
 
         if (gameWin){
+            saveScoreToFirestore();
             Log.d("GameView", "GameView draw stopped");
             return;
         }
@@ -732,6 +784,8 @@ public class GameView extends View {
             return y > screenHeight;
         }
     }
+
+
 
 }
 

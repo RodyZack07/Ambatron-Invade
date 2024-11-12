@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         adminButton = findViewById(R.id.Admin);
         infomenu = findViewById(R.id.info_button);
         buttonSFX = MediaPlayer.create(this, R.raw.button_sfx);
+
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
 
