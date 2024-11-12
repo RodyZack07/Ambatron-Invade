@@ -30,7 +30,10 @@ public class ProfilActivity extends AppCompatActivity {
 
         //  PREVS BTN
         prevsbtn = findViewById(R.id.prevsBtn3);
-        prevsbtn.setOnClickListener(view -> finish());
+        prevsbtn.setOnClickListener(view ->{
+            finish();
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        });
 
         // Inisialisasi View
         nicknameTextView = findViewById(R.id.nicknameTextView);

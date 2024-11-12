@@ -52,7 +52,10 @@ public class AccountCenter extends AppCompatActivity {
         deleteAccountBtn = findViewById(R.id.btn_delete_account);
 
         // Tombol kembali
-        prevsbtn.setOnClickListener(view -> finish());
+        prevsbtn.setOnClickListener(view -> {
+            finish();
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        });
 
         // Tombol logout
         logoutBtn.setOnClickListener(view -> showExitPopup(view));

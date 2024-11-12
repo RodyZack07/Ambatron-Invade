@@ -52,7 +52,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         buttonSFX = MediaPlayer.create(this, R.raw.button_sfx);
 
         ImageButton prevButton = findViewById(R.id.prevsBtn1);
-        prevButton.setOnClickListener(v -> finish());
+
 
         backgroundVideo = findViewById(R.id.backgroundVideo);
         Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.raw_gameplay);
@@ -63,6 +63,11 @@ public class SelectLevelActivity extends AppCompatActivity {
             mp.setLooping(true);
         });
         backgroundVideo.start();
+
+        prevButton.setOnClickListener(v -> prevsbutton());
+
+
+
 
 
 //        ============== CALL RESOURCE IMAGE VIEW LEVEL ================
@@ -182,6 +187,16 @@ public class SelectLevelActivity extends AppCompatActivity {
             popupWindow.dismiss();
         });
 
+
+    }
+
+    private void prevsbutton() {
+        Intent newIntent = new Intent(this, SelectFighterActivity.class);
+        newIntent.putExtra("username", "shinoa"); // Contoh pengiriman username
+        startActivity(newIntent);
+
+        // Tambahkan animasi fade transition jika diinginkan
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
     }
 

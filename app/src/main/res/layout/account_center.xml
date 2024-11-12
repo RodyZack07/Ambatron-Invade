@@ -51,7 +51,7 @@
             android:id="@+id/btn_delete_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Delete Account"
+            android:text="learn More"
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/red"
             android:textColor="@android:color/white"/>

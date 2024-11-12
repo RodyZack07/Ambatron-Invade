@@ -6,7 +6,12 @@
     android:layout_height="300dp"
     android:layout_gravity="center"
     android:padding="25dp"
-    android:background="@android:color/transparent">
+    android:background="@android:color/transparent"
+
+
+
+    >
+
 
 
 
@@ -22,6 +27,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+    <!-- Button di atas kiri -->
+    <ImageButton
+        android:id="@+id/backbutton"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+
+        android:layout_marginTop="30dp"
+        android:src="@drawable/arrow_selector3"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        tools:ignore="MissingConstraints" />
 
     <FrameLayout
         android:layout_width="200dp"

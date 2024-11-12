@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+
+import com.airbnb.lottie.LottieAnimationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -33,6 +36,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class MainActivity extends AppCompatActivity {
+
+//    ======== Library ==============
+private LottieAnimationView lottieLoading;
+
 
     private VideoView videoViewBackground;
     private PopupWindow popupWindow;
@@ -50,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton infomenu;
     private  ImageButton akunbtn;
 
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         // Initialize UI elements
+
+
+
         welcomeText = findViewById(R.id.welcomeText);
         warningText = findViewById(R.id.warning);
         borderText = findViewById(R.id.borderText);
@@ -198,13 +209,13 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         QuerySnapshot result = task.getResult();
                         if (result != null && !result.isEmpty()) {
-                            StringBuilder skins = new StringBuilder("Skin yang dimiliki:\n");
+                            StringBuilder skins = new StringBuilder("");
                             for (QueryDocumentSnapshot document : result) {
                                 String skinId = document.getString("id_skin");
                                 Boolean isLocked = document.getBoolean("status_terkunci");
 
                                 if (skinId != null) {
-                                    skins.append("Skin ID: ").append(skinId).append(" - ").append(isLocked ? "Terkunci" : "Terbuka").append("\n");
+                                    skins.append("").append(skinId).append(" - ").append(isLocked ? "" : "").append("");
                                 }
                             }
                             Toast.makeText(MainActivity.this, skins.toString(), Toast.LENGTH_LONG).show();
@@ -257,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
         infomenu.setOnClickListener(view -> {
             Intent intent = new Intent(this, InfoMenuActivity.class);
             startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         });
 
         // Inisialisasi akun dari popupView
@@ -264,6 +276,7 @@ public class MainActivity extends AppCompatActivity {
         akunbtn.setOnClickListener(view -> {
             Intent intent = new Intent(this, AccountCenter.class);
             startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         });
 
         seekBarVol.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -310,11 +323,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void directSelectFighter() {
-        Intent intent = new Intent(this, SelectFighterActivity.class);
-        intent.putExtra("username", user); // Kirim username ke SelectFighterActivity
-        startActivity(intent);
-        buttonSFX.start();
+        // Mendapatkan referensi ke LottieAnimationView
+        LottieAnimationView lottieLoading = findViewById(R.id.lottieLoading);
+
+        // Memastikan animasi hanya dimainkan jika file animasi valid
+        if (lottieLoading != null) {
+            // Menampilkan animasi dan memulai pemutaran
+            lottieLoading.setVisibility(View.VISIBLE);
+            lottieLoading.playAnimation();
+
+            // Delay untuk menunjukkan animasi sebentar sebelum berpindah activity
+            new Handler().postDelayed(() -> {
+                // Intent untuk berpindah ke SelectFighterActivity
+                Intent intent = new Intent(MainActivity.this, SelectFighterActivity.class);
+                intent.putExtra("username", "shinoa"); // Contoh pengiriman username
+                startActivity(intent);
+
+                // Tambahkan animasi fade transition jika diinginkan
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+                // Menghentikan animasi dan menyembunyikan animasi setelah berpindah activity
+                lottieLoading.cancelAnimation();
+                lottieLoading.setVisibility(View.GONE);
+                finish(); // Menutup MainActivity
+            }, 7000); // Delay 2 detik sebelum berpindah activity
+        }
+
     }
+
+
+
+
 
     private void openLoginActivity() {
         Intent intent = new Intent(this, Login.class);
@@ -325,6 +364,7 @@ public class MainActivity extends AppCompatActivity {
     private void showAchievement() {
         Intent intent = new Intent(this, ProfilActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         Toast.makeText(this, "Menampilkan achievement...", Toast.LENGTH_SHORT).show();
         buttonSFX.start();
     }

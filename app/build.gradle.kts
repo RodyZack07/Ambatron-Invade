@@ -9,6 +9,8 @@ android {
 
     defaultConfig {
 
+        renderscriptTargetApi = 21
+        renderscriptSupportModeEnabled = true
         applicationId = "com.example.savesthekunti"
         minSdk = 29
         targetSdk = 34
@@ -46,10 +48,15 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging")
 
     // Other libraries
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation ("com.airbnb.android:lottie:4.0.0")
+
+
+
 
 
     // Testing

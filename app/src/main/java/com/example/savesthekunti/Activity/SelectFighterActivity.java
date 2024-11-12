@@ -83,12 +83,19 @@ public class SelectFighterActivity extends AppCompatActivity {
         nextBtn.setOnClickListener(v -> nextFighter());
         selectBtn.setOnClickListener(v -> {selectGame();
             finish();});
-        prevsBtn1.setOnClickListener(view -> finish());
+        prevsBtn1.setOnClickListener(view -> prevsbutton());
 
         unlockSkin.setOnClickListener(v -> {
             unlockSkin.setEnabled(false); // Disable the button while unlocking
             unlockCurrentSkin();
         });
+    }
+
+    private void prevsbutton() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override
@@ -107,6 +114,13 @@ public class SelectFighterActivity extends AppCompatActivity {
     }
 
     private void fetchUserSkins() {
+        // Pastikan username sudah diinisialisasi
+        if (username == null || username.isEmpty()) {
+            Log.e("FetchUserSkins", "Username is null or empty");
+            return; // Hentikan eksekusi jika username tidak valid
+        }
+
+        // Jika username valid, lanjutkan mengambil data koleksi skin
         CollectionReference skinRef = firestore.collection("Akun").document(username).collection("Koleksi_Skin");
         skinRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -131,6 +145,7 @@ public class SelectFighterActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void updateFighterView() {
         String currentSkinID = fighterIDs[currentSkinIndex]; // Ambil ID skin saat ini
@@ -188,6 +203,9 @@ public class SelectFighterActivity extends AppCompatActivity {
             Intent intent = new Intent(SelectFighterActivity.this, SelectLevelActivity.class);
             intent.putExtra("selectedSkin", fighterIDs[currentSkinIndex]); // Kirim ID skin yang dipilih
             startActivity(intent);
+
+            // Tambahkan animasi fade transition jika diinginkan
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         } else {
             Toast.makeText(this, "Skin ini terkunci!", Toast.LENGTH_SHORT).show();
         }

@@ -5,6 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieLoading"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_centerInParent="true"
+        app:lottie_rawRes="@raw/lottei_rocket_anim"
+        android:layout_gravity="center"
+        app:lottie_autoPlay="false"
+        app:lottie_loop="true"
+        android:visibility="gone"
+        android:elevation="10dp"/>
+    <!-- Elevation untuk menempatkan animasi di atas -->
+
+
+
+
+
+
+
     <!-- VideoView sebagai latar belakang -->
     <VideoView
         android:id="@+id/videoViewBackground"
@@ -13,6 +34,7 @@
         android:layout_gravity="center"
         android:layout_marginBottom="0dp"
         android:layout_marginTop="0dp"
+        android:layout_alignParentBottom="true"
 
         />
 

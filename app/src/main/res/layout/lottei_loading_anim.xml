@@ -1,0 +1,20 @@
+<!-- layout/activity_main.xml -->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Konten lainnya jika ada -->
+
+    <!-- Lottie Animation untuk loading -->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieLoading"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        app:lottie_rawRes="@raw/lottie_uvo_anim"
+    app:lottie_autoPlay="false"
+    app:lottie_loop="true"
+    android:visibility="gone"/>
+</RelativeLayout>

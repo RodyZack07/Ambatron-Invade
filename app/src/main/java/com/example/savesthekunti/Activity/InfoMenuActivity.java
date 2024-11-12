@@ -13,7 +13,7 @@ import com.example.savesthekunti.R;
 
 public class InfoMenuActivity extends AppCompatActivity {
 
-    private ImageButton accountButton;
+    private ImageButton prevsbtn;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -21,17 +21,11 @@ public class InfoMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info_menu);
 
-        Log.d("InfoMenuActivity", "Layout loaded successfully"); // Debug log
+        prevsbtn = findViewById(R.id.backbutton);
+        prevsbtn.setOnClickListener(v -> {
+            finish();
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        });
 
-        accountButton = findViewById(R.id.AkunCenter);
-
-        if (accountButton == null) {
-            Log.e("InfoMenuActivity", "ImageButton with ID AkunCenter not found!");
-        } else {
-            accountButton.setOnClickListener(view -> {
-                Intent akun = new Intent(InfoMenuActivity.this, AccountCenter.class);
-                startActivity(akun);
-            });
-        }
     }
 }
