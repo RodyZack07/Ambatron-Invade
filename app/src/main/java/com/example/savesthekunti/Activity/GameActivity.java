@@ -5,6 +5,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,7 @@ import com.example.savesthekunti.Model.Score;
 import com.example.savesthekunti.R;
 
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements GameView.OnPlayerHpChangeListener {
     private GameView gameView;
     private VideoView gameplayBg;
     private TextView scoreTxt, defeatedTxt;
@@ -29,17 +30,14 @@ public class GameActivity extends AppCompatActivity {
     private Level levelData;
     public PopupWindow gameOverWindow;
     public PopupWindow gameWinWindow;
-    private PlayerShip playerShip;
+    private int initialHealth; private ImageView oneBarLeft, twoBarLeft, threeBarLeft, fourBarLeft, fiveBarLeft;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_activity);
-
-
-
-
 
         // Inisialisasi komponen UI
         explosionView = new ImageView(this);
@@ -53,7 +51,15 @@ public class GameActivity extends AppCompatActivity {
         gameplayBg = findViewById(R.id.videoView); // Menggunakan gameplayBg
         scoreTxt = findViewById(R.id.scoreText);
         defeatedTxt = findViewById(R.id.MonsterDefeated);
-        playerShip = new PlayerShip();
+        gameView.setOnPlayerHpChangeListener(this);
+        initialHealth = gameView.getPlayerShipHp();
+
+        oneBarLeft = findViewById(R.id.OneBarLeft);
+        twoBarLeft = findViewById(R.id.TwoBarLeft);
+        threeBarLeft = findViewById(R.id.ThreebarLeft);
+        fourBarLeft = findViewById(R.id.FourbarLeft);
+        fiveBarLeft = findViewById(R.id.FiveBarLeft);
+
 
         // Memuat video dari sumber yang diinginkan
         Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.raw_gameplay); // Ganti dengan nama file video yang benar
@@ -83,6 +89,25 @@ public class GameActivity extends AppCompatActivity {
                 defeatedTxt.setText("Monster Defeated: " + defeatedCount);
             }
         });
+    }
+
+    @Override
+    public void onPlayerHpChange(int newHp) {
+        initialHealth = newHp;
+        Log.d("GameActivity", "Player HP changed to: " + newHp);// Update initialHealth
+        // ...
+
+        oneBarLeft.setVisibility(newHp >= 100 ? View.VISIBLE : View.GONE);
+        twoBarLeft.setVisibility(newHp >= 200 ? View.VISIBLE : View.GONE);
+        threeBarLeft.setVisibility(newHp >= 400 ? View.VISIBLE : View.GONE);
+        fourBarLeft.setVisibility(newHp >= 600 ? View.VISIBLE : View.GONE);
+        fiveBarLeft.setVisibility(newHp >= 800? View.VISIBLE : View.GONE);
+
+        if (newHp <= 0) {
+            showGameOver(findViewById(R.id.gameContent)); // Panggil popup game over
+        }
+
+
     }
 
     private void onGameOver(int score) {

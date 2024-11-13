@@ -77,12 +77,19 @@ public class GameView extends View {
     private FirebaseAuth auth;
     private String userID;
 
+
     //LOGIC
 
     // Interface untuk mengubah skor
     interface OnChangeScoreListener {
         void onScoreChange(int score, int defeatedCount);
     }
+
+    public interface OnPlayerHpChangeListener {
+        void onPlayerHpChange(int newHp);
+    }
+
+    private OnPlayerHpChangeListener hpChangeListener;
 
     public void setSelectedShipIndex(String selectedSkin) {
         // Get the drawable resource ID based on the selectedSkin
@@ -93,9 +100,12 @@ public class GameView extends View {
         playerShip.setShipPosition(screenWidth, screenHeight); // Mengatur posisi pesawat setelah diganti
     }
 
-
     public void setOnChangeScoreListener(OnChangeScoreListener listener) {
         this.scoreChangeListener = listener;
+    }
+
+    public void setOnPlayerHpChangeListener(OnPlayerHpChangeListener listener) {
+        this.hpChangeListener = listener;
     }
 
     public GameView(Context context, AttributeSet attrs) {
@@ -172,7 +182,7 @@ public class GameView extends View {
                 });
     }
 
-//    ============================== DATABASE SCORE NOT READY YET ========================================================
+    //    ============================== DATABASE SCORE NOT READY YET ========================================================
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -232,15 +242,18 @@ public class GameView extends View {
 
             if (!isPlayerDefeated && checkCollision(monster, playerShip)) {
                 playerShip.reduceHp(monster.getDamage());
-                removeMonsters.add(monster); // Hapus monster setelah tabrakan
+                removeMonsters.add(monster);
+                if (hpChangeListener != null) {
+                    hpChangeListener.onPlayerHpChange(playerShip.getHp());
+                }// Hapus monster setelah tabrakan
 
 
                 if (playerShip.getHp() <= 0) {
                     isPlayerDefeated = true;
                     isPlayerAlive = false;
                     bullets.clear();
-                    gameOver = true; // Set game over flag
-                    gameActivity.showGameOver(this);
+                    gameOver = true;
+                    // Set game over flag
                 }
             }
         }
@@ -280,7 +293,7 @@ public class GameView extends View {
                         rudalAmbas.clear();
                         bossExplodeSFX.start();
                         gameWin = true;
-                        gameActivity.showGameWin(this);}
+                       }
                 }
 
                 for (RudalAmba rudal : rudalAmbas){
@@ -315,25 +328,60 @@ public class GameView extends View {
         this.gameOver = gameOver;
     }
 
+    public int getPlayerShipHp() {
+        return playerShip.getHp();
+    }
+
     public void destroy() {// Stop any ongoing tasks
 
-        monsterMiniBitmap.recycle();
-        bulletsBitmap.recycle();
-        bossAmbaBitmap.recycle();
-        rudalAmba.recycle();
+        // Recycle Bitmaps
+        if (monsterMiniBitmap != null) {
+            monsterMiniBitmap.recycle();
+            monsterMiniBitmap = null;
+            Log.d("GameView", "monsterMiniBitmap has been recycled.");
+        }
 
+        if (bulletsBitmap != null) {
+            bulletsBitmap.recycle();
+            bulletsBitmap = null;
+            Log.d("GameView", "bulletsBitmap has been recycled.");
+        }
+
+        if (bossAmbaBitmap != null) {
+            bossAmbaBitmap.recycle();
+            bossAmbaBitmap = null;
+            Log.d("GameView", "bossAmbaBitmap has been recycled.");
+        }
+
+        if (rudalAmba != null) {
+            rudalAmba.recycle();
+            rudalAmba = null;
+            Log.d("GameView", "rudalAmba has been recycled.");
+        }
+
+        // Clear lists
         monsterMini.clear();
         bullets.clear();
         rudalAmbas.clear();
+        Log.d("GameView", "All lists have been cleared.");
 
-
+        // Release Sound Effects
         if (bossExplodeSFX != null) {
             bossExplodeSFX.release();
             bossExplodeSFX = null;
+            Log.d("GameView", "bossExplodeSFX has been released.");
         }
+
         if (monsterExplodeSFX != null) {
             monsterExplodeSFX.release();
             monsterExplodeSFX = null;
+            Log.d("GameView", "monsterExplodeSFX has been released.");
+        }
+
+        if (laserSFX != null) {
+            laserSFX.release();
+            laserSFX = null;
+            Log.d("GameView", "laserSFX has been released.");
         }
     }
 
@@ -477,7 +525,6 @@ public class GameView extends View {
         }
         return false;
     }
-
 
 
 
