@@ -85,7 +85,7 @@
                 android:layout_marginBottom="40dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="Play Button"
-                android:src="@drawable/play_button"
+                android:src="@drawable/menu_play_btn"
                 android:clickable="true"
                 android:visibility="gone" /> <!-- Sembunyikan tombol Play jika belum login -->/>
 
@@ -99,7 +99,7 @@
                 android:layout_marginBottom="40dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="Play Button"
-                android:src="@drawable/achievement_button"
+                android:src="@drawable/menu_achievement_btn"
                 android:clickable="true"/>
 
             <ImageButton
@@ -109,7 +109,7 @@
                 android:layout_marginBottom="40dp"
                 android:contentDescription="Setting Button"
                 android:background="@android:color/transparent"
-                android:src="@drawable/setting_button"
+                android:src="@drawable/menu_setting_btn"
                 android:clickable="true"/>
 
             <ImageButton
@@ -118,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="QuitButton"
                 android:background="@android:color/transparent"
-                android:src="@drawable/quit_menu"
+                android:src="@drawable/menu_quit_btn"
                 android:clickable="true"/>
         </LinearLayout>
     </LinearLayout>

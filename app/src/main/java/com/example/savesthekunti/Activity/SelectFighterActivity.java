@@ -1,6 +1,7 @@
 package com.example.savesthekunti.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.savesthekunti.R;
+import com.example.savesthekunti.UI.LoadingScreen;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -46,6 +48,10 @@ public class SelectFighterActivity extends AppCompatActivity {
     private int currentSkinIndex = 0;
     private Button unlockSkin;
 
+//    AUDIO
+private MediaPlayer mediaPlayer;
+
+//    DATABASE
     private FirebaseFirestore firestore;
     private String username;
 
@@ -59,6 +65,13 @@ public class SelectFighterActivity extends AppCompatActivity {
         videoBackground.setVideoURI(videoUri);
         videoBackground.setOnPreparedListener(mp -> mp.setLooping(true));
         videoBackground.start();
+
+//        ====================================== Audio ======================================
+
+        // Initialize MediaPlayer for audio
+        mediaPlayer = MediaPlayer.create(this, R.raw.skin_idle);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
 
         ImageButton prevsBtn1 = findViewById(R.id.prevsBtn2);
         spaceShip = findViewById(R.id.ship_img);
@@ -91,6 +104,18 @@ public class SelectFighterActivity extends AppCompatActivity {
         });
     }
 
+
+//    ======================= LOAD VOLUME AND SET VOLUME ===================================
+    private int loadVolumePreference() {
+        SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
+        return prefs.getInt("volume", 50); // default 50
+    }
+
+    private void setVolume(MediaPlayer mediaPlayer, float volume) {
+        mediaPlayer.setVolume(volume, volume);
+    }
+
+
     private void prevsbutton() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -103,6 +128,11 @@ public class SelectFighterActivity extends AppCompatActivity {
         super.onResume();
         videoBackground.seekTo(videoPosition);
         videoBackground.start();
+
+        if (mediaPlayer != null) {
+            mediaPlayer.start();
+            setVolume(mediaPlayer, loadVolumePreference() / 100f);
+        }
         fetchUserSkins(); // Fetch skins setiap kali activity resume
     }
 
@@ -111,6 +141,10 @@ public class SelectFighterActivity extends AppCompatActivity {
         super.onPause();
         videoPosition = videoBackground.getCurrentPosition();
         videoBackground.pause();
+
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
     }
 
     private void fetchUserSkins() {
@@ -200,7 +234,7 @@ public class SelectFighterActivity extends AppCompatActivity {
 
     private void selectGame() {
         if (ownedSkins.contains(fighterIDs[currentSkinIndex])) {
-            Intent intent = new Intent(SelectFighterActivity.this, SelectLevelActivity.class);
+            Intent intent = new Intent(SelectFighterActivity.this, LoadingScreen.class);
             intent.putExtra("selectedSkin", fighterIDs[currentSkinIndex]); // Kirim ID skin yang dipilih
             startActivity(intent);
 

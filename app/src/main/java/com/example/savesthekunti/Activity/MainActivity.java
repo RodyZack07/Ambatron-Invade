@@ -20,6 +20,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+import android.window.SplashScreen;
 
 import com.airbnb.lottie.LottieAnimationView;
 
@@ -30,6 +31,7 @@ import com.example.savesthekunti.Database.Admin;
 import com.example.savesthekunti.Database.Login;
 import com.example.savesthekunti.Model.EditAsAdminActivity;
 import com.example.savesthekunti.R;
+import com.example.savesthekunti.UI.LoadingScreen;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -112,7 +114,7 @@ private LottieAnimationView lottieLoading;
         videoViewBackground.setVideoURI(videoUri);
         videoViewBackground.setOnPreparedListener(mp -> {
             mp.setLooping(true);
-            setVolume(mp, 0f);
+            mp.setVolume(0, 0); // Pastikan volume video benar-benar mati
         });
         videoViewBackground.start();
 
@@ -159,19 +161,26 @@ private LottieAnimationView lottieLoading;
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        videoViewBackground.seekTo(videoPosition);
-        videoViewBackground.start();
-        int savedVolume = loadVolumePreference();
-        setVolume(mediaPlayer, savedVolume / 100f);
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         videoPosition = videoViewBackground.getCurrentPosition();
         videoViewBackground.pause();
+
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        videoViewBackground.seekTo(videoPosition);
+        videoViewBackground.start();
+
+        if (mediaPlayer != null) {
+            mediaPlayer.start();
+            setVolume(mediaPlayer, loadVolumePreference() / 100f);
+        }
     }
 
     private void getUserData(String userId) {
@@ -323,17 +332,17 @@ private LottieAnimationView lottieLoading;
     }
 
     private void directSelectFighter() {
-        // Mendapatkan referensi ke LottieAnimationView
-        LottieAnimationView lottieLoading = findViewById(R.id.lottieLoading);
-
-        // Memastikan animasi hanya dimainkan jika file animasi valid
-        if (lottieLoading != null) {
-            // Menampilkan animasi dan memulai pemutaran
-            lottieLoading.setVisibility(View.VISIBLE);
-            lottieLoading.playAnimation();
-
-            // Delay untuk menunjukkan animasi sebentar sebelum berpindah activity
-            new Handler().postDelayed(() -> {
+//        // Mendapatkan referensi ke LottieAnimationView
+//        LottieAnimationView lottieLoading = findViewById(R.id.lottieLoading);
+//
+//        // Memastikan animasi hanya dimainkan jika file animasi valid
+//        if (lottieLoading != null) {
+//            // Menampilkan animasi dan memulai pemutaran
+//            lottieLoading.setVisibility(View.VISIBLE);
+//            lottieLoading.playAnimation();
+//
+//            // Delay untuk menunjukkan animasi sebentar sebelum berpindah activity
+//            new Handler().postDelayed(() -> {
                 // Intent untuk berpindah ke SelectFighterActivity
                 Intent intent = new Intent(MainActivity.this, SelectFighterActivity.class);
                 intent.putExtra("username", "shinoa"); // Contoh pengiriman username
@@ -341,13 +350,13 @@ private LottieAnimationView lottieLoading;
 
                 // Tambahkan animasi fade transition jika diinginkan
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
-                // Menghentikan animasi dan menyembunyikan animasi setelah berpindah activity
-                lottieLoading.cancelAnimation();
-                lottieLoading.setVisibility(View.GONE);
-                finish(); // Menutup MainActivity
-            }, 7000); // Delay 2 detik sebelum berpindah activity
-        }
+//
+//                // Menghentikan animasi dan menyembunyikan animasi setelah berpindah activity
+//                lottieLoading.cancelAnimation();
+//                lottieLoading.setVisibility(View.GONE);
+//                finish(); // Menutup MainActivity
+//            }, 7000); // Delay 2 detik sebelum berpindah activity
+//        }
 
     }
 

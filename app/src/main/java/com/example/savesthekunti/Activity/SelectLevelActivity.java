@@ -2,6 +2,7 @@ package com.example.savesthekunti.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +23,9 @@ public class SelectLevelActivity extends AppCompatActivity {
     private View settingsView;
     private String selectedSkin;
     private MediaPlayer buttonSFX;
+
+    //    AUDIO
+    private MediaPlayer mediaPlayer;
 
     private Level[] levels = {
             new Level(1, 100, 30, 500, 10, 30, R.drawable.boss_amba),
@@ -53,6 +57,13 @@ public class SelectLevelActivity extends AppCompatActivity {
 
         ImageButton prevButton = findViewById(R.id.prevsBtn1);
 
+
+        //        ====================================== Audio ======================================
+
+        // Initialize MediaPlayer for audio
+        mediaPlayer = MediaPlayer.create(this, R.raw.level_idle);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
 
         backgroundVideo = findViewById(R.id.backgroundVideo);
         Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.raw_gameplay);
@@ -792,16 +803,36 @@ public class SelectLevelActivity extends AppCompatActivity {
     }
 
 
+    //    ======================= LOAD VOLUME AND SET VOLUME ===================================
+    private int loadVolumePreference() {
+        SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
+        return prefs.getInt("volume", 50); // default 50
+    }
+
+    private void setVolume(MediaPlayer mediaPlayer, float volume) {
+        mediaPlayer.setVolume(volume, volume);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         backgroundVideo.start();
+
+        if (mediaPlayer != null) {
+            mediaPlayer.start();
+            setVolume(mediaPlayer, loadVolumePreference() / 100f);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         backgroundVideo.pause();
+
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
+
     }
 
     @Override

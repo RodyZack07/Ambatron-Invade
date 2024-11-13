@@ -37,6 +37,7 @@
         <activity android:name=".Activity.ProfilActivity"/>
         <activity android:name=".Database.Admin"/>
         <activity android:name=".Database.AccountCenter"/>
+        <activity android:name=".UI.LoadingScreen"/>
 
         <activity android:name=".Model.EditAsAdminActivity"/>
 
