@@ -333,6 +333,12 @@ public class GameView extends View {
 
     public void destroy() {// Stop any ongoing tasks
 
+        // Hentikan Handler untuk menghindari tugas yang terus berjalan setelah GameView dihancurkan
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+            Log.d("GameView", "Handler has been stopped and all callbacks removed.");
+        }
         // Recycle Bitmaps
         if (monsterMiniBitmap != null) {
             monsterMiniBitmap.recycle();
@@ -433,7 +439,7 @@ public class GameView extends View {
                     laserSFX.start();
                 }
                 shootBullet();
-                handler.postDelayed(this, 250); // Menembak setiap 100 ms
+                handler.postDelayed(this, 150); // Menembak setiap 100 ms
             }
         }, 100);
     }

@@ -35,7 +35,6 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     private int initialHealth; private ImageView oneBarLeft, twoBarLeft, threeBarLeft, fourBarLeft, fiveBarLeft;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +105,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         fiveBarLeft.setVisibility(newHp >= 800? View.VISIBLE : View.GONE);
 
         if (newHp <= 0) {
-            showGameOver(findViewById(R.id.gameContent)); // Panggil popup game over
+            showGameOver(findViewById(R.id.gameContent));
         }
 
 
@@ -183,6 +182,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
             @Override
             public void run() {
                 gameView.destroy();
+                gameView.setVisibility(View.GONE);
             }
         }, 1000);
     }
@@ -218,21 +218,15 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
                 recreate();
             }
         });
-
-
     }
 
     @Override
-    public void onBackPressed (){
-
-    }
+    public void onBackPressed (){}
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         // Release any remaining resources
         if (gameView != null) {
-            gameView.destroy();
-        }
-    }
+            gameView.destroy();}}
 }
