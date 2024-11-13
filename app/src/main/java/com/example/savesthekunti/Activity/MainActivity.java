@@ -96,7 +96,7 @@ private LottieAnimationView lottieLoading;
 
             // Update UI based on login status
             if (user != null) {
-                welcomeText.setText("Selamat datang, " + user + "!");
+                welcomeText.setText(user);
                 if (isAdmin) {
                     adminButton.setVisibility(View.VISIBLE);
                 }
@@ -192,7 +192,7 @@ private LottieAnimationView lottieLoading;
                             if (document.exists()) {
                                 String username = document.getString("username");
 
-                                welcomeText.setText("Selamat datang, " + username + "!");
+                                welcomeText.setText(username);
                                 getSkinData(userId);
 
                                 Boolean isAdmin = document.getBoolean("isAdmin");
