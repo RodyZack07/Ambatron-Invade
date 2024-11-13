@@ -324,8 +324,10 @@ public class GameView extends View {
     public int getPlayerShipHp() {
         return playerShip.getHp();
     }
-    public int getBossAmbaHp(){return bossAmba.getHp();}
-
+    public int getBossAmbaHp(){if (bossAmba != null) {
+        return bossAmba.getHp();
+    } return 0;}
+    public BossAmba getBossAmba() {return bossAmba;}
     public void destroy() {// Stop any ongoing tasks
 
         // Hentikan Handler untuk menghindari tugas yang terus berjalan setelah GameView dihancurkan

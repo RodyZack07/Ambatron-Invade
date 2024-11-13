@@ -16,9 +16,12 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
+import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Handler;
 import android.os.Looper;
+import android.animation.ObjectAnimator;
+import android.view.animation.DecelerateInterpolator;
 
 import com.example.savesthekunti.Model.Score;
 import com.example.savesthekunti.R;
@@ -32,9 +35,11 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     private Level levelData;
     public PopupWindow gameOverWindow;
     public PopupWindow gameWinWindow;
+    private ProgressBar bossHealthBar;
     private int initialHealth;
     private int initalBossHealth;
     private ImageView oneBarLeft, twoBarLeft, threeBarLeft, fourBarLeft, fiveBarLeft;
+
 
 
     @Override
@@ -57,13 +62,24 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         gameView.setOnPlayerHpChangeListener(this);
         gameView.setOnBossHpChangeListener(this);
         initialHealth = gameView.getPlayerShipHp();
-        initalBossHealth = gameView.getBossAmbaHp();
+        if (gameView.getBossAmba() != null) {
+            initalBossHealth = gameView.getBossAmbaHp();
+        } else {
+            Log.e("GameActivity", "BossAmba is still null!");
+            initalBossHealth = 0;  // Set default value
+        }
 
         oneBarLeft = findViewById(R.id.OneBarLeft);
         twoBarLeft = findViewById(R.id.TwoBarLeft);
         threeBarLeft = findViewById(R.id.ThreebarLeft);
         fourBarLeft = findViewById(R.id.FourbarLeft);
         fiveBarLeft = findViewById(R.id.FiveBarLeft);
+
+        bossHealthBar = findViewById(R.id.bossHealthBar);
+
+        int bossMaxHp = gameView.getBossAmbaHp();  // Ambil nilai HP awal dari gameView
+        bossHealthBar.setMax(bossMaxHp);           // Atur nilai max ProgressBar
+        bossHealthBar.setProgress(bossMaxHp);      // Set progress sesuai HP saat ini
 
 
         // Memuat video dari sumber yang diinginkan
@@ -114,10 +130,30 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
 
     @Override
     public void onBossHpChange(int newHp) {
-        initalBossHealth = newHp;
-        if (newHp <= 0) {
-            showGameWin(findViewById(R.id.gameContent));
+        if (gameView.getBossAmba() != null) {
+            initalBossHealth = newHp;
+
+            Log.d("GameActivity", "Boss HP changed to: " + newHp);
+            updateBossHealthBar(newHp);
+
+            if (newHp <= 0) {
+                showGameWin(findViewById(R.id.gameContent));
+            }
+        } else {
+            Log.d("GameActivity", "BossAmba belum terinisialisasi");
         }
+    }
+
+    private void updateBossHealthBar(int newHp) {
+        if (newHp >= 0 && initalBossHealth > 0) {
+            float healthPercentage = (float) newHp / (float) initalBossHealth;
+
+            if (Float.isNaN(healthPercentage)) {
+                healthPercentage = 0f;
+            }
+            ObjectAnimator healthBarAnimation = ObjectAnimator.ofFloat(bossHealthBar, "scaleX", healthPercentage);
+            healthBarAnimation.setDuration(500); // Animation duration
+            healthBarAnimation.start();}
     }
 
     private void onGameOver(int score) {
