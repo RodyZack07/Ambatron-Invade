@@ -17,6 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 import androidx.appcompat.app.AppCompatActivity;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.example.savesthekunti.Model.Score;
 import com.example.savesthekunti.R;
@@ -176,6 +178,13 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
                 recreate();
             }
         });
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                gameView.destroy();
+            }
+        }, 1000);
     }
 
     public void showGameWin(View anchorView){

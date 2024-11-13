@@ -252,8 +252,7 @@ public class GameView extends View {
                     isPlayerDefeated = true;
                     isPlayerAlive = false;
                     bullets.clear();
-                    gameOver = true;
-                    // Set game over flag
+                    gameOver = true; // Set game over flag
                 }
             }
         }
@@ -293,7 +292,7 @@ public class GameView extends View {
                         rudalAmbas.clear();
                         bossExplodeSFX.start();
                         gameWin = true;
-                       }
+                        gameActivity.showGameWin(this);}
                 }
 
                 for (RudalAmba rudal : rudalAmbas){
@@ -429,8 +428,10 @@ public class GameView extends View {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                laserSFX.setLooping(true);
-                laserSFX.start();
+                if (laserSFX != null) {
+                    laserSFX.setLooping(true);
+                    laserSFX.start();
+                }
                 shootBullet();
                 handler.postDelayed(this, 250); // Menembak setiap 100 ms
             }
