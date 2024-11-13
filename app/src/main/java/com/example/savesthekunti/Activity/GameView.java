@@ -72,6 +72,7 @@ public class GameView extends View {
     private MediaPlayer bossExplodeSFX;
     private MediaPlayer monsterExplodeSFX;
     private MediaPlayer laserSFX;
+    private MediaPlayer hittenSFX;
 
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
@@ -85,11 +86,13 @@ public class GameView extends View {
         void onScoreChange(int score, int defeatedCount);
     }
 
+    public interface OnBossHpChangeListener {
+        void onBossHpChange(int newHp);
+    } private OnBossHpChangeListener bossHpChangeListener;
+
     public interface OnPlayerHpChangeListener {
         void onPlayerHpChange(int newHp);
-    }
-
-    private OnPlayerHpChangeListener hpChangeListener;
+    } private OnPlayerHpChangeListener hpChangeListener;
 
     public void setSelectedShipIndex(String selectedSkin) {
         // Get the drawable resource ID based on the selectedSkin
@@ -103,9 +106,11 @@ public class GameView extends View {
     public void setOnChangeScoreListener(OnChangeScoreListener listener) {
         this.scoreChangeListener = listener;
     }
-
     public void setOnPlayerHpChangeListener(OnPlayerHpChangeListener listener) {
         this.hpChangeListener = listener;
+    }
+    public void setOnBossHpChangeListener(OnBossHpChangeListener listener){
+        this.bossHpChangeListener = listener;
     }
 
     public GameView(Context context, AttributeSet attrs) {
@@ -146,8 +151,9 @@ public class GameView extends View {
         bulletsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.beam_bullet);
         rudalAmba = BitmapFactory.decodeResource(getResources(), R.drawable.rudal_amba);
         bossExplodeSFX = MediaPlayer.create(context, R.raw.boss_explode);
-        monsterExplodeSFX = MediaPlayer.create(context, R.raw.monster_sfx);
+        monsterExplodeSFX = MediaPlayer.create(context, R.raw.blown_monster);
         laserSFX = MediaPlayer.create(context, R.raw.laser_sfx);
+        hittenSFX = MediaPlayer.create(context, R.raw.hit_sfx);
 
         post(() -> {
             screenWidth = getWidth();
@@ -187,17 +193,12 @@ public class GameView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if(gameOver){
+        if(gameOver || gameWin){
             saveScoreToFirestore();
             Log.d("GameView", "GameView draw stopped");
             return;
         }
 
-        if (gameWin){
-            saveScoreToFirestore();
-            Log.d("GameView", "GameView draw stopped");
-            return;
-        }
         long currentTime = System.currentTimeMillis();
         if (lastFrameTime == 0) {
             lastFrameTime = currentTime;
@@ -210,15 +211,10 @@ public class GameView extends View {
         List<Bullet> removeBullets = new ArrayList<>();
         List<RudalAmba> removeRudal = new ArrayList<>();
 
-
         if (isPlayerAlive && !isPlayerDefeated) {
             playerShip.draw(canvas);
         } else {
             Log.d("GameView", "PlayerShip is defeated and will not be drawn.");
-        }
-
-        if(gameOver){
-            return;
         }
 
         //Panggil BosAmba
@@ -243,10 +239,10 @@ public class GameView extends View {
             if (!isPlayerDefeated && checkCollision(monster, playerShip)) {
                 playerShip.reduceHp(monster.getDamage());
                 removeMonsters.add(monster);
+                hittenSFX.start();
                 if (hpChangeListener != null) {
                     hpChangeListener.onPlayerHpChange(playerShip.getHp());
                 }// Hapus monster setelah tabrakan
-
 
                 if (playerShip.getHp() <= 0) {
                     isPlayerDefeated = true;
@@ -284,15 +280,17 @@ public class GameView extends View {
 
                 if (isBossAmbaSpawned && checkCollision(bullet, bossAmba)) {
                     bossAmba.reduceHp(bullet.getDamage());
-                    removeBullets.add(bullet);  // Hapus peluru setelah mengenai bos
+                    removeBullets.add(bullet);
+                    if (bossHpChangeListener != null){
+                        bossHpChangeListener.onBossHpChange(bossAmba.getHp());
+                    }
 
                     if (bossAmba.getHp() <= 0) {
                         isBossAmbaSpawned = false;
                         isBossAmbaDefeated = true;
                         rudalAmbas.clear();
                         bossExplodeSFX.start();
-                        gameWin = true;
-                        gameActivity.showGameWin(this);}
+                        gameWin = true;}
                 }
 
                 for (RudalAmba rudal : rudalAmbas){
@@ -310,16 +308,12 @@ public class GameView extends View {
         bullets.removeAll(removeBullets);
         rudalAmbas.removeAll(removeBullets);
 
-
-
         removeOffScreenMonsters();
         removeOffScreenBullets();
         removeOffScreenRudal();
 
         if(score >= 200 && !isBossAmbaSpawned && !isBossAmbaDefeated){
-            spawnBossAmba();
-        }
-
+            spawnBossAmba();}
         invalidate();
     }
 
@@ -330,6 +324,7 @@ public class GameView extends View {
     public int getPlayerShipHp() {
         return playerShip.getHp();
     }
+    public int getBossAmbaHp(){return bossAmba.getHp();}
 
     public void destroy() {// Stop any ongoing tasks
 
@@ -388,6 +383,11 @@ public class GameView extends View {
             laserSFX = null;
             Log.d("GameView", "laserSFX has been released.");
         }
+        if (hittenSFX != null) {
+            hittenSFX.release();
+            hittenSFX = null;
+            Log.d("GameView", "laserSFX has been released.");
+        }
     }
 
     private void spawnMonsterMini() {
@@ -439,7 +439,7 @@ public class GameView extends View {
                     laserSFX.start();
                 }
                 shootBullet();
-                handler.postDelayed(this, 150); // Menembak setiap 100 ms
+                handler.postDelayed(this, 115); // Menembak setiap 100 ms
             }
         }, 100);
     }
@@ -545,7 +545,6 @@ public class GameView extends View {
     //COLLISION END
 
 
-
     public void removeOffScreenMonsters() {
         List<MonsterMini> monstersToRemove = new ArrayList<>();
         for (MonsterMini monster : monsterMini) {
@@ -563,8 +562,7 @@ public class GameView extends View {
                 bulletsToRemove.add(bullet);
             }
         }
-        bullets.removeAll(bulletsToRemove);
-    }
+        bullets.removeAll(bulletsToRemove);}
 
     public void removeOffScreenRudal(){
         List<RudalAmba> rudalToRemove = new ArrayList<>();
@@ -573,10 +571,7 @@ public class GameView extends View {
                 rudalToRemove.add(rudal);
             }
         }
-        rudalAmbas.removeAll(rudalToRemove);
-    }
-
-
+        rudalAmbas.removeAll(rudalToRemove);}
 
 
     // Class PlayerShip

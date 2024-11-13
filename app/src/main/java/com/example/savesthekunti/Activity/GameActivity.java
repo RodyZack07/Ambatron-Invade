@@ -24,7 +24,7 @@ import com.example.savesthekunti.Model.Score;
 import com.example.savesthekunti.R;
 
 
-public class GameActivity extends AppCompatActivity implements GameView.OnPlayerHpChangeListener {
+public class GameActivity extends AppCompatActivity implements GameView.OnPlayerHpChangeListener, GameView.OnBossHpChangeListener {
     private GameView gameView;
     private VideoView gameplayBg;
     private TextView scoreTxt, defeatedTxt;
@@ -32,7 +32,9 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     private Level levelData;
     public PopupWindow gameOverWindow;
     public PopupWindow gameWinWindow;
-    private int initialHealth; private ImageView oneBarLeft, twoBarLeft, threeBarLeft, fourBarLeft, fiveBarLeft;
+    private int initialHealth;
+    private int initalBossHealth;
+    private ImageView oneBarLeft, twoBarLeft, threeBarLeft, fourBarLeft, fiveBarLeft;
 
 
     @Override
@@ -53,7 +55,9 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         scoreTxt = findViewById(R.id.scoreText);
         defeatedTxt = findViewById(R.id.MonsterDefeated);
         gameView.setOnPlayerHpChangeListener(this);
+        gameView.setOnBossHpChangeListener(this);
         initialHealth = gameView.getPlayerShipHp();
+        initalBossHealth = gameView.getBossAmbaHp();
 
         oneBarLeft = findViewById(R.id.OneBarLeft);
         twoBarLeft = findViewById(R.id.TwoBarLeft);
@@ -103,12 +107,17 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         threeBarLeft.setVisibility(newHp >= 400 ? View.VISIBLE : View.GONE);
         fourBarLeft.setVisibility(newHp >= 600 ? View.VISIBLE : View.GONE);
         fiveBarLeft.setVisibility(newHp >= 800? View.VISIBLE : View.GONE);
-
         if (newHp <= 0) {
             showGameOver(findViewById(R.id.gameContent));
         }
+    }
 
-
+    @Override
+    public void onBossHpChange(int newHp) {
+        initalBossHealth = newHp;
+        if (newHp <= 0) {
+            showGameWin(findViewById(R.id.gameContent));
+        }
     }
 
     private void onGameOver(int score) {
@@ -183,6 +192,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
             public void run() {
                 gameView.destroy();
                 gameView.setVisibility(View.GONE);
+
             }
         }, 1000);
     }
@@ -228,5 +238,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         super.onDestroy();
         // Release any remaining resources
         if (gameView != null) {
-            gameView.destroy();}}
+            gameView.destroy();
+        }
+    }
 }
