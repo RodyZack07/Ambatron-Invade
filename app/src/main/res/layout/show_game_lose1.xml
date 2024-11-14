@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Background ImageView fullscreen -->
+    <ImageView
+        android:id="@+id/backgroundImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/account_center_bg" />
+
+    <!-- Game Logo -->
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/show_game_over_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/show_game_logo" />
+
+    <!-- Game Over Text -->
+
+    <!-- Level Text -->
+
+
+    <ImageView
+
+        android:layout_width="700dp"
+        android:layout_height="409dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView"
+        app:srcCompat="@drawable/show_game_win_logo" />
+
+    <ImageView
+        android:id="@+id/show_game_over_text"
+        android:layout_width="120dp"
+        android:layout_height="148dp"
+        android:layout_marginTop="196dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView"
+        app:srcCompat="@drawable/show_game_over_text" />
+
+    <TextView
+        android:id="@+id/levelnumberTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/neuropol"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:text="Level"
+        android:textSize="30sp"
+        app:layout_constraintTop_toBottomOf="@+id/show_game_over_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Stars -->
+
+    <!-- Win Line -->
+
+    <!-- Home Button -->
+
+    <!-- Next Button -->
+
+
+    <ImageView
+        android:id="@+id/star_center"
+        android:layout_width="84dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_game_over_text"
+        app:srcCompat="@drawable/game_info_bintang_kosong" />
+
+    <ImageView
+        android:layout_width="81dp"
+        android:layout_height="77dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="152dp"
+        app:layout_constraintStart_toEndOf="@+id/star_center"
+        app:layout_constraintTop_toBottomOf="@+id/show_game_over_text"
+        app:srcCompat="@drawable/game_info_bintang_kosong" />
+
+    <ImageView
+
+        android:layout_width="84dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="152dp"
+        app:layout_constraintEnd_toStartOf="@+id/star_center"
+        app:layout_constraintTop_toBottomOf="@+id/show_game_over_text"
+        app:srcCompat="@drawable/game_info_bintang_kosong" />
+
+    <ImageView
+        android:layout_width="305dp"
+        android:layout_height="91dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/show_game_over_text"
+        app:srcCompat="@drawable/show_game_win_line" />
+
+    <ImageButton
+        android:id="@+id/homebtn"
+        android:layout_width="120dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginBottom="52dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/show_game_win_home" />
+
+    <ImageButton
+        android:id="@+id/nextbtn"
+        android:layout_width="120dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="224dp"
+        android:layout_marginBottom="52dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/show_game_next" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

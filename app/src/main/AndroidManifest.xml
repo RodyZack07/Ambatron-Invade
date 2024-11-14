@@ -38,6 +38,10 @@
         <activity android:name=".Database.Admin"/>
         <activity android:name=".Database.AccountCenter"/>
         <activity android:name=".UI.LoadingScreen"/>
+        <activity android:name=".Level.Showgamewin1"/>
+        <activity android:name=".Level.Showgamelose1"/>
+        <activity android:name=".Activity.PauseMenu"/>
+
 
         <activity android:name=".Model.EditAsAdminActivity"/>
 

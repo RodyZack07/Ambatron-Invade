@@ -3,17 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@drawable/background">
+    android:background="@drawable/account_center_bg">
 
     <!-- Button di atas kiri -->
     <ImageButton
         android:id="@+id/backbutton"
         android:layout_width="60dp"
-        android:layout_height="40dp"
+        android:layout_height="60dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="30dp"
-        android:src="@drawable/arrow_selector3"
+        android:src="@drawable/account_center_silang"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"/>
 
@@ -37,21 +37,21 @@
             android:fontFamily="@font/neuropol"/>
 
         <!-- Tombol Logout -->
-        <Button
-            android:id="@+id/logout_button"
+        <ImageButton
+            android:id="@+id/btn_delete_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Logout"
+            android:src="@drawable/account_center_learn_more"
             android:layout_marginTop="24dp"
             android:backgroundTint="@color/dark_blue"
             android:textColor="@android:color/white"/>
 
         <!-- Tombol Hapus Akun -->
-        <Button
-            android:id="@+id/btn_delete_account"
+        <ImageButton
+            android:id="@+id/logout_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="learn More"
+            android:src="@drawable/account_center_logout"
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/red"
             android:textColor="@android:color/white"/>

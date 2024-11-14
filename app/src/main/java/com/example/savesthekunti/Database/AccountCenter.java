@@ -32,8 +32,8 @@ public class AccountCenter extends AppCompatActivity {
     private FirebaseFirestore firestore;
     private String username;
     private String email;
-    private ImageButton prevsbtn;
-    private Button logoutBtn, deleteAccountBtn;
+
+    private ImageButton logoutBtn, deleteAccountBtn,  prevsbtn;
     private FirebaseAuth mAuth;
 
     @Override

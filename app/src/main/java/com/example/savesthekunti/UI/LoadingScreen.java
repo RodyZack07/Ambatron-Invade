@@ -16,12 +16,18 @@ import com.example.savesthekunti.R;
 public class LoadingScreen extends AppCompatActivity {
     private String[] fighterIDs = {"blue_cosmos", "retro_sky", "wing_of_justice"};
     private int currentSkinIndex = 0;
+    private String selectedSkin;
+
+
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading_screen);
+
+        // Ambil data skin yang dipilih dari SelectFighterActivity
+        selectedSkin = getIntent().getStringExtra("selectedSkin");
 
         // Mengatur background abu-abu untuk FrameLayout
         FrameLayout mainLayout = findViewById(R.id.main);
@@ -36,7 +42,7 @@ public class LoadingScreen extends AppCompatActivity {
             public void run() {
                 // Pindah ke SelectYourFighter
                 Intent intent = new Intent(LoadingScreen.this, SelectLevelActivity.class);
-                intent.putExtra("selectedSkin", fighterIDs[currentSkinIndex]);
+                intent.putExtra("selectedSkin", selectedSkin);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 startActivity(intent);
                 finish(); // Tutup activity ini agar tidak bisa kembali ke splash screen

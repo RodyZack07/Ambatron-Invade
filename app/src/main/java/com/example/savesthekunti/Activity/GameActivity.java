@@ -23,6 +23,8 @@ import android.os.Looper;
 import android.animation.ObjectAnimator;
 import android.view.animation.DecelerateInterpolator;
 
+import com.example.savesthekunti.Level.Showgamelose1;
+import com.example.savesthekunti.Level.Showgamewin1;
 import com.example.savesthekunti.Model.Score;
 import com.example.savesthekunti.R;
 
@@ -39,6 +41,8 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     private int initialHealth;
     private int initalBossHealth;
     private ImageView oneBarLeft, twoBarLeft, threeBarLeft, fourBarLeft, fiveBarLeft;
+    private Level currentLevelData;
+    private ImageButton pausemenu;
 
 
 
@@ -47,10 +51,26 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_activity);
 
+        currentLevelData = (Level) getIntent().getSerializableExtra("levelData");
+
         // Inisialisasi komponen UI
         explosionView = new ImageView(this);
         explosionView.setLayoutParams(new RelativeLayout.LayoutParams(300, 230)); // Atur ukuran sesuai kebutuhan
         explosionView.setVisibility(View.GONE);  // Sembunyikan awalnya
+
+//        ================================================= PAUSE ======================================================================================
+        pausemenu = findViewById(R.id.pausebtn);
+        pausemenu.setOnClickListener(v -> {
+            Intent intent = new Intent(GameActivity.this, PauseMenu.class);
+            intent.putExtra("username", "shinoa"); // Contoh pengiriman usern
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);// ame
+
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+            startActivity(intent);
+        });
+
+
 
         // Tambahkan explosionView ke layout
         ((ViewGroup) findViewById(R.id.gameContent)).addView(explosionView);
@@ -191,79 +211,23 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
                 explosionAnimation.getNumberOfFrames() * 7);
     }
 
-    public void showGameOver(View anchorView){
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.game_over, null);
-
-        ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
-        ImageButton replayBtn = popupView.findViewById(R.id.replayBtn);
-        ImageButton nextBtn = popupView.findViewById(R.id.nextBtn);
-
-        int popupWidth = getResources().getDimensionPixelSize(R.dimen.popup_width);
-        int popupHeight = getResources().getDimensionPixelSize(R.dimen.popup_height);
-
-        gameOverWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
-        gameOverWindow.setAnimationStyle(R.style.PopupAnimation);
-        gameOverWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
-
-        homeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(GameActivity.this, SelectFighterActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        replayBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                gameOverWindow.dismiss();
-                recreate();
-            }
-        });
-
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                gameView.destroy();
-                gameView.setVisibility(View.GONE);
-
-            }
-        }, 1000);
+    public void showGameOver(View anchorView) {
+        Intent intent = new Intent(GameActivity.this, Showgamewin1.class);
+        intent.putExtra("levelData", currentLevelData);
+        startActivity(intent);
+        // Tambahkan animasi fade transition jika diinginkan
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finishAffinity(); // Menutup semua aktivitas di tumpukan yang sama
     }
 
+
     public void showGameWin(View anchorView){
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.game_win, null);
-
-        ImageButton homeBtn = popupView.findViewById(R.id.homebtn);
-        ImageButton replayBtn = popupView.findViewById(R.id.replayBtn);
-        ImageButton nextBtn = popupView.findViewById(R.id.nextBtn);
-
-        int popupWidth = getResources().getDimensionPixelSize(R.dimen.popup_width);
-        int popupHeight = getResources().getDimensionPixelSize(R.dimen.popup_height);
-
-        gameWinWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
-        gameWinWindow.setAnimationStyle(R.style.PopupAnimation);
-        gameWinWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
-
-        homeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(GameActivity.this, SelectFighterActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-        replayBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                gameWinWindow.dismiss();
-                recreate();
-            }
-        });
+        Intent intent = new Intent(GameActivity.this, Showgamelose1.class);
+        intent.putExtra("levelData", currentLevelData);
+        startActivity(intent);
+        // Tambahkan animasi fade transition jika diinginkan
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finishAffinity(); // Menutup semua aktivitas di tumpukan yang sama
     }
 
     @Override
