@@ -37,7 +37,7 @@ public class Showgamelose1 extends AppCompatActivity {
 
         ImageButton homeBtn = findViewById(R.id.homebtn);
 
-        ImageButton nextBtn = findViewById(R.id.nextbtn);
+        ImageButton nextBtn = findViewById(R.id.nextBtn);
 
         homeBtn.setOnClickListener(view -> {
             Intent intent = new Intent(Showgamelose1.this, SelectFighterActivity.class);
