@@ -20,7 +20,7 @@ public class Showgamelose1 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.show_game_win1); // Sesuaikan dengan layout yang benar
+        setContentView(R.layout.show_game_lose1); // Sesuaikan dengan layout yang benar
 
         // Ambil data level dari Intent
         Level levelData = (Level) getIntent().getSerializableExtra("levelData");

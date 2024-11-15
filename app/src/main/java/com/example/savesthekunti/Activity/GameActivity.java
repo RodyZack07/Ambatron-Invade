@@ -212,7 +212,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     }
 
     public void showGameOver(View anchorView) {
-        Intent intent = new Intent(GameActivity.this, Showgamewin1.class);
+        Intent intent = new Intent(GameActivity.this, Showgamelose1.class);
         intent.putExtra("levelData", currentLevelData);
         startActivity(intent);
         // Tambahkan animasi fade transition jika diinginkan
@@ -222,7 +222,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
 
 
     public void showGameWin(View anchorView){
-        Intent intent = new Intent(GameActivity.this, Showgamelose1.class);
+        Intent intent = new Intent(GameActivity.this, Showgamewin1.class);
         intent.putExtra("levelData", currentLevelData);
         startActivity(intent);
         // Tambahkan animasi fade transition jika diinginkan
