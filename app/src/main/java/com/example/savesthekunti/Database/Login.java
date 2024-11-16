@@ -43,32 +43,28 @@ public class Login extends AppCompatActivity {
 
         // Initialize UI elements
         prevsBtn = findViewById(R.id.prevsBtn3);
-        prevsBtn.setOnClickListener(view -> finish());
+        prevsBtn.setOnClickListener(view -> {
+            finish();
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        });
 
         usernameField = findViewById(R.id.usernameText);
         passwordField = findViewById(R.id.passwordText);
         loginButton = findViewById(R.id.Login);
         registerButton = findViewById(R.id.createAccountButton);
 
-        // Set OnClickListener for login button
         loginButton.setOnClickListener(v -> {
             String username = usernameField.getText().toString().trim();
             String password = passwordField.getText().toString().trim();
             loginUser(username, password);
         });
 
-        // Set OnClickListener for register button
         registerButton.setOnClickListener(v -> {
-            try {
-                startActivity(new Intent(Login.this, Register.class));
-            } catch (Exception e) {
-                Log.e("Login", "Error launching Register activity", e);
-                Toast.makeText(Login.this, "Terjadi kesalahan saat membuka halaman registrasi", Toast.LENGTH_SHORT).show();
-            }
+            startActivity(new Intent(Login.this, Register.class));
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         });
     }
 
-    // Function to hash password using SHA-256
     private String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -87,85 +83,70 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    // Function to log in the user
     private void loginUser(String username, String password) {
-        // Validate input
         if (username.isEmpty() || password.isEmpty()) {
-            Toast.makeText(Login.this, "Username dan password harus diisi", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Username dan password harus diisi", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Hash the password
-        String hashedPassword = hashPassword(password);
+        if (password.length() < 6) {
+            Toast.makeText(this, "Password minimal 6 karakter", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        // Query Firestore to check if username and password match
+        String hashedPassword = hashPassword(password);
         CollectionReference akunRef = firestore.collection("Akun");
+
         akunRef.whereEqualTo("username", username)
-                .whereEqualTo("password", hashedPassword) // Hash password being searched
+                .whereEqualTo("password", hashedPassword)
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        if (!task.getResult().isEmpty()) {
-                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                            String userId = document.getId();
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                        String userId = document.getId();
 
-                            // Save username and login status to SharedPreferences
-                            editor.putString("username", username);
-                            editor.putBoolean("isLoggedIn", true);
+                        editor.putString("username", username);
+                        editor.putBoolean("isLoggedIn", true);
 
-                            // Check admin status and save it
-                            Boolean isAdmin = document.getBoolean("isAdmin");
-                            if (isAdmin != null && isAdmin) {
-                                editor.putBoolean("isAdmin", true);
-                            } else {
-                                editor.putBoolean("isAdmin", false);
-                            }
-                            editor.apply();
+                        Boolean isAdmin = document.getBoolean("isAdmin");
+                        editor.putBoolean("isAdmin", isAdmin != null && isAdmin);
+                        editor.apply();
 
-                            // Fetch skin status and save it
-                            fetchUserSkins(username);
 
-                            // Navigate to MainActivity
-                            Intent intent = new Intent(Login.this, MainActivity.class);
-                            intent.putExtra("username", username);
-                            intent.putExtra("isAdmin", true);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            Toast.makeText(Login.this, "Login gagal, username atau password salah", Toast.LENGTH_SHORT).show();
-                        }
+
+                        fetchUserSkins(userId);
+
+                        Intent intent = new Intent(Login.this, MainActivity.class);
+                        intent.putExtra("username", username);
+                        startActivity(intent);
+                        finish();
                     } else {
-                        // Handle Firestore query errors
-                        Log.e("Login", "Error querying Firestore: " + task.getException());
-                        Toast.makeText(Login.this, "Terjadi kesalahan saat login. Silakan coba lagi.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Login gagal, username atau password salah", Toast.LENGTH_SHORT).show();
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Login", "Error querying Firestore", e);
+                    Toast.makeText(this, "Terjadi kesalahan saat login. Coba lagi.", Toast.LENGTH_SHORT).show();
                 });
     }
 
-    // Function to fetch skin status from Firestore and save it to SharedPreferences
-    private void fetchUserSkins(String username) {
-        firestore.collection("Akun").document(username).collection("Koleksi_Skin")
+    private void fetchUserSkins(String userId) {
+        firestore.collection("Akun").document(userId).collection("Koleksi_Skin")
                 .get()
                 .addOnCompleteListener(task -> {
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
                         for (DocumentSnapshot document : task.getResult()) {
                             String skinId = document.getString("id_skin");
                             boolean isLocked = document.getBoolean("status_terkunci");
-
-                            // Save skin status to SharedPreferences
                             editor.putBoolean(skinId + "_locked", isLocked);
                         }
+                        editor.apply();
                     } else {
-                        // If no skins are found, set the default skin to unlocked
-                        editor.putBoolean("blue_cosmos_locked", false); // Set blue_cosmos as default skin
+                        editor.putBoolean("blue_cosmos_locked", false);
+                        editor.apply();
                     }
-                    editor.apply(); // Save changes
                 })
-                .addOnFailureListener(e -> {
-                    // Handle errors if the query fails
-                    Log.e("Login", "Error fetching skins: " + e.getMessage());
-                    Toast.makeText(Login.this, "Error retrieving skin data.", Toast.LENGTH_SHORT).show();
-                });
+                .addOnFailureListener(e -> Log.e("Login", "Error fetching skin data", e));
     }
 }

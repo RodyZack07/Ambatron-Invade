@@ -45,7 +45,10 @@ public class Register extends AppCompatActivity {
 
         // Inisialisasi UI
         prevsBtn = findViewById(R.id.prevsBtn3);
-        prevsBtn.setOnClickListener(view -> finish());
+        prevsBtn.setOnClickListener(view -> {
+            finish();
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        });
 
         usernameField = findViewById(R.id.usernameText);
         emailField = findViewById(R.id.emailText);
@@ -130,6 +133,7 @@ public class Register extends AppCompatActivity {
         akunData.put("created_at", System.currentTimeMillis());
         akunData.put("updated_at", System.currentTimeMillis());
         akunData.put("score", 0);
+        akunData.put("currency", 10); // Tambahkan mata uang default
 
         firestore.collection("Akun").document(username)
                 .set(akunData)
@@ -188,6 +192,7 @@ public class Register extends AppCompatActivity {
 
         addLockedSkin(skinRef, "retro_sky");
         addLockedSkin(skinRef, "wing_of_justice");
+        addLockedSkin(skinRef, "x56_core");
     }
 
     private void addLockedSkin(CollectionReference skinRef, String skinId) {

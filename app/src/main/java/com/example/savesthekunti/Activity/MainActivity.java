@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import com.example.savesthekunti.Database.Login;
 import com.example.savesthekunti.Model.EditAsAdminActivity;
 import com.example.savesthekunti.R;
 import com.example.savesthekunti.UI.LoadingScreen;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -39,8 +41,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class MainActivity extends AppCompatActivity {
 
-//    ======== Library ==============
-private LottieAnimationView lottieLoading;
+    //    ======== Library ==============
+    private LottieAnimationView lottieLoading;
 
 
     private VideoView videoViewBackground;
@@ -53,7 +55,7 @@ private LottieAnimationView lottieLoading;
     private FirebaseFirestore db;
     private String user;
     private ImageButton adminButton;
-    private TextView warningText; // Declare warning TextView
+    private TextView warningText,currencyTextView;; // Declare warning TextView
     private ImageView borderText;
     private SharedPreferences sharedPreferences;
     private ImageButton infomenu;
@@ -71,6 +73,8 @@ private LottieAnimationView lottieLoading;
         // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
 
+
+
         // Initialize UI elements
 
 
@@ -85,18 +89,25 @@ private LottieAnimationView lottieLoading;
         // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
 
+        // Inisialisasi TextView
+        currencyTextView = findViewById(R.id.currencyTextView);
 
-        // Check if user is logged in
+
+/// ============================= AMBIL DATA DARI LOGIN =====================================
         boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
         if (isLoggedIn) {
             // Retrieve username and admin status from SharedPreferences
-            user = sharedPreferences.getString("username", "");
+            user = sharedPreferences.getString("username", "id_user");
             boolean isAdmin = sharedPreferences.getBoolean("isAdmin", false);
             String email = getIntent().getStringExtra("email"); // Retrieve the email
 
             // Update UI based on login status
             if (user != null) {
                 welcomeText.setText(user);
+
+                // Fetch and display currency data
+                getCurrencyData(user); // Call the function to get currency
+
                 if (isAdmin) {
                     adminButton.setVisibility(View.VISIBLE);
                 }
@@ -107,6 +118,7 @@ private LottieAnimationView lottieLoading;
             borderText.setVisibility(View.VISIBLE);
             Toast.makeText(this, "Anda Harus Login Untuk Bermain", Toast.LENGTH_SHORT).show();
         }
+
 
         // Initialize VideoView for background
         videoViewBackground = findViewById(R.id.videoViewBackground);
@@ -183,6 +195,43 @@ private LottieAnimationView lottieLoading;
         }
     }
 
+
+//   =========================== INISIALISASI TEXT VIEW MATA UANG =============================
+
+    // Fungsi untuk mengambil data currency dari Firestore
+    private void getCurrencyData(String username) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Menemukan dokumen berdasarkan username
+        db.collection("Akun")
+                .whereEqualTo("username", username) // Menyesuaikan dengan username yang login
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            // Ambil nilai currency dari Firestore
+                            Long currencyLong = document.getLong("currency");
+                            if (currencyLong != null) {
+                                int userCurrency = currencyLong.intValue();  // Mengubah nilai currency menjadi integer
+                                Log.d("SelectFighterActivity", "User currency: " + userCurrency); // Debug log
+                                currencyTextView.setText(String.valueOf(userCurrency)); // Update display currency
+                            } else {
+                                Log.d("SelectFighterActivity", "Currency not found in user data.");
+                            }
+                        }
+                    } else {
+                        Log.d("SelectFighterActivity", "Error getting documents: ", task.getException());
+                    }
+                });
+    }
+
+
+
+
+
+
+
+
     private void getUserData(String userId) {
         if (isInternetAvailable()) {
             db.collection("Akun").document(userId).get()
@@ -224,18 +273,21 @@ private LottieAnimationView lottieLoading;
                                 Boolean isLocked = document.getBoolean("status_terkunci");
 
                                 if (skinId != null) {
-                                    skins.append("").append(skinId).append(" - ").append(isLocked ? "" : "").append("");
+                                    skins.append(skinId).append(" - ").append(isLocked ? "Locked" : "Unlocked").append("\n");
                                 }
                             }
-                            Toast.makeText(MainActivity.this, skins.toString(), Toast.LENGTH_LONG).show();
+
                         } else {
-                            Toast.makeText(MainActivity.this, "Tidak ada skin yang ditemukan untuk pengguna ini.", Toast.LENGTH_SHORT).show();
+                            // Tidak ada data ditemukan, tampilkan pesan di UI atau log
+                            Log.d("SkinData", "Tidak ada skin yang ditemukan untuk pengguna ini.");
                         }
                     } else {
-                        Toast.makeText(MainActivity.this, "Error getting documents: " + task.getException(), Toast.LENGTH_SHORT).show();
+                        // Error saat mengambil data, tampilkan pesan di log
+                        Log.e("SkinData", "Error getting documents: ", task.getException());
                     }
                 });
     }
+
 
     private void setVolume(MediaPlayer mediaPlayer, float volume) {
         mediaPlayer.setVolume(volume, volume);
@@ -328,37 +380,38 @@ private LottieAnimationView lottieLoading;
 
     private void openAdminActivity() {
         Intent intent = new Intent(this, EditAsAdminActivity.class);
+
         startActivity(intent);
+
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     private void directSelectFighter() {
-//        // Mendapatkan referensi ke LottieAnimationView
-//        LottieAnimationView lottieLoading = findViewById(R.id.lottieLoading);
-//
-//        // Memastikan animasi hanya dimainkan jika file animasi valid
-//        if (lottieLoading != null) {
-//            // Menampilkan animasi dan memulai pemutaran
-//            lottieLoading.setVisibility(View.VISIBLE);
-//            lottieLoading.playAnimation();
-//
-//            // Delay untuk menunjukkan animasi sebentar sebelum berpindah activity
-//            new Handler().postDelayed(() -> {
-                // Intent untuk berpindah ke SelectFighterActivity
-                Intent intent = new Intent(MainActivity.this, SelectFighterActivity.class);
-                intent.putExtra("username", "shinoa"); // Contoh pengiriman username
-                startActivity(intent);
+        // Ambil username dan currency dari SharedPreferences
+        String username = sharedPreferences.getString("username", null);
+        int userCurrency = sharedPreferences.getInt("currency", 0); // Ambil currency dari SharedPreferences (atau dari Firestore)
 
-                // Tambahkan animasi fade transition jika diinginkan
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//
-//                // Menghentikan animasi dan menyembunyikan animasi setelah berpindah activity
-//                lottieLoading.cancelAnimation();
-//                lottieLoading.setVisibility(View.GONE);
-//                finish(); // Menutup MainActivity
-//            }, 7000); // Delay 2 detik sebelum berpindah activity
-//        }
+        // Pastikan username tidak null sebelum melanjutkan
+        if (username != null) {
+            // Buat intent ke SelectFighterActivity
+            Intent intent = new Intent(MainActivity.this, SelectFighterActivity.class);
 
+            // Tambahkan username dan currency ke dalam intent
+            intent.putExtra("username", username);
+            intent.putExtra("currency", userCurrency); // Kirimkan currency
+
+            // Mulai aktivitas SelectFighterActivity
+            startActivity(intent);
+
+            // Tambahkan animasi fade transition jika diinginkan
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        } else {
+            // Jika username tidak tersedia, tampilkan pesan peringatan
+            Toast.makeText(this, "Kesalahan: Username tidak ditemukan. Harap login ulang.", Toast.LENGTH_SHORT).show();
+        }
     }
+
+
 
 
 

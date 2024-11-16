@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.savesthekunti.Activity.GameActivity;
+import com.example.savesthekunti.Activity.GameView;
 import com.example.savesthekunti.Activity.Level;
 import com.example.savesthekunti.Activity.SelectFighterActivity;
 import com.example.savesthekunti.Activity.SelectLevelActivity;
@@ -37,7 +38,7 @@ public class Showgamelose1 extends AppCompatActivity {
 
         ImageButton homeBtn = findViewById(R.id.homebtn);
 
-        ImageButton nextBtn = findViewById(R.id.nextBtn);
+        ImageButton Retry = findViewById(R.id.nextBtn);
 
         homeBtn.setOnClickListener(view -> {
             Intent intent = new Intent(Showgamelose1.this, SelectFighterActivity.class);
@@ -49,9 +50,9 @@ public class Showgamelose1 extends AppCompatActivity {
         });
 
 
-        nextBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(Showgamelose1.this, GameActivity.class);
-            intent.putExtra("levelIndex", 2); // Lanjutkan ke level berikutnya
+        Retry.setOnClickListener(view -> {
+            Intent intent = new Intent(Showgamelose1.this, GameView.class);
+
             startActivity(intent);
             finish();
         });

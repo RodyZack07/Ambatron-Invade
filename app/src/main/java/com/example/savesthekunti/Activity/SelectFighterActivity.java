@@ -12,6 +12,7 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -24,6 +25,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -32,8 +34,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SelectFighterActivity extends AppCompatActivity {
 
@@ -43,22 +43,38 @@ public class SelectFighterActivity extends AppCompatActivity {
 
     private ImageView spaceShip;
     private ImageView lockOverlay; // Overlay untuk gembok
-    private String[] fighterIDs = {"blue_cosmos", "retro_sky", "wing_of_justice"};
+    private String[] fighterIDs = {"blue_cosmos", "retro_sky", "wing_of_justice", "x56_core"};
     private ArrayList<String> ownedSkins = new ArrayList<>(); // ArrayList untuk menyimpan skin yang dimiliki
     private int currentSkinIndex = 0;
     private Button unlockSkin;
+    private int userCurrency;
 
-//    AUDIO
-private MediaPlayer mediaPlayer;
+    // AUDIO
+    private MediaPlayer mediaPlayer;
 
-//    DATABASE
+    // DATABASE
     private FirebaseFirestore firestore;
     private String username;
+    private TextView currencyTextView; // Add TextView for currency display
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_fighter);
+
+//        ambil currecy
+        int userCurrency = getIntent().getIntExtra("currency", 0); // Ambil nilai currency yang diteruskan
+
+        // Pastikan Firebase diinisialisasi sebelum digunakan
+        if (FirebaseApp.getApps(this).isEmpty()) {
+            FirebaseApp.initializeApp(this);
+        }
+
+        // Sekarang FirebaseFirestore bisa digunakan
+        firestore = FirebaseFirestore.getInstance();
+
+        // Ambil data uang pengguna dari Firestore
+        getUserCurrency();
 
         videoBackground = findViewById(R.id.selectBg);
         Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.skin_selector);
@@ -66,9 +82,7 @@ private MediaPlayer mediaPlayer;
         videoBackground.setOnPreparedListener(mp -> mp.setLooping(true));
         videoBackground.start();
 
-//        ====================================== Audio ======================================
-
-        // Initialize MediaPlayer for audio
+        // ====================================== Audio ======================================
         mediaPlayer = MediaPlayer.create(this, R.raw.skin_idle);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
@@ -85,6 +99,10 @@ private MediaPlayer mediaPlayer;
         // Inisialisasi tombol unlockSkin
         unlockSkin = findViewById(R.id.skinUnlock); // Pastikan ID ini ada di layout XML
 
+        // Inisialisasi TextView untuk menampilkan mata uang
+        currencyTextView = findViewById(R.id.currencyTextView);
+
+
         username = getIntent().getStringExtra("username");
         String koleksiSkin = username != null ? username : "default_user"; // Menggunakan username sebagai ID koleksi skin
 
@@ -94,8 +112,10 @@ private MediaPlayer mediaPlayer;
 
         prevsBtn.setOnClickListener(v -> prevsFighter());
         nextBtn.setOnClickListener(v -> nextFighter());
-        selectBtn.setOnClickListener(v -> {selectGame();
-            finish();});
+        selectBtn.setOnClickListener(v -> {
+            selectGame();
+            finish();
+        });
         prevsBtn1.setOnClickListener(view -> prevsbutton());
 
         unlockSkin.setOnClickListener(v -> {
@@ -104,8 +124,7 @@ private MediaPlayer mediaPlayer;
         });
     }
 
-
-//    ======================= LOAD VOLUME AND SET VOLUME ===================================
+    // ======================= LOAD VOLUME AND SET VOLUME ===================================
     private int loadVolumePreference() {
         SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
         return prefs.getInt("volume", 50); // default 50
@@ -115,13 +134,45 @@ private MediaPlayer mediaPlayer;
         mediaPlayer.setVolume(volume, volume);
     }
 
-
     private void prevsbutton() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
+
+    private void getUserCurrency() {
+        if (username == null || username.isEmpty()) {
+            Log.d("SelectFighterActivity", "Username is null or empty.");
+            return;
+        }
+
+        if (firestore == null) {
+            Log.d("SelectFighterActivity", "Firestore instance is null.");
+            return;
+        }
+
+        DocumentReference userRef = firestore.collection("Akun").document(username);
+        userRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                // Mengambil nilai currency dari Firestore
+                Long currencyLong = documentSnapshot.getLong("currency");
+                if (currencyLong != null) {
+                    userCurrency = currencyLong.intValue();  // Mengubah nilai currency menjadi integer
+                    Log.d("SelectFighterActivity", "User currency: " + userCurrency); // Debug log
+                    currencyTextView.setText(String.valueOf(userCurrency)); // Update currency display
+                } else {
+                    Log.d("SelectFighterActivity", "Currency not found in user data.");
+                }
+            } else {
+                Log.d("SelectFighterActivity", "User data not found.");
+            }
+        }).addOnFailureListener(e -> {
+            Log.d("SelectFighterActivity", "Error getting user data: ", e);
+        });
+    }
+
+
+
 
     @Override
     protected void onResume() {
@@ -148,35 +199,30 @@ private MediaPlayer mediaPlayer;
     }
 
     private void fetchUserSkins() {
-        // Pastikan username sudah diinisialisasi
         if (username == null || username.isEmpty()) {
             Log.e("FetchUserSkins", "Username is null or empty");
-            return; // Hentikan eksekusi jika username tidak valid
+            return;
         }
 
-        // Jika username valid, lanjutkan mengambil data koleksi skin
         CollectionReference skinRef = firestore.collection("Akun").document(username).collection("Koleksi_Skin");
-        skinRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                ownedSkins.clear();
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        String skinId = document.getString("id_skin");
-                        Boolean isLocked = document.getBoolean("status_terkunci");
-                        Boolean isUnlocked = document.getBoolean("is_unlocked");
+        skinRef.get().addOnCompleteListener(task -> {
+            ownedSkins.clear();
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    String skinId = document.getString("id_skin");
+                    Boolean isLocked = document.getBoolean("status_terkunci");
+                    Boolean isUnlocked = document.getBoolean("is_unlocked");
 
-                        if (skinId != null && isLocked != null && isUnlocked != null) {
-                            if (!isLocked || isUnlocked) {
-                                ownedSkins.add(skinId);
-                            }
+                    if (skinId != null && isLocked != null && isUnlocked != null) {
+                        if (!isLocked || isUnlocked) {
+                            ownedSkins.add(skinId); // Menambahkan skin yang sudah dibuka
                         }
                     }
-                } else {
-                    Log.d("FetchUserSkins", "Error getting documents: ", task.getException());
                 }
-                updateFighterView();
+            } else {
+                Log.d("FetchUserSkins", "Error getting documents: ", task.getException());
             }
+            updateFighterView(); // Perbarui tampilan berdasarkan skin yang dimiliki
         });
     }
 
@@ -184,38 +230,31 @@ private MediaPlayer mediaPlayer;
     private void updateFighterView() {
         String currentSkinID = fighterIDs[currentSkinIndex]; // Ambil ID skin saat ini
 
-        // Dapatkan ID drawable berdasarkan nama skin
         int skinDrawableId = getResources().getIdentifier(currentSkinID, "drawable", getPackageName());
-        spaceShip.setImageResource(skinDrawableId); // Set gambar pesawat
+        spaceShip.setImageResource(skinDrawableId);
 
-        // Ambil data skin dari Firestore untuk cek status terkunci
         DocumentReference skinRef = firestore.collection("Akun").document(username)
                 .collection("Koleksi_Skin").document(currentSkinID);
-        skinRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Boolean isUnlocked = document.getBoolean("is_unlocked");
-                        Boolean isLocked = document.getBoolean("status_terkunci");
+        skinRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Boolean isUnlocked = document.getBoolean("is_unlocked");
+                    Boolean isLocked = document.getBoolean("status_terkunci");
 
-                        // Tampilkan atau sembunyikan overlay gembok sesuai status terkunci
-                        if (isUnlocked != null && isUnlocked) {
-                            lockOverlay.setVisibility(View.GONE); // Sembunyikan gembok
-                        } else if (isLocked != null && isLocked) {
-                            lockOverlay.setVisibility(View.VISIBLE); // Tampilkan gembok
-                        }
-                    } else {
-                        lockOverlay.setVisibility(View.VISIBLE); // Tampilkan gembok jika data tidak ditemukan
+                    if (isUnlocked != null && isUnlocked) {
+                        lockOverlay.setVisibility(View.GONE); // Sembunyikan gembok
+                    } else if (isLocked != null && isLocked) {
+                        lockOverlay.setVisibility(View.VISIBLE); // Tampilkan gembok
                     }
                 } else {
-                    lockOverlay.setVisibility(View.VISIBLE); // Tampilkan gembok jika ada error
+                    lockOverlay.setVisibility(View.VISIBLE); // Tampilkan gembok jika data tidak ditemukan
                 }
+            } else {
+                lockOverlay.setVisibility(View.VISIBLE); // Tampilkan gembok jika ada error
             }
         });
     }
-
 
 
     private void nextFighter() {
@@ -237,14 +276,12 @@ private MediaPlayer mediaPlayer;
             Intent intent = new Intent(SelectFighterActivity.this, LoadingScreen.class);
             intent.putExtra("selectedSkin", fighterIDs[currentSkinIndex]); // Kirim ID skin yang dipilih
             startActivity(intent);
-
-            // Tambahkan animasi fade transition jika diinginkan
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         } else {
             Toast.makeText(this, "Skin ini terkunci!", Toast.LENGTH_SHORT).show();
         }
-        buttonSFX.start();}
-
+        buttonSFX.start();
+    }
 
 
     private void FighterSwitchAnimation() {
@@ -271,32 +308,67 @@ private MediaPlayer mediaPlayer;
     }
 
     private void unlockCurrentSkin() {
-        String selectedSkinID = fighterIDs[currentSkinIndex];
-        Log.d("UnlockSkin", "Selected Skin ID: " + selectedSkinID); // Log untuk memeriksa ID yang dipilih
+        // Ambil reference ke dokumen skin berdasarkan username dan skin yang dipilih
+        DocumentReference skinRef = firestore.collection("Akun").document(username)
+                .collection("Koleksi_Skin").document(fighterIDs[currentSkinIndex]);
 
-        DocumentReference skinRef = firestore.collection("Akun").document(username).collection("Koleksi_Skin").document(selectedSkinID);
+        // Ambil nilai currency terlebih dahulu untuk memeriksa apakah cukup
+        DocumentReference userRef = firestore.collection("Akun").document(username);
+        userRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                // Ambil nilai currency dari dokumen
+                Long currencyLong = documentSnapshot.getLong("currency");
+                if (currencyLong != null) {
+                    int userCurrency = currencyLong.intValue();
 
-        // Update status terkunci menjadi false
-        skinRef.update("status_terkunci", false)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("UnlockSkin", "Skin " + selectedSkinID + " berhasil dibuka.");
-                    Toast.makeText(this, "Skin berhasil dibuka!", Toast.LENGTH_SHORT).show();
+                    // Periksa apakah currency cukup untuk membuka skin
+                    if (userCurrency >= 10) {
+                        // Lakukan unlock skin jika currency cukup
+                        skinRef.update("status_terkunci", false, "is_unlocked", true)
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d("SelectFighterActivity", "Pembelian Skin Berhasil");
 
-                    // Update is_unlocked field to true
-                    skinRef.update("is_unlocked", true)
-                            .addOnSuccessListener(aVoid2 -> {
-                                Log.d("UnlockSkin", "is_unlocked field updated to true for " + selectedSkinID);
-                                fetchUserSkins(); // Refresh the skin list
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e("UnlockSkin", "Error updating is_unlocked field: " + e.getMessage());
-                                Toast.makeText(this, "Gagal memperbarui status skin: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            });
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("UnlockSkin", "Error: " + e.getMessage()); // Log kesalahan
-                    Toast.makeText(this, "Gagal membuka skin: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                })
-                .addOnCompleteListener(task -> unlockSkin.setEnabled(true)); // Re-enable the button after operation
+                                    // Kurangi currency sebanyak 2
+                                    int updatedCurrency = userCurrency - 10;
+
+                                    // Update currency di Firestore
+                                    userRef.update("currency", updatedCurrency)
+                                            .addOnSuccessListener(aVoid1 -> {
+                                                // Refresh skins setelah unlock dan update currency
+                                                fetchUserSkins();
+
+                                                Toast.makeText(SelectFighterActivity.this, "Pembelian Skin Berhasil", Toast.LENGTH_SHORT).show();
+                                                unlockSkin.setEnabled(true);
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Log.d("SelectFighterActivity", "Failed to update currency: ", e);
+                                                unlockSkin.setEnabled(true);
+                                            });
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.d("SelectFighterActivity", "Failed to unlock skin: ", e);
+                                    unlockSkin.setEnabled(true);
+                                });
+                    } else {
+                        // Jika currency tidak cukup, tampilkan Toast
+                        Toast.makeText(SelectFighterActivity.this, "KoinTron tidak cukup untuk membuka skin!", Toast.LENGTH_SHORT).show();
+                        unlockSkin.setEnabled(true);
+                    }
+                }
+            } else {
+                Log.d("SelectFighterActivity", "User document not found.");
+                unlockSkin.setEnabled(true);
+            }
+        }).addOnFailureListener(e -> {
+            Log.d("SelectFighterActivity", "Failed to retrieve user data: ", e);
+            unlockSkin.setEnabled(true);
+        });
     }
+
+
+
+
+
+
+
 }
