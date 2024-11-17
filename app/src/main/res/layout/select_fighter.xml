@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- Video Background -->
     <VideoView
@@ -73,14 +74,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
 
-        <!-- Overlay Gembok -->
-        <ImageView
+        <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lockOverlay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
             android:layout_gravity="center"
-            android:src="@drawable/skin_activity_key"
-            android:visibility="gone" /> <!-- Sembunyikan overlay secara default -->
+            app:lottie_rawRes="@raw/lockanim"
+            app:lottie_autoPlay="true"
+
+            android:elevation="20dp"
+            android:visibility="gone"/>
+
+
 
     </FrameLayout>
 

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -48,6 +49,8 @@ public class SelectFighterActivity extends AppCompatActivity {
     private int currentSkinIndex = 0;
     private Button unlockSkin;
     private int userCurrency;
+    private String Username;
+    private SharedPreferences sharedPreferences;
 
     // AUDIO
     private MediaPlayer mediaPlayer;
@@ -61,6 +64,8 @@ public class SelectFighterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_fighter);
+
+        username = getIntent().getStringExtra("username");
 
 //        ambil currecy
         int userCurrency = getIntent().getIntExtra("currency", 0); // Ambil nilai currency yang diteruskan
@@ -103,7 +108,7 @@ public class SelectFighterActivity extends AppCompatActivity {
         currencyTextView = findViewById(R.id.currencyTextView);
 
 
-        username = getIntent().getStringExtra("username");
+
         String koleksiSkin = username != null ? username : "default_user"; // Menggunakan username sebagai ID koleksi skin
 
         firestore = FirebaseFirestore.getInstance();
@@ -136,6 +141,7 @@ public class SelectFighterActivity extends AppCompatActivity {
 
     private void prevsbutton() {
         Intent intent = new Intent(this, MainActivity.class);
+
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
@@ -229,6 +235,8 @@ public class SelectFighterActivity extends AppCompatActivity {
 
     private void updateFighterView() {
         String currentSkinID = fighterIDs[currentSkinIndex]; // Ambil ID skin saat ini
+        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.lock_fade_in);
+        Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.lock_fade_out);
 
         int skinDrawableId = getResources().getIdentifier(currentSkinID, "drawable", getPackageName());
         spaceShip.setImageResource(skinDrawableId);
@@ -244,14 +252,19 @@ public class SelectFighterActivity extends AppCompatActivity {
 
                     if (isUnlocked != null && isUnlocked) {
                         lockOverlay.setVisibility(View.GONE); // Sembunyikan gembok
+                        lockOverlay.startAnimation(fadeOut); // Jalankan animasi
                     } else if (isLocked != null && isLocked) {
                         lockOverlay.setVisibility(View.VISIBLE); // Tampilkan gembok
+                        lockOverlay.startAnimation(fadeIn); // Jalankan animasi
                     }
                 } else {
                     lockOverlay.setVisibility(View.VISIBLE); // Tampilkan gembok jika data tidak ditemukan
+
                 }
             } else {
                 lockOverlay.setVisibility(View.VISIBLE); // Tampilkan gembok jika ada error
+
+
             }
         });
     }
@@ -275,6 +288,7 @@ public class SelectFighterActivity extends AppCompatActivity {
         if (ownedSkins.contains(fighterIDs[currentSkinIndex])) {
             Intent intent = new Intent(SelectFighterActivity.this, LoadingScreen.class);
             intent.putExtra("selectedSkin", fighterIDs[currentSkinIndex]); // Kirim ID skin yang dipilih
+            intent.putExtra("username", username);
             startActivity(intent);
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         } else {

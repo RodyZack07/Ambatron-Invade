@@ -3,6 +3,7 @@ package com.example.savesthekunti.Level;
 import static androidx.core.content.ContextCompat.startActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
@@ -40,9 +41,13 @@ public class Showgamelose1 extends AppCompatActivity {
 
         ImageButton Retry = findViewById(R.id.nextBtn);
 
+        SharedPreferences sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
+        // Ambil username dari SharedPreferences
+        String username = sharedPreferences.getString("username", null);
+
         homeBtn.setOnClickListener(view -> {
             Intent intent = new Intent(Showgamelose1.this, SelectFighterActivity.class);
-            intent.putExtra("username", "shinoa"); // Contoh pengiriman username
+            intent.putExtra("username", username);
             startActivity(intent);
             // Tambahkan animasi fade transition jika diinginkan
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

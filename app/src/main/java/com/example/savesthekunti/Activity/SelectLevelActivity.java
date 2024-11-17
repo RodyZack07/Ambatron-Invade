@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.example.savesthekunti.R;
@@ -23,6 +24,8 @@ public class SelectLevelActivity extends AppCompatActivity {
     private View settingsView;
     private String selectedSkin;
     private MediaPlayer buttonSFX;
+    private String username;
+    private SharedPreferences sharedPreferences;
 
     //    AUDIO
     private MediaPlayer mediaPlayer;
@@ -53,6 +56,7 @@ public class SelectLevelActivity extends AppCompatActivity {
 
         // Ambil data skin yang dipilih dari SelectFighterActivity
         selectedSkin = getIntent().getStringExtra("selectedSkin");
+        username = getIntent().getStringExtra("username");
         buttonSFX = MediaPlayer.create(this, R.raw.button_sfx);
 
         ImageButton prevButton = findViewById(R.id.prevsBtn1);
@@ -202,14 +206,31 @@ public class SelectLevelActivity extends AppCompatActivity {
     }
 
     private void prevsbutton() {
-        Intent newIntent = new Intent(this, SelectFighterActivity.class);
-        newIntent.putExtra("username", "shinoa"); // Contoh pengiriman username
-        startActivity(newIntent);
+        // Inisialisasi SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
 
-        // Tambahkan animasi fade transition jika diinginkan
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        // Ambil username dari SharedPreferences
+        String username = sharedPreferences.getString("username", null);
 
+        // Pastikan username tidak null sebelum melanjutkan
+        if (username != null) {
+            // Buat intent ke SelectFighterActivity
+            Intent intent = new Intent(SelectLevelActivity.this, SelectFighterActivity.class);
+
+            // Tambahkan username ke dalam intent
+            intent.putExtra("username", username);
+
+            // Mulai aktivitas SelectFighterActivity
+            startActivity(intent);
+
+            // Tambahkan animasi fade transition jika diinginkan
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        } else {
+            // Jika username tidak tersedia, tampilkan pesan peringatan
+            Toast.makeText(this, "Kesalahan: Username tidak ditemukan. Harap login ulang.", Toast.LENGTH_SHORT).show();
+        }
     }
+
 
     private void showLevelPopup3(View anchorView) {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -671,6 +692,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[0];
         intent.putExtra("levelData", levelData);
+        intent.putExtra("username", username);
         startActivity(intent);
         buttonSFX.start();
     }

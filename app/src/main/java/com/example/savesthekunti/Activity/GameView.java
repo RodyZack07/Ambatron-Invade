@@ -12,7 +12,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.savesthekunti.R;
 
@@ -22,9 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import com.example.savesthekunti.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class GameView extends View {
@@ -68,6 +68,8 @@ public class GameView extends View {
 
     private OnChangeScoreListener scoreChangeListener;
     private int scoreThresholdForStar = 100; // Skor minimal untuk memunculkan bintang baru
+    private boolean scoreSaved = false;
+
 
     private MediaPlayer bossExplodeSFX;
     private MediaPlayer monsterExplodeSFX;
@@ -77,6 +79,22 @@ public class GameView extends View {
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
     private String userID;
+
+
+//    SCOREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+// Metode untuk mendapatkan nilai skor
+public int getScore() {
+    return score;
+}
+
+    // Metode untuk menambah skor
+    public void addScore(int points) {
+        score += points;
+    }
+
+    public Level getLevel(){
+    return levelData;
+    }
 
 
     //LOGIC
@@ -165,37 +183,56 @@ public class GameView extends View {
         });
     }
 
-    //    ============================== DATABASE SCORE NOT READY YET ========================================================
-    private void saveScoreToFirestore() {
+
+
+
+
+
+    private void saveScoreToFirestore(int score, int defeatedCount, String status) {
+        if (firestore == null) {
+            firestore = FirebaseFirestore.getInstance();
+        }
+
         if (userID == null) {
-            Log.e("GameView", "User belum login, tidak bisa menyimpan skor");
+            Log.e("GameView", "User ID is not set. Please authenticate the user.");
             return;
         }
 
+        // Generate a unique document ID using a timestamp
+        String documentID = FieldValue.serverTimestamp().toString();
+
+        // Create a reference to the "Score" subcollection within the user's document
+        CollectionReference scoreRef = firestore.collection("Akun").document(userID).collection("Score");
+
+        // Create a map to store the score data
         Map<String, Object> scoreData = new HashMap<>();
         scoreData.put("score", score);
         scoreData.put("defeatedCount", defeatedCount);
-        scoreData.put("timestamp", System.currentTimeMillis());
+        scoreData.put("status", status); // Can be "win" or "lose"
+        scoreData.put("date_created", FieldValue.serverTimestamp());
 
-        firestore.collection("Akun").document(userID).collection("Score").add(scoreData)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("GameView", "Skor berhasil disimpan");
-                    Toast.makeText(getContext(), "Skor berhasil disimpan", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("GameView", "Gagal menyimpan skor", e);
-                    Toast.makeText(getContext(), "Gagal menyimpan skor", Toast.LENGTH_SHORT).show();
-                });
+        // Save the score data to the Firestore database
+        scoreRef.document(documentID).set(scoreData)
+                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Score successfully added."))
+                .addOnFailureListener(e -> Log.e("Firestore", "Failed to add score: " + e.getMessage()));
     }
+
+
 
     //    ============================== DATABASE SCORE NOT READY YET ========================================================
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if(gameOver || gameWin){
-            saveScoreToFirestore();
+        if (gameOver || gameWin) {
             Log.d("GameView", "GameView draw stopped");
+
+            // Simpan skor ke Firestore hanya sekali saat game selesai
+            if (!scoreSaved) {
+                scoreSaved = true; // Variabel boolean untuk mencegah penyimpanan berulang
+                String status = gameWin ? "win" : "lose";
+                saveScoreToFirestore(score, defeatedCount, status);
+            }
             return;
         }
 
@@ -206,6 +243,7 @@ public class GameView extends View {
 
         float deltaTime = (currentTime - lastFrameTime) / 1000f;
         lastFrameTime = currentTime;
+
 
         List<MonsterMini> removeMonsters = new ArrayList<>();
         List<Bullet> removeBullets = new ArrayList<>();
@@ -254,11 +292,12 @@ public class GameView extends View {
         }
 
 
-        if(!isPlayerDefeated) {
+        if (!isPlayerDefeated) {
             for (Bullet bullet : bullets) {
                 bullet.updatePositionBullet(deltaTime);
                 bullet.draw(canvas);
 
+                // Deteksi kolisi dengan monster mini
                 for (MonsterMini monster : monsterMini) {
                     if (checkCollision(bullet, monster)) {
                         removeBullets.add(bullet);
@@ -266,22 +305,25 @@ public class GameView extends View {
                         score += 15;
                         defeatedCount++;
 
-                        if(monster.getHp() <= 0){
+                        if (monster.getHp() <= 0) {
                             removeMonsters.add(monster);
-                            monsterExplodeSFX.start();}
+                            monsterExplodeSFX.start();
+                        }
+
                         // Menampilkan animasi ledakan di posisi monster
-                        Log.d("GameView", "Triggering explosion at: " + monster.getX() + ", " + monster.getY());
                         gameActivity.triggerExplosion(monster.getX(), monster.getY());
 
                         if (scoreChangeListener != null) {
-                            scoreChangeListener.onScoreChange(score, defeatedCount);}
+                            scoreChangeListener.onScoreChange(score, defeatedCount);
+                        }
                     }
                 }
 
+                // Deteksi kolisi dengan bos
                 if (isBossAmbaSpawned && checkCollision(bullet, bossAmba)) {
                     bossAmba.reduceHp(bullet.getDamage());
                     removeBullets.add(bullet);
-                    if (bossHpChangeListener != null){
+                    if (bossHpChangeListener != null) {
                         bossHpChangeListener.onBossHpChange(bossAmba.getHp());
                     }
 
@@ -290,19 +332,29 @@ public class GameView extends View {
                         isBossAmbaDefeated = true;
                         rudalAmbas.clear();
                         bossExplodeSFX.start();
-                        gameWin = true;}
+                        gameWin = true;
+
+                        // **Tambahkan logika untuk menyimpan skor saat menang**
+                        saveScoreToFirestore(score, defeatedCount, "win");
+                    }
                 }
 
-                for (RudalAmba rudal : rudalAmbas){
-                    if(checkCollision(bullet, rudal)){
+                // Deteksi kolisi dengan rudal bos
+                for (RudalAmba rudal : rudalAmbas) {
+                    if (checkCollision(bullet, rudal)) {
                         rudal.reduceDurability(bullet.getDamage());
                         removeBullets.add(bullet);
 
-                        if(rudal.getDurability() <= 0){
+                        if (rudal.getDurability() <= 0) {
                             removeRudal.add(rudal);
-                        }}}
+                        }
+                    }
+                }
             }
         }
+
+
+
 
         monsterMini.removeAll(removeMonsters);
         bullets.removeAll(removeBullets);

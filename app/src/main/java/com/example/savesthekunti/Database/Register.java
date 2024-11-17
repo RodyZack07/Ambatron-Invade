@@ -8,17 +8,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.savesthekunti.Database.Login;
 import com.example.savesthekunti.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.MessageDigest;
@@ -132,18 +128,16 @@ public class Register extends AppCompatActivity {
         akunData.put("isAdmin", false);
         akunData.put("created_at", System.currentTimeMillis());
         akunData.put("updated_at", System.currentTimeMillis());
-        akunData.put("score", 0);
-        akunData.put("currency", 10); // Tambahkan mata uang default
 
         firestore.collection("Akun").document(username)
                 .set(akunData)
                 .addOnSuccessListener(aVoid -> {
                     setDefaultSkin(username);
                     setDefaultAchievements(username);
+//                    setDefaultScores(username); // Tambahkan setDefaultScores
 
                     Log.d("Register", "Akun berhasil didaftarkan dengan username sebagai ID");
                     Toast.makeText(Register.this, "Registrasi berhasil, silakan verifikasi email Anda", Toast.LENGTH_SHORT).show();
-                    // Logout untuk mencegah akses tanpa verifikasi dan arahkan ke Login
                     auth.signOut();
                     startActivity(new Intent(Register.this, Login.class));
                     finish();
@@ -154,29 +148,60 @@ public class Register extends AppCompatActivity {
                 });
     }
 
+
+
+
     private void setDefaultAchievements(String userId) {
         CollectionReference achievementRef = firestore.collection("Akun").document(userId).collection("Achievement");
 
-        Map<String, Object> achievement1 = new HashMap<>();
-        achievement1.put("id", "achv_001");
-        achievement1.put("name", "Monster Hunter");
-        achievement1.put("desc", "Defeat 50 monsters.");
-        achievement1.put("rules", "Defeat at least 50 monsters to unlock.");
-        achievement1.put("isGet", false);
-        achievement1.put("monster_defeated", 0);
-        achievement1.put("highscore", 0);
-        achievementRef.document("achv_001").set(achievement1);
+        Map<String, Object> achievementData = new HashMap<>();
+        achievementData.put("id", "Achievement");
+        achievementData.put("name", "Monster Hunter");
+        achievementData.put("desc", "Defeat 50 monsters.");
+        achievementData.put("rules", "Defeat at least 50 monsters to unlock.");
+        achievementData.put("isGet", false);
+        achievementData.put("monster_defeated", 0);
 
-        Map<String, Object> achievement2 = new HashMap<>();
-        achievement2.put("id", "achv_002");
-        achievement2.put("name", "Score Master");
-        achievement2.put("desc", "Reach a highscore of 1000.");
-        achievement2.put("rules", "Get a score of 1000 or higher to unlock.");
-        achievement2.put("isGet", false);
-        achievement2.put("monster_defeated", 0);
-        achievement2.put("highscore", 0);
-        achievementRef.document("achv_002").set(achievement2);
+        achievementRef.document("MonsterHunter").set(achievementData)
+                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Achievement berhasil ditambahkan."))
+                .addOnFailureListener(e -> Log.e("Firestore", "Gagal menambahkan Achievement: " + e.getMessage()));
     }
+
+    private void setDefaultScores(String userId) {
+        CollectionReference scoreRef = firestore.collection("Akun").document(userId).collection("Score");
+
+        // Score 1
+        Map<String, Object> scoreData1 = new HashMap<>();
+        scoreData1.put("id", "Score1");
+        scoreData1.put("name", "Default Score");
+        scoreData1.put("desc", "Default starting score");
+        scoreData1.put("score", 0);
+        scoreData1.put("stars", 0);
+        scoreData1.put("status", "pending");
+        scoreData1.put("date_created", FieldValue.serverTimestamp());
+
+        scoreRef.document("Score1").set(scoreData1)
+                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Score1 berhasil ditambahkan."))
+                .addOnFailureListener(e -> Log.e("Firestore", "Gagal menambahkan Score1: " + e.getMessage()));
+
+        // Score 2
+        Map<String, Object> scoreData2 = new HashMap<>();
+        scoreData2.put("id", "Score2");
+        scoreData2.put("name", "Monster Hunter Score");
+        scoreData2.put("desc", "Score untuk Monster Hunter Achievement");
+        scoreData2.put("score", 0);
+        scoreData2.put("stars", 0);
+        scoreData2.put("status", "pending");
+        scoreData2.put("date_created", FieldValue.serverTimestamp());
+
+        scoreRef.document("Score2").set(scoreData2)
+                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Score2 berhasil ditambahkan."))
+                .addOnFailureListener(e -> Log.e("Firestore", "Gagal menambahkan Score2: " + e.getMessage()));
+    }
+
+
+
+
 
     private void setDefaultSkin(String userId) {
         CollectionReference skinRef = firestore.collection("Akun").document(userId).collection("Koleksi_Skin");
