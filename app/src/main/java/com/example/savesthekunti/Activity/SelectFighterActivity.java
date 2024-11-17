@@ -177,9 +177,6 @@ public class SelectFighterActivity extends AppCompatActivity {
         });
     }
 
-
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -190,7 +187,7 @@ public class SelectFighterActivity extends AppCompatActivity {
             mediaPlayer.start();
             setVolume(mediaPlayer, loadVolumePreference() / 100f);
         }
-        fetchUserSkins(); // Fetch skins setiap kali activity resume
+        fetchUserSkins();
     }
 
     @Override

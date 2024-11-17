@@ -3,11 +3,9 @@ package com.example.savesthekunti.Level;
 import static androidx.core.content.ContextCompat.startActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,14 +21,6 @@ public class Showgamewin1 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_game_win1); // Sesuaikan dengan layout yang benar
-
-        SharedPreferences sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
-        // Ambil username dari SharedPreferences
-        String username = sharedPreferences.getString("username", null);
-
-
-
-
 
 
         // Ambil data level dari Intent
@@ -52,7 +42,7 @@ public class Showgamewin1 extends AppCompatActivity {
 
         homeBtn.setOnClickListener(view -> {
             Intent intent = new Intent(Showgamewin1.this, SelectFighterActivity.class);
-            intent.putExtra("username", username);
+            intent.putExtra("username", "shinoa"); // Contoh pengiriman username
             startActivity(intent);
             // Tambahkan animasi fade transition jika diinginkan
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
