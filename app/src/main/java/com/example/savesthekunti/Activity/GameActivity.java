@@ -35,14 +35,12 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     private TextView scoreTxt, defeatedTxt;
     private ImageView explosionView;
     private Level levelData;
-    public PopupWindow gameOverWindow;
-    public PopupWindow gameWinWindow;
-    private ProgressBar bossHealthBar;
     private int initialHealth;
     private int initalBossHealth;
     private ImageView oneBarLeft, twoBarLeft, threeBarLeft, fourBarLeft, fiveBarLeft;
     private Level currentLevelData;
     private ImageButton pausemenu;
+    private int levelIndex;
 
 
 
@@ -52,6 +50,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         setContentView(R.layout.game_activity);
 
         currentLevelData = (Level) getIntent().getSerializableExtra("levelData");
+        levelIndex = getIntent().getIntExtra("levelIndex", 0);
 
         // Inisialisasi komponen UI
         explosionView = new ImageView(this);
@@ -95,11 +94,8 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         fourBarLeft = findViewById(R.id.FourbarLeft);
         fiveBarLeft = findViewById(R.id.FiveBarLeft);
 
-        bossHealthBar = findViewById(R.id.bossHealthBar);
-
         int bossMaxHp = gameView.getBossAmbaHp();  // Ambil nilai HP awal dari gameView
-        bossHealthBar.setMax(bossMaxHp);           // Atur nilai max ProgressBar
-        bossHealthBar.setProgress(bossMaxHp);      // Set progress sesuai HP saat ini
+
 
 
         // Memuat video dari sumber yang diinginkan
@@ -152,9 +148,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     public void onBossHpChange(int newHp) {
         if (gameView.getBossAmba() != null) {
             initalBossHealth = newHp;
-
             Log.d("GameActivity", "Boss HP changed to: " + newHp);
-            updateBossHealthBar(newHp);
 
             if (newHp <= 0) {
                 showGameWin(findViewById(R.id.gameContent));
@@ -164,17 +158,6 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         }
     }
 
-    private void updateBossHealthBar(int newHp) {
-        if (newHp >= 0 && initalBossHealth > 0) {
-            float healthPercentage = (float) newHp / (float) initalBossHealth;
-
-            if (Float.isNaN(healthPercentage)) {
-                healthPercentage = 0f;
-            }
-            ObjectAnimator healthBarAnimation = ObjectAnimator.ofFloat(bossHealthBar, "scaleX", healthPercentage);
-            healthBarAnimation.setDuration(500); // Animation duration
-            healthBarAnimation.start();}
-    }
 
     private void onGameOver(int score) {
         int stars = calculateStars(score); // Calculate stars based on score
@@ -212,22 +195,27 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     }
 
     public void showGameOver(View anchorView) {
+        anchorView.postDelayed(() -> {
+            gameView.destroy();
         Intent intent = new Intent(GameActivity.this, Showgamelose1.class);
         intent.putExtra("levelData", currentLevelData);
         startActivity(intent);
         // Tambahkan animasi fade transition jika diinginkan
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        finishAffinity(); // Menutup semua aktivitas di tumpukan yang sama
+        finish();
+        }, 700);
     }
 
-
     public void showGameWin(View anchorView){
-        Intent intent = new Intent(GameActivity.this, Showgamewin1.class);
-        intent.putExtra("levelData", currentLevelData);
-        startActivity(intent);
-        // Tambahkan animasi fade transition jika diinginkan
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        finishAffinity(); // Menutup semua aktivitas di tumpukan yang sama
+        anchorView.postDelayed(() -> {
+            gameView.destroy();
+            Intent intent = new Intent(GameActivity.this, Showgamewin1.class);
+            intent.putExtra("levelData", currentLevelData);
+            intent.putExtra("selectedSkin", getIntent().getStringExtra("selectedSkin"));
+            startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            finish();
+            }, 700);
     }
 
     @Override

@@ -17,8 +17,6 @@ public class Level implements Serializable {
         this.monsterMiniHp = monsterMiniHp;
         this.monsterMiniDamage = monsterMiniDamage;
         this.bossAmbaHp = bossAmbaHp;
-        this.rudalDurability = rudalDurability;
-        this.rudalDamage = rudalDamage;
         this.bossImageSrc = bossImageSrc;
     }
 

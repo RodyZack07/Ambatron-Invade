@@ -12,7 +12,7 @@
         android:layout_gravity="center"
         android:layout_marginBottom="0dp"
         android:layout_marginTop="0dp"
-   />
+        />
     <!-- GameView untuk menggambar game -->
     <com.example.savesthekunti.Activity.GameView
         android:id="@+id/gameView"
@@ -66,7 +66,7 @@
         android:layout_width="350dp"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="35dp"
         android:layout_marginLeft="5dp"
         >
 
@@ -119,28 +119,101 @@
 
     <LinearLayout
         android:layout_width="450dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal">
+        android:layout_height="65dp"
+        android:layout_marginTop="750dp"
+        android:gravity="left"
+        android:orientation="horizontal"
+        >
 
         <ImageView
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_gravity="center"/>
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:id="@+id/bossBar1"
+            android:layout_width="20dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/boss_health"/>
+
+        <ImageView
+            android:id="@+id/bossBar2"
+            android:layout_width="23dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/boss_health" />
+        <ImageView
+            android:id="@+id/bossBar3"
+            android:layout_width="20dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/boss_health"/>
+        <ImageView
+            android:id="@+id/bossBar4"
+            android:layout_width="20dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/boss_health"/>
+        <ImageView
+            android:id="@+id/bossBar5"
+            android:layout_width="20dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/boss_health"/>
+        <ImageView
+            android:id="@+id/bossBar6"
+            android:layout_width="20dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/boss_health"/>
+        <ImageView
+            android:id="@+id/bossBar7"
+            android:layout_width="20dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/boss_health"/>
+        <ImageView
+            android:id="@+id/bossBar8"
+            android:layout_width="20dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/boss_health"/>
+        <ImageView
+            android:id="@+id/bossBar9"
+            android:layout_width="20dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/boss_health"/>
+        <ImageView
+            android:id="@+id/bossBar10"
+            android:layout_width="20dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/boss_health"/>
 
 
 
-</LinearLayout>
-    <ProgressBar
-        android:id="@+id/bossHealthBar"
-        android:layout_gravity="center"
-        android:layout_width="300dp"
-        android:layout_height="20dp"
-        android:layout_marginLeft="50dp"
-        android:progressBackgroundTint="@color/light_blue"
-        android:progress="100"
-        android:max="100"
-        android:layout_marginTop="700dp"
-        style="?android:attr/progressBarStyleHorizontal"/>
+    </LinearLayout>
 
 </RelativeLayout>

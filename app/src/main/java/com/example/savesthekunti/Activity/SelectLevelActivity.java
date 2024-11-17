@@ -45,6 +45,10 @@ public class SelectLevelActivity extends AppCompatActivity {
             new Level(15, 320, 360, 25000, 250, 330, R.drawable.bos_punk),
     };
 
+    public Level[] getLevels() {
+        return levels;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
