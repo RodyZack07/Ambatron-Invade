@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,7 +38,6 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     private Level levelData;
     public PopupWindow gameOverWindow;
     public PopupWindow gameWinWindow;
-    private ProgressBar bossHealthBar;
     private int initialHealth;
     private int initalBossHealth;
     private int maxBossHealth;
@@ -46,6 +46,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     private Level currentLevelData;
     private ImageButton pausemenu;
     private int levelIndex;
+    private LinearLayout bossHealthBar;
 
 
 
@@ -87,6 +88,14 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         gameView.setOnBossHpChangeListener(this);
         initialHealth = gameView.getPlayerShipHp();
         maxBossHealth = gameView.getBossAmbaMaxHp();
+        bossHealthBar = findViewById(R.id.bossHealthBar);
+
+        if (gameView.getBossAmba() != null) {
+            bossHealthBar.setVisibility(View.VISIBLE); // Tampilkan jika BossAmba ada
+        } else {
+            bossHealthBar.setVisibility(View.GONE); // Sembunyikan jika BossAmba tidak ada
+        }
+
 
 
         //HEALTH BAR
@@ -158,7 +167,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     public void onBossHpChange(int newHp) {
         if (gameView.getBossAmba() != null) {
             Log.d("GameActivity", "Boss HP changed to: " + newHp);
-
+            bossHealthBar.setVisibility(View.VISIBLE);
             if (maxBossHealth == 0) {
                 maxBossHealth = newHp;
                 Log.d("GameActivity", "Max Boss HP set to: " + maxBossHealth);

@@ -137,12 +137,14 @@
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/bossHealthBar"
         android:layout_width="450dp"
         android:layout_height="65dp"
         android:layout_marginTop="750dp"
         android:gravity="left"
         android:layout_marginLeft="70dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+       >
 
         <ImageView
             android:layout_width="60dp"
