@@ -7,12 +7,10 @@ public class Level implements Serializable {
     public int monsterMiniHp;
     public int monsterMiniDamage;
     public int bossAmbaHp;
-    public int rudalDurability;
-    public int rudalDamage;
     public int bossImageSrc;
 
     // Constructor, getters, and setters
-    public Level(int levelNumber, int monsterMiniHp, int monsterMiniDamage, int bossAmbaHp, int rudalDurability, int rudalDamage, int bossImageSrc ) {
+    public Level(int levelNumber, int monsterMiniHp, int monsterMiniDamage, int bossAmbaHp, int bossImageSrc ) {
         this.levelNumber = levelNumber;
         this.monsterMiniHp = monsterMiniHp;
         this.monsterMiniDamage = monsterMiniDamage;
@@ -41,11 +39,4 @@ public class Level implements Serializable {
         return bossAmbaHp;
     }
 
-    public int getRudalDurability() {
-        return rudalDurability;
-    }
-
-    public int getRudalDamage() {
-        return rudalDamage;
-    }
 }

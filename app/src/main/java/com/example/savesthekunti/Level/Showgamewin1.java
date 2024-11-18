@@ -3,6 +3,7 @@ package com.example.savesthekunti.Level;
 import static androidx.core.content.ContextCompat.startActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
@@ -17,6 +18,9 @@ import com.example.savesthekunti.Activity.SelectLevelActivity;
 import com.example.savesthekunti.R;
 
 public class Showgamewin1 extends AppCompatActivity {
+    private Level[] levels;
+    private String selectedSkin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +29,11 @@ public class Showgamewin1 extends AppCompatActivity {
 
         // Ambil data level dari Intent
         Level levelData = (Level) getIntent().getSerializableExtra("levelData");
+
+        SelectLevelActivity selectLevelActivity = new SelectLevelActivity();
+        levels = selectLevelActivity.getLevels();
+        selectedSkin = getIntent().getStringExtra("selectedSkin");
+
 
         // Tampilkan nomor level di TextView jika levelData tidak null
         if (levelData != null) {
@@ -40,9 +49,14 @@ public class Showgamewin1 extends AppCompatActivity {
 
         ImageButton nextBtn = findViewById(R.id.nextbtn);
 
+//        SHARED PREFRENCE
+        SharedPreferences sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
+        String username = sharedPreferences.getString("username", null);
+
+
         homeBtn.setOnClickListener(view -> {
             Intent intent = new Intent(Showgamewin1.this, SelectFighterActivity.class);
-            intent.putExtra("username", "shinoa"); // Contoh pengiriman username
+            intent.putExtra("username",username); // Contoh pengiriman username
             startActivity(intent);
             // Tambahkan animasi fade transition jika diinginkan
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -51,10 +65,27 @@ public class Showgamewin1 extends AppCompatActivity {
 
 
         nextBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(Showgamewin1.this, GameActivity.class);
-            intent.putExtra("levelIndex", 2); // Lanjutkan ke level berikutnya
-            startActivity(intent);
-            finish();
+            int nextLevelNumber = levelData.getLevelNumber() + 1;
+            Level nextLevelData = getLevelByNumber(nextLevelNumber);
+
+            if (nextLevelData != null) { // Pastikan level berikutnya ada
+                Intent intent = new Intent(Showgamewin1.this, GameActivity.class);
+                intent.putExtra("levelData", nextLevelData);
+                intent.putExtra("selectedSkin", selectedSkin);// Kirim data level berikutnya
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                finish();
+            }
         });
+    }
+    private Level getLevelByNumber(int levelNumber) {
+        if (levels != null) {
+            for (Level level : levels) {
+                if (level.getLevelNumber() == levelNumber) {
+                    return level;
+                }
+            }
+        }
+        return null;
     }
 }

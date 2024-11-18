@@ -34,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import android.view.animation.AnimationUtils;
 import java.util.ArrayList;
 
 public class SelectFighterActivity extends AppCompatActivity {
@@ -165,7 +166,7 @@ public class SelectFighterActivity extends AppCompatActivity {
                 if (currencyLong != null) {
                     userCurrency = currencyLong.intValue();  // Mengubah nilai currency menjadi integer
                     Log.d("SelectFighterActivity", "User currency: " + userCurrency); // Debug log
-                    currencyTextView.setText(String.valueOf(userCurrency)); // Update currency display
+
                 } else {
                     Log.d("SelectFighterActivity", "Currency not found in user data.");
                 }
@@ -319,62 +320,40 @@ public class SelectFighterActivity extends AppCompatActivity {
     }
 
     private void unlockCurrentSkin() {
-        // Ambil reference ke dokumen skin berdasarkan username dan skin yang dipilih
+        Log.d("UnlockSkin", "Memulai proses unlock skin");
         DocumentReference skinRef = firestore.collection("Akun").document(username)
                 .collection("Koleksi_Skin").document(fighterIDs[currentSkinIndex]);
 
-        // Ambil nilai currency terlebih dahulu untuk memeriksa apakah cukup
         DocumentReference userRef = firestore.collection("Akun").document(username);
         userRef.get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
-                // Ambil nilai currency dari dokumen
                 Long currencyLong = documentSnapshot.getLong("currency");
                 if (currencyLong != null) {
                     int userCurrency = currencyLong.intValue();
-
-                    // Periksa apakah currency cukup untuk membuka skin
+                    Log.d("UnlockSkin", "Currency pengguna: " + userCurrency);
                     if (userCurrency >= 10) {
-                        // Lakukan unlock skin jika currency cukup
                         skinRef.update("status_terkunci", false, "is_unlocked", true)
                                 .addOnSuccessListener(aVoid -> {
-                                    Log.d("SelectFighterActivity", "Pembelian Skin Berhasil");
-
-                                    // Kurangi currency sebanyak 2
+                                    Log.d("UnlockSkin", "Skin berhasil di-unlock");
                                     int updatedCurrency = userCurrency - 10;
-
-                                    // Update currency di Firestore
                                     userRef.update("currency", updatedCurrency)
                                             .addOnSuccessListener(aVoid1 -> {
-                                                // Refresh skins setelah unlock dan update currency
+                                                Log.d("UnlockSkin", "Currency berhasil diperbarui");
                                                 fetchUserSkins();
-
-                                                Toast.makeText(SelectFighterActivity.this, "Pembelian Skin Berhasil", Toast.LENGTH_SHORT).show();
-                                                unlockSkin.setEnabled(true);
+                                                Toast.makeText(this, "Skin berhasil dibuka!", Toast.LENGTH_SHORT).show();
                                             })
-                                            .addOnFailureListener(e -> {
-                                                Log.d("SelectFighterActivity", "Failed to update currency: ", e);
-                                                unlockSkin.setEnabled(true);
-                                            });
+                                            .addOnFailureListener(e -> Log.e("UnlockSkin", "Gagal mengupdate currency", e));
                                 })
-                                .addOnFailureListener(e -> {
-                                    Log.d("SelectFighterActivity", "Failed to unlock skin: ", e);
-                                    unlockSkin.setEnabled(true);
-                                });
+                                .addOnFailureListener(e -> Log.e("UnlockSkin", "Gagal mengupdate status skin", e));
                     } else {
-                        // Jika currency tidak cukup, tampilkan Toast
-                        Toast.makeText(SelectFighterActivity.this, "KoinTron tidak cukup untuk membuka skin!", Toast.LENGTH_SHORT).show();
-                        unlockSkin.setEnabled(true);
+                        Log.d("UnlockSkin", "Kointron tidak cukup.");
+                        Toast.makeText(this, "Kointron tidak cukup", Toast.LENGTH_SHORT).show();
                     }
                 }
-            } else {
-                Log.d("SelectFighterActivity", "User document not found.");
-                unlockSkin.setEnabled(true);
             }
-        }).addOnFailureListener(e -> {
-            Log.d("SelectFighterActivity", "Failed to retrieve user data: ", e);
-            unlockSkin.setEnabled(true);
-        });
+        }).addOnFailureListener(e -> Log.e("UnlockSkin", "Gagal mendapatkan data user", e));
     }
+
 
 
 

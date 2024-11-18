@@ -26,7 +26,7 @@
     <dimen name ="setting_height">400dp</dimen>
 
     <dimen name = "boss_width">300dp</dimen>
-    <dimen name = "boss_height">300dp</dimen>
+    <dimen name = "boss_height">270dp</dimen>
 
     <dimen name = "level_height">300dp</dimen>
     <dimen name = "level_width">350dp</dimen>

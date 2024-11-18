@@ -25,22 +25,37 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.MainActivity"/>
-        <activity android:name=".Activity.SelectFighterActivity"/>
-        <activity android:name=".Activity.GameActivity"/>
-        <activity android:name=".Activity.GameView"/>
-        <activity android:name=".Activity.GameActivity2"/>
-        <activity android:name=".Activity.SelectLevelActivity" />
-        <activity android:name=".Activity.InfoMenuActivity"/>
-        <activity android:name=".Database.Register"/>
-        <activity android:name=".Database.Login"/>
-        <activity android:name=".Activity.ProfilActivity"/>
-        <activity android:name=".Database.Admin"/>
-        <activity android:name=".Database.AccountCenter"/>
-        <activity android:name=".UI.LoadingScreen"/>
-        <activity android:name=".Level.Showgamewin1"/>
-        <activity android:name=".Level.Showgamelose1"/>
-        <activity android:name=".Activity.PauseMenu"/>
+        <activity android:name=".Activity.MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.SelectFighterActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.GameActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Activity.GameView"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Activity.SelectLevelActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.InfoMenuActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Database.Register"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Database.Login"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.ProfilActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Database.Admin"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".Database.AccountCenter"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".UI.LoadingScreen"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Level.Showgamewin1"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Level.Showgamelose1"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.PauseMenu"
+            android:screenOrientation="portrait"/>
 
 
         <activity android:name=".Model.EditAsAdminActivity"/>

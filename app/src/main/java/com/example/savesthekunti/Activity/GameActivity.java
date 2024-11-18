@@ -40,9 +40,12 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     private ProgressBar bossHealthBar;
     private int initialHealth;
     private int initalBossHealth;
+    private int maxBossHealth;
     private ImageView oneBarLeft, twoBarLeft, threeBarLeft, fourBarLeft, fiveBarLeft;
+    private ImageView bossBar1, bossBar2, bossBar3, bossBar4, bossBar5, bossBar6, bossBar7, bossBar8, bossBar9, bossBar10;
     private Level currentLevelData;
     private ImageButton pausemenu;
+    private int levelIndex;
 
 
 
@@ -52,6 +55,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         setContentView(R.layout.game_activity);
 
         currentLevelData = (Level) getIntent().getSerializableExtra("levelData");
+        levelIndex = getIntent().getIntExtra("levelIndex", 0);
 
         // Inisialisasi komponen UI
         explosionView = new ImageView(this);
@@ -82,27 +86,28 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         gameView.setOnPlayerHpChangeListener(this);
         gameView.setOnBossHpChangeListener(this);
         initialHealth = gameView.getPlayerShipHp();
-        if (gameView.getBossAmba() != null) {
-            initalBossHealth = gameView.getBossAmbaHp();
-        } else {
-            Log.e("GameActivity", "BossAmba is still null!");
-            initalBossHealth = 0;  // Set default value
-        }
+        maxBossHealth = gameView.getBossAmbaMaxHp();
 
+
+        //HEALTH BAR
         oneBarLeft = findViewById(R.id.OneBarLeft);
         twoBarLeft = findViewById(R.id.TwoBarLeft);
         threeBarLeft = findViewById(R.id.ThreebarLeft);
         fourBarLeft = findViewById(R.id.FourbarLeft);
         fiveBarLeft = findViewById(R.id.FiveBarLeft);
 
-        bossHealthBar = findViewById(R.id.bossHealthBar);
+        bossBar1 = findViewById(R.id.bossBar1);
+        bossBar2 = findViewById(R.id.bossBar2);
+        bossBar3 = findViewById(R.id.bossBar3);
+        bossBar4 = findViewById(R.id.bossBar4);
+        bossBar5 = findViewById(R.id.bossBar5);
+        bossBar6 = findViewById(R.id.bossBar6);
+        bossBar7 = findViewById(R.id.bossBar7);
+        bossBar8 = findViewById(R.id.bossBar8);
+        bossBar9 = findViewById(R.id.bossBar9);
+        bossBar10 = findViewById(R.id.bossBar10);
 
-        int bossMaxHp = gameView.getBossAmbaHp();  // Ambil nilai HP awal dari gameView
-        bossHealthBar.setMax(bossMaxHp);           // Atur nilai max ProgressBar
-        bossHealthBar.setProgress(bossMaxHp);      // Set progress sesuai HP saat ini
 
-
-        // Memuat video dari sumber yang diinginkan
         Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.raw_gameplay); // Ganti dengan nama file video yang benar
 
         gameplayBg.setVideoURI(videoUri); // Menggunakan gameplayBg
@@ -138,11 +143,12 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         Log.d("GameActivity", "Player HP changed to: " + newHp);// Update initialHealth
         // ...
 
-        oneBarLeft.setVisibility(newHp >= 100 ? View.VISIBLE : View.GONE);
+        oneBarLeft.setVisibility(newHp >= 1 ? View.VISIBLE : View.GONE);
         twoBarLeft.setVisibility(newHp >= 200 ? View.VISIBLE : View.GONE);
         threeBarLeft.setVisibility(newHp >= 400 ? View.VISIBLE : View.GONE);
         fourBarLeft.setVisibility(newHp >= 600 ? View.VISIBLE : View.GONE);
         fiveBarLeft.setVisibility(newHp >= 800? View.VISIBLE : View.GONE);
+
         if (newHp <= 0) {
             showGameOver(findViewById(R.id.gameContent));
         }
@@ -151,10 +157,14 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     @Override
     public void onBossHpChange(int newHp) {
         if (gameView.getBossAmba() != null) {
-            initalBossHealth = newHp;
-
             Log.d("GameActivity", "Boss HP changed to: " + newHp);
-            updateBossHealthBar(newHp);
+
+            if (maxBossHealth == 0) {
+                maxBossHealth = newHp;
+                Log.d("GameActivity", "Max Boss HP set to: " + maxBossHealth);
+            }
+
+            updateBossBars(newHp);
 
             if (newHp <= 0) {
                 showGameWin(findViewById(R.id.gameContent));
@@ -164,17 +174,29 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         }
     }
 
-    private void updateBossHealthBar(int newHp) {
-        if (newHp >= 0 && initalBossHealth > 0) {
-            float healthPercentage = (float) newHp / (float) initalBossHealth;
+    private void updateBossBars(int currentHp) {
+        if (maxBossHealth <= 0) {
+            Log.e("GameActivity", "Boss max HP is zero. Skipping boss bar update.");
+            return;
+        }
 
-            if (Float.isNaN(healthPercentage)) {
-                healthPercentage = 0f;
-            }
-            ObjectAnimator healthBarAnimation = ObjectAnimator.ofFloat(bossHealthBar, "scaleX", healthPercentage);
-            healthBarAnimation.setDuration(500); // Animation duration
-            healthBarAnimation.start();}
+        // Hitung persentase HP
+        int percentageHp = (int) ((double) currentHp / maxBossHealth * 100);
+        Log.d("GameActivity", "Current Boss HP: " + currentHp + ", Percentage: " + percentageHp + "%");
+
+        bossBar1.setVisibility(percentageHp >= 10 ? View.VISIBLE : View.GONE);
+        bossBar2.setVisibility(percentageHp >= 20 ? View.VISIBLE : View.GONE);
+        bossBar3.setVisibility(percentageHp >= 30 ? View.VISIBLE : View.GONE);
+        bossBar4.setVisibility(percentageHp >= 40 ? View.VISIBLE : View.GONE);
+        bossBar5.setVisibility(percentageHp >= 50 ? View.VISIBLE : View.GONE);
+        bossBar6.setVisibility(percentageHp >= 60 ? View.VISIBLE : View.GONE);
+        bossBar7.setVisibility(percentageHp >= 70 ? View.VISIBLE : View.GONE);
+        bossBar8.setVisibility(percentageHp >= 80 ? View.VISIBLE : View.GONE);
+        bossBar9.setVisibility(percentageHp >= 90 ? View.VISIBLE : View.GONE);
+        bossBar10.setVisibility(percentageHp >= 100 ? View.VISIBLE : View.GONE);
     }
+
+
 
     private void onGameOver(int score) {
         int stars = calculateStars(score); // Calculate stars based on score
@@ -186,7 +208,6 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         startActivity(intent); // Move to Score Activity
     }
 
-
     private int calculateStars(int score) {
         if (score > 1000) {
             return 3; // 3 stars for scores over 1000
@@ -196,7 +217,6 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
             return 1; // 1 star for scores under 500
         }
     }
-
 
     public void triggerExplosion(float x, float y) {
         explosionView.setX(x);
@@ -222,12 +242,15 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
 
 
     public void showGameWin(View anchorView){
-        Intent intent = new Intent(GameActivity.this, Showgamewin1.class);
-        intent.putExtra("levelData", currentLevelData);
-        startActivity(intent);
-        // Tambahkan animasi fade transition jika diinginkan
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        finishAffinity(); // Menutup semua aktivitas di tumpukan yang sama
+        anchorView.postDelayed(() -> {
+            gameView.destroy();
+            Intent intent = new Intent(GameActivity.this, Showgamewin1.class);
+            intent.putExtra("levelData", currentLevelData);
+            intent.putExtra("selectedSkin", getIntent().getStringExtra("selectedSkin"));
+            startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            finish();
+        }, 700);
     }
 
     @Override
