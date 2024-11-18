@@ -1,7 +1,5 @@
 package com.example.savesthekunti.Level;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,10 +10,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.savesthekunti.Activity.GameActivity;
-import com.example.savesthekunti.Activity.GameView;
 import com.example.savesthekunti.Activity.Level;
 import com.example.savesthekunti.Activity.SelectFighterActivity;
-import com.example.savesthekunti.Activity.SelectLevelActivity;
 import com.example.savesthekunti.R;
 
 public class Showgamelose1 extends AppCompatActivity {
@@ -38,28 +34,32 @@ public class Showgamelose1 extends AppCompatActivity {
         }
 
         ImageButton homeBtn = findViewById(R.id.homebtn);
+        ImageButton retryBtn = findViewById(R.id.retryBtn);
 
-        ImageButton Retry = findViewById(R.id.nextBtn);
-
-        SharedPreferences sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
         // Ambil username dari SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
         String username = sharedPreferences.getString("username", null);
 
+        // Navigasi ke SelectFighterActivity
         homeBtn.setOnClickListener(view -> {
             Intent intent = new Intent(Showgamelose1.this, SelectFighterActivity.class);
             intent.putExtra("username", username);
             startActivity(intent);
-            // Tambahkan animasi fade transition jika diinginkan
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             finish();
         });
 
-
-        Retry.setOnClickListener(view -> {
-            Intent intent = new Intent(Showgamelose1.this, GameView.class);
-
-            startActivity(intent);
-            finish();
+        // Fungsi Retry untuk mengulangi level
+        retryBtn.setOnClickListener(view -> {
+            if (levelData != null) {
+                Intent intent = new Intent(Showgamelose1.this, GameActivity.class);
+                intent.putExtra("levelData", levelData); // Kirim kembali data level yang sama
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                finish();
+            } else {
+                Log.e("Showgamelose1", "Level data is null, cannot retry level");
+            }
         });
     }
 }

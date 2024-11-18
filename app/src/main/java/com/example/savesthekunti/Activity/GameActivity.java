@@ -243,6 +243,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     public void showGameOver(View anchorView) {
         Intent intent = new Intent(GameActivity.this, Showgamelose1.class);
         intent.putExtra("levelData", currentLevelData);
+        intent.putExtra("selectedSkin", getIntent().getStringExtra("selectedSkin")); // Tambahkan data skin yang dipilih
         startActivity(intent);
         // Tambahkan animasi fade transition jika diinginkan
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
