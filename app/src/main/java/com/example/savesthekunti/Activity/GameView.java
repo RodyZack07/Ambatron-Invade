@@ -733,42 +733,21 @@ public int getScore() {
         }
 
         public void updatePositionBoss(float deltaTime) {
-            // Variabel untuk pola sinusoidal dan percepatan
-            float amplitude = 100f; // Amplitudo gerakan sinusoidal
-            float frequency = 2f;   // Frekuensi gerakan sinusoidal
-            float verticalSpeed = 50f; // Kecepatan vertikal default
-            float maxVerticalOffset = 500f; // Batas gerakan vertikal
+            // Gerakan jatuh bos dan berhenti ketika y = 500
+            if (y < 50) {
+                y += velocityY * deltaTime;
+            }
 
-            // Gerakan horizontal dengan pola sinusoidal
-            if (isMovingRight) {
+            if(isMovingRight){
                 x += velocityX * deltaTime;
-                if (x + width >= screenWidth) {
+                if(x + width >= screenWidth){
                     isMovingRight = false;
                 }
-            } else {
+            }else{
                 x -= velocityX * deltaTime;
-                if (x <= 0) {
+                if(x <= 0){
                     isMovingRight = true;
-                }
-            }
-            // Tambahkan pola sinusoidal ke gerakan horizontal
-            x += Math.sin(frequency * y / maxVerticalOffset) * amplitude * deltaTime;
-
-            // Gerakan vertikal dinamis (naik turun)
-            if (y < maxVerticalOffset) {
-                y += verticalSpeed * deltaTime;
-            } else {
-                y = 0; // Reset ke atas setelah mencapai batas vertikal
-            }
-
-            // Perubahan kecepatan dinamis untuk membuat gerakan lebih tidak terduga
-            if (Math.random() < 0.01) { // Random event untuk mengubah kecepatan
-                velocityX = 50 + (float) Math.random() * 100; // Randomize kecepatan horizontal
-                verticalSpeed = 50 + (float) Math.random() * 50; // Randomize kecepatan vertikal
-            }
-        }
-
-
+                }}}
 
         public void draw(Canvas canvas) {
             canvas.drawBitmap(Bitmap.createScaledBitmap(bossAmbaBitmap, width, height, false), x, y, paint);
@@ -818,8 +797,5 @@ public int getScore() {
             return y > screenHeight;
         }
     }
-
-
-
 }
 

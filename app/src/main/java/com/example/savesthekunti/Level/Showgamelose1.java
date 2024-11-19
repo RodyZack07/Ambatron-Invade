@@ -22,6 +22,7 @@ public class Showgamelose1 extends AppCompatActivity {
 
         // Ambil data level dari Intent
         Level levelData = (Level) getIntent().getSerializableExtra("levelData");
+        String selectedSkin = getIntent().getStringExtra("selectedSkin");
 
         // Tampilkan nomor level di TextView jika levelData tidak null
         if (levelData != null) {
@@ -53,12 +54,12 @@ public class Showgamelose1 extends AppCompatActivity {
         retryBtn.setOnClickListener(view -> {
             if (levelData != null) {
                 Intent intent = new Intent(Showgamelose1.this, GameActivity.class);
-                intent.putExtra("levelData", levelData); // Kirim kembali data level yang sama
+                intent.putExtra("levelData", levelData);
+                intent.putExtra("selectedSkin", selectedSkin);
                 startActivity(intent);
+
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
-            } else {
-                Log.e("Showgamelose1", "Level data is null, cannot retry level");
             }
         });
     }
