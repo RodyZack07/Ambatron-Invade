@@ -48,7 +48,8 @@ public class PauseMenu extends AppCompatActivity {
         quitButton.setOnClickListener(v -> {
             Intent intent = new Intent(PauseMenu.this, MainActivity.class); // Ganti dengan aktivitas utama
             startActivity(intent); // Kembali ke layar utama
-            finish(); // Menutup PauseMenu
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            finishAffinity(); // Menutup PauseMenu
         });
     }
 }

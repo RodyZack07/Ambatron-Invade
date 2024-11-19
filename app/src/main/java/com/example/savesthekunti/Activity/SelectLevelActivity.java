@@ -16,6 +16,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.example.savesthekunti.R;
+import com.example.savesthekunti.UI.LoadingScreenGame;
 
 public class SelectLevelActivity extends AppCompatActivity {
 
@@ -161,7 +162,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
         playBtn.setOnClickListener(view -> {showlevelActivity();
-                                            finish();});
+            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -196,7 +197,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
         playBtn.setOnClickListener(view -> {showlevelActivity2();
-                                            finish();});
+            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -258,7 +259,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
         playBtn.setOnClickListener(view -> {showlevelActivity3();
-                                            finish();});
+            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -293,7 +294,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
         playBtn.setOnClickListener(view -> {showlevelActivity4();
-                                            finish();});
+            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -363,7 +364,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
         playBtn.setOnClickListener(view -> {showlevelActivity6();
-                                            finish();});
+            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -398,7 +399,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
         playBtn.setOnClickListener(view -> {showlevelActivity7();
-                                            finish();});
+            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -433,7 +434,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
         playBtn.setOnClickListener(view -> {showlevelActivity8();
-                                            finish();});
+            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -468,7 +469,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
         playBtn.setOnClickListener(view -> {showlevelActivity9();
-                                            finish();});
+            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -503,7 +504,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
         playBtn.setOnClickListener(view -> {showlevelActivity10();
-                                            finish();});
+            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -538,7 +539,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
         playBtn.setOnClickListener(view -> {showlevelActivity11();
-                                            finish();});
+            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -573,7 +574,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
         playBtn.setOnClickListener(view -> {showlevelActivity12();
-                                            finish();});
+            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -608,7 +609,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
         playBtn.setOnClickListener(view -> {showlevelActivity13();
-                                            finish();});
+            finish();});
 
         homeBtn.setOnClickListener(view -> {
             popupWindow.dismiss();
@@ -642,7 +643,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
         playBtn.setOnClickListener(view -> {showlevelActivity14();
-                                            finish();});
+            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -677,7 +678,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         ImageButton playBtn = popupView.findViewById(R.id.playbtn);
 
         playBtn.setOnClickListener(view -> {showlevelActivity15();
-                                            finish();});
+            finish();});
 
 
         homeBtn.setOnClickListener(view -> {
@@ -692,138 +693,153 @@ public class SelectLevelActivity extends AppCompatActivity {
 
     // =============== FUNCTION BUTTON LEVEL START =======================
     private void showlevelActivity() {
-        Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        Intent intent = new Intent(SelectLevelActivity.this,  LoadingScreenGame.class);
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[0];
         intent.putExtra("levelData", levelData);
         intent.putExtra("username", username);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
     }
 
     private void showlevelActivity2() {
-        Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        Intent intent = new Intent(SelectLevelActivity.this, LoadingScreenGame.class);
         intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
         Level levelData = levels[1];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
     }
 
     private void showlevelActivity3() {
-        Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        Intent intent = new Intent(SelectLevelActivity.this,  LoadingScreenGame.class);
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[2];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
     }
 
     private void showlevelActivity4() {
-        Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        Intent intent = new Intent(SelectLevelActivity.this,  LoadingScreenGame.class);
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[3];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
     }
 
     private void showlevelActivity5() {
-        Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        Intent intent = new Intent(SelectLevelActivity.this,  LoadingScreenGame.class);
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[4];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
     }
 
     private void showlevelActivity6() {
-        Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        Intent intent = new Intent(SelectLevelActivity.this,  LoadingScreenGame.class);
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[5];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
     }
 
     private void showlevelActivity7() {
-        Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        Intent intent = new Intent(SelectLevelActivity.this, LoadingScreenGame.class);
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[6];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
     }
 
     private void showlevelActivity8() {
-        Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        Intent intent = new Intent(SelectLevelActivity.this,  LoadingScreenGame.class);
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[7];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
     }
 
     private void showlevelActivity9() {
-        Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        Intent intent = new Intent(SelectLevelActivity.this,  LoadingScreenGame.class);
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[8];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
     }
 
     private void showlevelActivity10() {
-        Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        Intent intent = new Intent(SelectLevelActivity.this,  LoadingScreenGame.class);
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[9];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
     }
 
     private void showlevelActivity11() {
-        Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        Intent intent = new Intent(SelectLevelActivity.this,  LoadingScreenGame.class);
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[10];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
     }
 
     private void showlevelActivity12() {
-        Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        Intent intent = new Intent(SelectLevelActivity.this, LoadingScreenGame.class);
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[11];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
     }
 
     private void showlevelActivity13() {
-        Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        Intent intent = new Intent(SelectLevelActivity.this,  LoadingScreenGame.class);
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[12];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
     }
 
     private void showlevelActivity14() {
-        Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        Intent intent = new Intent(SelectLevelActivity.this,  LoadingScreenGame.class);
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[13];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
     }
 
     private void showlevelActivity15() {
-        Intent intent = new Intent(SelectLevelActivity.this, GameActivity.class);
+        Intent intent = new Intent(SelectLevelActivity.this,  LoadingScreenGame.class);
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[14];
         intent.putExtra("levelData", levelData);
         startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
 
     }
