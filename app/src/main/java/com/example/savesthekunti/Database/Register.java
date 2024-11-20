@@ -141,8 +141,7 @@ public class Register extends AppCompatActivity {
                     setDefaultSkin(username);
                     setDefaultAchievements(username);
                     setDefaultScore(username);
-
-
+                    setDefaultLevels(username);
 
                     Log.d("Register", "Akun berhasil didaftarkan dengan username sebagai ID");
                     Toast.makeText(Register.this, "Registrasi berhasil, silakan verifikasi email Anda", Toast.LENGTH_SHORT).show();
@@ -232,6 +231,33 @@ public class Register extends AppCompatActivity {
                     Log.e("Register", "Gagal menyimpan default score", e);
                 });
     }
+
+    private void setDefaultLevels(String userId) {
+        // Akses subkoleksi "Levels" di dalam koleksi "Akun"
+        CollectionReference levelsRef = firestore.collection("Akun").document(userId).collection("Levels");
+
+        Map<String, Object> levelData= new HashMap<>();
+        levelData.put("isLevelCompleted1", true);
+        levelData.put("isLevelCompleted2", false);
+        levelData.put("isLevelCompleted3", false);
+        levelData.put("isLevelCompleted4", false);
+        levelData.put("isLevelCompleted5", false);
+        levelData.put("isLevelCompleted6", false);
+        levelData.put("isLevelCompleted7", false);
+        levelData.put("isLevelCompleted8", false);
+        levelData.put("isLevelCompleted9", false);
+        levelData.put("isLevelCompleted10", false);
+        levelData.put("isLevelCompleted11", false);
+        levelData.put("isLevelCompleted12", false);
+        levelData.put("isLevelCompleted13", false);
+        levelData.put("isLevelCompleted14", false);
+        levelData.put("isLevelCompleted15", false);
+
+        levelsRef.document(userId).set(levelData);
+
+    }
+
+
 
 
 

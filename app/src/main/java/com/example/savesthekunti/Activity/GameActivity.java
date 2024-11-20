@@ -47,6 +47,8 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     private ImageButton pausemenu;
     private int levelIndex;
     private LinearLayout bossHealthBar;
+    private boolean statusWin = false;
+    private boolean statusLose = false;
 
 
 
