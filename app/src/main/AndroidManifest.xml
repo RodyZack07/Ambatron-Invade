@@ -31,8 +31,6 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".Activity.GameActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".Activity.GameView"
-            android:screenOrientation="portrait" />
         <activity android:name=".Activity.SelectLevelActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".Activity.InfoMenuActivity"

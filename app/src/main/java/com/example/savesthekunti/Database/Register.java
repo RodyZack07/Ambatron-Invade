@@ -140,6 +140,9 @@ public class Register extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     setDefaultSkin(username);
                     setDefaultAchievements(username);
+                    setDefaultScore(username);
+
+
 
                     Log.d("Register", "Akun berhasil didaftarkan dengan username sebagai ID");
                     Toast.makeText(Register.this, "Registrasi berhasil, silakan verifikasi email Anda", Toast.LENGTH_SHORT).show();
@@ -176,6 +179,7 @@ public class Register extends AppCompatActivity {
         achievement2.put("monster_defeated", 0);
         achievement2.put("highscore", 0);
         achievementRef.document("achv_002").set(achievement2);
+
     }
 
     private void setDefaultSkin(String userId) {
@@ -193,6 +197,7 @@ public class Register extends AppCompatActivity {
         addLockedSkin(skinRef, "retro_sky");
         addLockedSkin(skinRef, "wing_of_justice");
         addLockedSkin(skinRef, "x56_core");
+
     }
 
     private void addLockedSkin(CollectionReference skinRef, String skinId) {
@@ -205,4 +210,29 @@ public class Register extends AppCompatActivity {
 
         skinRef.document(skinId).set(lockedSkinData);
     }
+
+    private void setDefaultScore(String userId) {
+        // Mengakses koleksi "Akun" dan dokumen berdasarkan userId
+        CollectionReference scoreRef = firestore.collection("Akun").document(userId).collection("Score");
+
+        // Membuat data default untuk score
+        Map<String, Object> scoreData = new HashMap<>();
+        scoreData.put("highscore", 0); // Misalnya, nilai awal highscore adalah 0
+        scoreData.put("current_score", 0); // Nilai skor saat ini
+        scoreData.put("level", 1); // Level awal
+        scoreData.put("created_at", System.currentTimeMillis());
+        scoreData.put("updated_at", System.currentTimeMillis());
+
+        // Menyimpan data default ke dalam koleksi "Score" untuk pengguna
+        scoreRef.document("default_score").set(scoreData)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("Register", "Default score berhasil diset.");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Register", "Gagal menyimpan default score", e);
+                });
+    }
+
+
+
 }
