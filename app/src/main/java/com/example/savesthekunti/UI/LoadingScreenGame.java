@@ -1,9 +1,11 @@
 package com.example.savesthekunti.UI;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
@@ -16,17 +18,32 @@ import com.example.savesthekunti.R;
 public class LoadingScreenGame extends AppCompatActivity {
     private String selectedSkin;
     private Level levelData;
-    private String username;
+
+    private SharedPreferences sharedPreferences;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading_screen);
 
-        // Ambil data skin yang dipilih, level, dan username dari Intent
+        // Inisialisasi SharedPreferences
+        sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
+
+
+        /// Ambil data skin yang dipilih, level, dan username dari Intent
         selectedSkin = getIntent().getStringExtra("selectedSkin");
         levelData = (Level) getIntent().getSerializableExtra("levelData");
-        username = getIntent().getStringExtra("username");
+        String username = sharedPreferences.getString("username", null);
+
+        // Validasi data Intent dan SharedPreferences
+        if (selectedSkin == null || levelData == null || username == null) {
+            Log.e("LoadingScreenGame", "Intent data or username is null. Cannot proceed.");
+            // Tambahkan logika untuk menangani kesalahan, seperti kembali ke layar sebelumnya
+            finish();
+            return;
+        }
+
 
         // Mengatur background abu-abu untuk FrameLayout
         FrameLayout mainLayout = findViewById(R.id.main);
@@ -44,10 +61,18 @@ public class LoadingScreenGame extends AppCompatActivity {
                 intent.putExtra("selectedSkin", selectedSkin);
                 intent.putExtra("levelData", levelData); // Mengirim level yang dipilih
                 intent.putExtra("username", username);  // Mengirim username pengguna
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                startActivity(intent);
-                finish(); // Tutup activity ini agar tidak bisa kembali ke splash screen
+
+                // Error handling for username
+                if (username != null) {
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    startActivity(intent);
+                    finish(); // Tutup activity ini agar tidak bisa kembali ke splash screen
+                } else {
+                    Log.e("LoadingScreenGame", "Username is null. Cannot start GameActivity.");
+                    // Handle the case where username is null, e.g., show an error message
+                }
             }
+
         }, splashScreenDuration);
     }
 }

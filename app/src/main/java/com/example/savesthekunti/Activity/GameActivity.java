@@ -1,6 +1,7 @@
 package com.example.savesthekunti.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -28,6 +29,11 @@ import com.example.savesthekunti.Level.Showgamelose1;
 import com.example.savesthekunti.Level.Showgamewin1;
 import com.example.savesthekunti.Model.Score;
 import com.example.savesthekunti.R;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class GameActivity extends AppCompatActivity implements GameView.OnPlayerHpChangeListener, GameView.OnBossHpChangeListener {
@@ -49,6 +55,9 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     private LinearLayout bossHealthBar;
     private boolean statusWin = false;
     private boolean statusLose = false;
+    private String username;
+    private SharedPreferences sharedPreferences;
+    private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
 
 
@@ -57,8 +66,17 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_activity);
 
+        sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
         currentLevelData = (Level) getIntent().getSerializableExtra("levelData");
-        levelIndex = getIntent().getIntExtra("levelIndex", 0);
+
+        username = getIntent().getStringExtra("username");
+        if (username == null || username.isEmpty()) {
+            Log.e("GameActivity", "Username is null or empty. Cannot update Firestore.");
+            return;
+        }
+
+
+
 
         // Inisialisasi komponen UI
         explosionView = new ImageView(this);
@@ -69,8 +87,9 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         pausemenu = findViewById(R.id.pausebtn);
         pausemenu.setOnClickListener(v -> {
             Intent intent = new Intent(GameActivity.this, PauseMenu.class);
-            intent.putExtra("username", "shinoa"); // Contoh pengiriman usern
+            intent.putExtra("username", username); // Contoh pengiriman usern
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);// ame
+
 
             overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
@@ -184,12 +203,33 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
             updateBossBars(newHp);
 
             if (newHp <= 0) {
+                // Boss defeated, show win screen
                 showGameWin(findViewById(R.id.gameContent));
+
+                // Update Firestore untuk membuka level berikutnya
+                unlockNextLevel(username, levelIndex);
             }
         } else {
             Log.d("GameActivity", "BossAmba belum terinisialisasi");
         }
     }
+
+
+
+
+    private void unlockNextLevel(String username, int currentLevel) {
+        firestore.collection("Akun")
+                .document(username)
+                .update(
+                        "Levels.isLevelCompleted" + currentLevel, true,
+                        "Levels.isLevelCompleted" + (currentLevel + 1), true
+                )
+                .addOnSuccessListener(aVoid -> Log.d("GameActivity", "Level updated successfully"))
+                .addOnFailureListener(e -> Log.e("GameActivity", "Error updating levels", e));
+    }
+
+
+
 
     private void updateBossBars(int currentHp) {
         if (maxBossHealth <= 0) {

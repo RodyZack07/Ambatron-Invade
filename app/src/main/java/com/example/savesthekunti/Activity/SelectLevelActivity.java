@@ -697,6 +697,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[0];
         intent.putExtra("levelData", levelData);
+
         intent.putExtra("username", username);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -708,6 +709,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         intent.putExtra("selectedSkin", selectedSkin); // Kirim skin yang dipilih ke GameActivity
         Level levelData = levels[1];
         intent.putExtra("levelData", levelData);
+        intent.putExtra("username", username);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
@@ -718,6 +720,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[2];
         intent.putExtra("levelData", levelData);
+        intent.putExtra("username", username);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
@@ -728,6 +731,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         intent.putExtra("selectedSkin", selectedSkin);
         Level levelData = levels[3];
         intent.putExtra("levelData", levelData);
+        intent.putExtra("username", username);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         buttonSFX.start();
