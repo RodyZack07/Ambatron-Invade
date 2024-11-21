@@ -203,19 +203,13 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
             updateBossBars(newHp);
 
             if (newHp <= 0) {
-                // Boss defeated, show win screen
                 showGameWin(findViewById(R.id.gameContent));
-
-                // Update Firestore untuk membuka level berikutnya
-                unlockNextLevel(username, levelIndex);
+                updateLevelCompletionStatus(true);
             }
         } else {
             Log.d("GameActivity", "BossAmba belum terinisialisasi");
         }
     }
-
-
-
 
     private void unlockNextLevel(String username, int currentLevel) {
         firestore.collection("Akun")
@@ -227,9 +221,6 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
                 .addOnSuccessListener(aVoid -> Log.d("GameActivity", "Level updated successfully"))
                 .addOnFailureListener(e -> Log.e("GameActivity", "Error updating levels", e));
     }
-
-
-
 
     private void updateBossBars(int currentHp) {
         if (maxBossHealth <= 0) {
@@ -298,6 +289,23 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
             finish();
         }, 700);
     }
+
+    private void updateLevelCompletionStatus(boolean isWin) {
+        String levelField = "isLevelCompleted" + currentLevelData.getLevelNumber();
+        Map<String, Object> levelUpdate = new HashMap<>();
+        levelUpdate.put(levelField, isWin); // true jika menang, false jika kalah
+
+        firestore.collection("Akun").document(username).collection("Levels")
+                .document("levelsCompleted")
+                .update(levelUpdate)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("GameActivity", "Level completion status updated successfully for level " + currentLevelData.getLevelNumber());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("GameActivity", "Failed to update level completion status: ", e);
+                });
+    }
+
 
     @Override
     public void onBackPressed (){}
