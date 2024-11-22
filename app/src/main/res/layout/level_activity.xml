@@ -81,10 +81,12 @@
             android:layout_marginLeft="40dp">
 
             <FrameLayout
+                android:id="@+id/level1"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="180dp"
-                android:layout_marginLeft="0dp">
+                android:layout_marginLeft="0dp"
+                android:clickable="true">
 
                 <ImageButton
                     android:id="@+id/bg_level_1_1"
@@ -92,6 +94,8 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/lvl_stroke"
                     android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
                     />
 
                 <TextView
@@ -139,6 +143,7 @@
             android:layout_marginLeft="40dp">
 
             <FrameLayout
+                android:id="@+id/level2"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="260dp"
@@ -195,6 +200,7 @@
             android:layout_marginLeft="40dp">
 
             <FrameLayout
+                android:id="@+id/level3"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="360dp"
@@ -251,6 +257,7 @@
             android:layout_marginLeft="40dp">
 
             <FrameLayout
+                android:id="@+id/level4"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="460dp"
@@ -307,6 +314,7 @@
             android:layout_marginLeft="40dp">
 
             <FrameLayout
+                android:id="@+id/level5"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="540dp"
@@ -363,6 +371,7 @@
             android:layout_marginLeft="40dp">
 
             <FrameLayout
+                android:id="@+id/level6"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="630dp"
@@ -419,6 +428,7 @@
             android:layout_marginLeft="40dp">
 
             <FrameLayout
+                android:id="@+id/level7"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="730dp"
@@ -504,6 +514,7 @@
             android:layout_marginLeft="40dp">
 
             <FrameLayout
+                android:id="@+id/level8"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="970dp"
@@ -560,6 +571,7 @@
             android:layout_marginLeft="40dp">
 
             <FrameLayout
+                android:id="@+id/level9"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="1070dp"
@@ -616,6 +628,7 @@
             android:layout_marginLeft="40dp">
 
             <FrameLayout
+                android:id="@+id/level10"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="1170dp"
@@ -672,6 +685,7 @@
             android:layout_marginLeft="40dp">
 
             <FrameLayout
+                android:id="@+id/level11"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="1270dp"
@@ -728,6 +742,7 @@
             android:layout_marginLeft="40dp">
 
             <FrameLayout
+               android:id="@+id/level12"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="1370dp"
@@ -784,6 +799,7 @@
             android:layout_marginLeft="40dp">
 
             <FrameLayout
+                android:id="@+id/level13"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="1470dp"
@@ -840,6 +856,7 @@
             android:layout_marginLeft="40dp">
 
             <FrameLayout
+                android:id="@+id/level14"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="1570dp"
@@ -927,6 +944,7 @@
             android:layout_marginLeft="40dp">
 
             <FrameLayout
+                android:id="@+id/level15"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="1870dp"

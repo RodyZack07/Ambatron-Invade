@@ -53,7 +53,6 @@ public class GameView extends View {
     private int rudalDurability;
     private int rudalDamage;
 
-
     private GameActivity gameActivity; // Referensi ke GameActivity
     private int screenWidth, screenHeight;
     private Handler handler;
@@ -67,7 +66,6 @@ public class GameView extends View {
     private OnChangeScoreListener scoreChangeListener;
     private int scoreThresholdForStar = 100; // Skor minimal untuk memunculkan bintang baru
     private boolean scoreSaved = false;
-
 
     private MediaPlayer bossExplodeSFX;
     private MediaPlayer monsterExplodeSFX;

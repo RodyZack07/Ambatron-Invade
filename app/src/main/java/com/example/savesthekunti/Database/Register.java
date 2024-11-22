@@ -253,7 +253,7 @@ public class Register extends AppCompatActivity {
         levelData.put("isLevelCompleted14", false);
         levelData.put("isLevelCompleted15", false);
 
-        levelsRef.document("levelsCompleted").set(levelData);
+        levelsRef.document(userId).set(levelData);
 
     }
 

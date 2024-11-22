@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,15 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 import android.widget.VideoView;
+import android.widget.FrameLayout;
+
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import com.example.savesthekunti.R;
 import com.example.savesthekunti.UI.LoadingScreenGame;
@@ -68,7 +78,6 @@ public class SelectLevelActivity extends AppCompatActivity {
 
 
         //        ====================================== Audio ======================================
-
         // Initialize MediaPlayer for audio
         mediaPlayer = MediaPlayer.create(this, R.raw.level_idle);
         mediaPlayer.setLooping(true);
@@ -86,26 +95,68 @@ public class SelectLevelActivity extends AppCompatActivity {
 
         prevButton.setOnClickListener(v -> prevsbutton());
 
-
-
-
-
 //        ============== CALL RESOURCE IMAGE VIEW LEVEL ================
-        ImageView bgLevel1 = findViewById(R.id.bg_level_1_1);
-        ImageView bgLevel2 = findViewById(R.id.bg_level_2_1);
-        ImageView bgLevel3 = findViewById(R.id.bg_level_3_1);
-        ImageView bgLevel4= findViewById(R.id.bg_level_4_1);
-        ImageView bgLevel5= findViewById(R.id.bg_level_5_1);
-        ImageView bgLevel6= findViewById(R.id.bg_level_6_1)
-        ImageView bgLevel7= findViewById(R.id.bg_level_7_1);
-        ImageView bgLevel8= findViewById(R.id.bg_level_8_1);
-        ImageView bgLevel9= findViewById(R.id.bg_level_9_1);
-        ImageView bgLevel10= findViewById(R.id.bg_level_10_1);
-        ImageView bgLevel11= findViewById(R.id.bg_level_11_1);
-        ImageView bgLevel12= findViewById(R.id.bg_level_12_1);
-        ImageView bgLevel13= findViewById(R.id.bg_level_13_1);
-        ImageView bgLevel14= findViewById(R.id.bg_level_14_1);
-        ImageView bgLevel15= findViewById(R.id.bg_level_15_1);
+        FrameLayout bgLevel1 = findViewById(R.id.level1);
+        FrameLayout bgLevel2 = findViewById(R.id.level2);
+        FrameLayout bgLevel3 = findViewById(R.id.level3);
+        FrameLayout bgLevel4= findViewById(R.id.level4);
+        FrameLayout bgLevel5= findViewById(R.id.level5);
+        FrameLayout bgLevel6= findViewById(R.id.level6);
+        FrameLayout bgLevel7= findViewById(R.id.level7);
+        FrameLayout bgLevel8= findViewById(R.id.level8);
+        FrameLayout bgLevel9= findViewById(R.id.level9);
+        FrameLayout bgLevel10= findViewById(R.id.level10);
+        FrameLayout bgLevel11= findViewById(R.id.level11);
+        FrameLayout bgLevel12= findViewById(R.id.level12);
+        FrameLayout bgLevel13= findViewById(R.id.level3);
+        FrameLayout bgLevel14= findViewById(R.id.level4);
+        FrameLayout bgLevel15= findViewById(R.id.level15);
+
+        username = getIntent().getStringExtra("username");
+
+        // Query Firestore untuk mendapatkan data level
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        firestore.collection("Akun").document(username).collection("Levels").document("levelsCompleted").get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+
+                        boolean isLevelsCompleted1 = documentSnapshot.getBoolean("isLevelCompleted1");
+                        boolean isLevelsCompleted2 = documentSnapshot.getBoolean("isLevelCompleted2");
+                        boolean isLevelsCompleted3 = documentSnapshot.getBoolean("isLevelCompleted3");
+                        boolean isLevelsCompleted4 = documentSnapshot.getBoolean("isLevelCompleted4");
+                        boolean isLevelsCompleted5 = documentSnapshot.getBoolean("isLevelCompleted5");
+                        boolean isLevelsCompleted6 = documentSnapshot.getBoolean("isLevelCompleted6");
+                        boolean isLevelsCompleted7 = documentSnapshot.getBoolean("isLevelCompleted7");
+                        boolean isLevelsCompleted8 = documentSnapshot.getBoolean("isLevelCompleted8");
+                        boolean isLevelsCompleted9 = documentSnapshot.getBoolean("isLevelCompleted9");
+                        boolean isLevelsCompleted10 = documentSnapshot.getBoolean("isLevelCompleted10");
+                        boolean isLevelsCompleted11 = documentSnapshot.getBoolean("isLevelCompleted11");
+                        boolean isLevelsCompleted12 = documentSnapshot.getBoolean("isLevelCompleted12");
+                        boolean isLevelsCompleted13 = documentSnapshot.getBoolean("isLevelCompleted13");
+                        boolean isLevelsCompleted14 = documentSnapshot.getBoolean("isLevelCompleted14");
+
+
+                        // Update visibilitas dan opacity manual tanpa looping
+                        updateLevelVisibility(bgLevel2, isLevelsCompleted1); // Level 2 bergantung pada Level 1
+                        updateLevelVisibility(bgLevel3, isLevelsCompleted2);
+                        updateLevelVisibility(bgLevel4, isLevelsCompleted3);
+                        updateLevelVisibility(bgLevel5, isLevelsCompleted4);
+                        updateLevelVisibility(bgLevel6, isLevelsCompleted5);
+                        updateLevelVisibility(bgLevel7, isLevelsCompleted6);
+                        updateLevelVisibility(bgLevel8, isLevelsCompleted7);
+                        updateLevelVisibility(bgLevel9, isLevelsCompleted8);
+                        updateLevelVisibility(bgLevel10, isLevelsCompleted9);
+                        updateLevelVisibility(bgLevel11, isLevelsCompleted10);
+                        updateLevelVisibility(bgLevel12, isLevelsCompleted11);
+                        updateLevelVisibility(bgLevel13, isLevelsCompleted12);
+                        updateLevelVisibility(bgLevel14, isLevelsCompleted13);
+                        updateLevelVisibility(bgLevel15, isLevelsCompleted14);
+
+                    } else {
+                        Log.e("Firestore", "Document not found for username: " + username);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("Firestore", "Failed to fetch user data", e));
 
 
         bgLevel1.setOnClickListener(this::showLevelPopup);
@@ -123,9 +174,15 @@ public class SelectLevelActivity extends AppCompatActivity {
         bgLevel13.setOnClickListener(this::showLevelPopup13);
         bgLevel14.setOnClickListener(this::showLevelPopup14);
         bgLevel15.setOnClickListener(this::showLevelPopup15);
-
-
-        // Implementasi lainnya untuk level yang berbeda
+    }
+    private void updateLevelVisibility(FrameLayout levelImage, boolean isCompleted) {
+        if (isCompleted) {
+            levelImage.setVisibility(View.VISIBLE);
+            levelImage.setAlpha(1.0f); // 100% opacity
+        } else {
+            levelImage.setVisibility(View.VISIBLE);
+            levelImage.setAlpha(0.5f); // 50% opacity
+        }
     }
 
 

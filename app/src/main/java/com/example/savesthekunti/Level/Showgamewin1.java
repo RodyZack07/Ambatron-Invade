@@ -34,6 +34,11 @@ public class Showgamewin1 extends AppCompatActivity {
         levels = selectLevelActivity.getLevels();
         selectedSkin = getIntent().getStringExtra("selectedSkin");
 
+        if (levelData == null) {
+            Log.e("Showgamewin1", "levelData is null");
+            return;
+        }
+
 
         // Tampilkan nomor level di TextView jika levelData tidak null
         if (levelData != null) {
@@ -65,8 +70,14 @@ public class Showgamewin1 extends AppCompatActivity {
 
 
         nextBtn.setOnClickListener(view -> {
+            if (levelData == null) {
+                Log.e("Showgamewin1", "levelData is null");
+                return;
+            }
             int nextLevelNumber = levelData.getLevelNumber() + 1;
             Level nextLevelData = getLevelByNumber(nextLevelNumber);
+
+
 
             if (nextLevelData != null) { // Pastikan level berikutnya ada
                 Intent intent = new Intent(Showgamewin1.this, GameActivity.class);

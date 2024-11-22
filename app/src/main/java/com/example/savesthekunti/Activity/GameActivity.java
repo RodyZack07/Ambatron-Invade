@@ -296,7 +296,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         levelUpdate.put(levelField, isWin); // true jika menang, false jika kalah
 
         firestore.collection("Akun").document(username).collection("Levels")
-                .document("levelsCompleted")
+                .document(username)
                 .update(levelUpdate)
                 .addOnSuccessListener(aVoid -> {
                     Log.d("GameActivity", "Level completion status updated successfully for level " + currentLevelData.getLevelNumber());

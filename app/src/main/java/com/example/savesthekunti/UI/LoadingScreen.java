@@ -17,6 +17,8 @@ public class LoadingScreen extends AppCompatActivity {
     private String[] fighterIDs = {"blue_cosmos", "retro_sky", "wing_of_justice"};
     private int currentSkinIndex = 0;
     private String selectedSkin;
+    private String username;
+
 
 
 
@@ -28,6 +30,7 @@ public class LoadingScreen extends AppCompatActivity {
 
         // Ambil data skin yang dipilih dari SelectFighterActivity
         selectedSkin = getIntent().getStringExtra("selectedSkin");
+        username = getIntent().getStringExtra("username");
 
         // Mengatur background abu-abu untuk FrameLayout
         FrameLayout mainLayout = findViewById(R.id.main);
@@ -43,6 +46,7 @@ public class LoadingScreen extends AppCompatActivity {
                 // Pindah ke SelectYourFighter
                 Intent intent = new Intent(LoadingScreen.this, SelectLevelActivity.class);
                 intent.putExtra("selectedSkin", selectedSkin);
+                intent.putExtra("username", username);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 startActivity(intent);
                 finish(); // Tutup activity ini agar tidak bisa kembali ke splash screen
