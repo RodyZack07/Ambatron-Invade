@@ -108,8 +108,8 @@ public class SelectLevelActivity extends AppCompatActivity {
         FrameLayout bgLevel10= findViewById(R.id.level10);
         FrameLayout bgLevel11= findViewById(R.id.level11);
         FrameLayout bgLevel12= findViewById(R.id.level12);
-        FrameLayout bgLevel13= findViewById(R.id.level3);
-        FrameLayout bgLevel14= findViewById(R.id.level4);
+        FrameLayout bgLevel13= findViewById(R.id.level13);
+        FrameLayout bgLevel14= findViewById(R.id.level14);
         FrameLayout bgLevel15= findViewById(R.id.level15);
 
         username = getIntent().getStringExtra("username");
@@ -135,8 +135,6 @@ public class SelectLevelActivity extends AppCompatActivity {
                         boolean isLevelsCompleted13 = documentSnapshot.getBoolean("isLevelCompleted13");
                         boolean isLevelsCompleted14 = documentSnapshot.getBoolean("isLevelCompleted14");
 
-
-                        // Update visibilitas dan opacity manual tanpa looping
                         updateLevelVisibility(bgLevel2, isLevelsCompleted1); // Level 2 bergantung pada Level 1
                         updateLevelVisibility(bgLevel3, isLevelsCompleted2);
                         updateLevelVisibility(bgLevel4, isLevelsCompleted3);

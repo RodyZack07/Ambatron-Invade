@@ -130,6 +130,32 @@
                         android:layout_height="20dp"
                         android:src="@drawable/lvl_blank_star" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/levelStars1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="19dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+
+                    android:src="@drawable/lvl_yellow_star" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/lvl_yellow_star" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/lvl_yellow_star" />
+                </LinearLayout>
+
             </FrameLayout>
         </LinearLayout>
 
@@ -147,7 +173,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="260dp"
-                android:layout_marginLeft="120dp">
+                android:layout_marginLeft="120dp"
+                android:clickable="true">
 
                 <ImageButton
                     android:id="@+id/bg_level_2_1"
@@ -155,6 +182,8 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/lvl_stroke"
                     android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
                     />
 
                 <TextView
@@ -204,7 +233,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="360dp"
-                android:layout_marginLeft="230dp">
+                android:layout_marginLeft="230dp"
+                android:clickable="true">
 
                 <ImageButton
                     android:id="@+id/bg_level_3_1"
@@ -212,6 +242,8 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/lvl_stroke"
                     android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
                     />
 
                 <TextView
@@ -261,7 +293,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="460dp"
-                android:layout_marginLeft="120dp">
+                android:layout_marginLeft="120dp"
+                android:clickable="true">
 
                 <ImageButton
                     android:id="@+id/bg_level_4_1"
@@ -269,6 +302,8 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/lvl_stroke"
                     android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
                     />
 
                 <TextView
@@ -318,6 +353,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="540dp"
+                android:clickable="true"
                 >
 
                 <ImageButton
@@ -326,6 +362,8 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/lvl_stroke"
                     android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
                     />
 
                 <TextView
@@ -375,7 +413,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="630dp"
-                android:layout_marginLeft="120dp">
+                android:layout_marginLeft="120dp"
+                android:clickable="true">
 
                 <ImageButton
                     android:id="@+id/bg_level_6_1"
@@ -383,6 +422,8 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/lvl_stroke"
                     android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
                     />
 
                 <TextView
@@ -432,7 +473,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="730dp"
-                android:layout_marginLeft="230dp">
+                android:layout_marginLeft="230dp"
+                android:clickable="true">
 
                 <ImageButton
                     android:id="@+id/bg_level_7_1"
@@ -440,6 +482,8 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/lvl_stroke"
                     android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
                     />
 
                 <TextView
@@ -518,7 +562,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="970dp"
-                android:layout_marginLeft="230dp">
+                android:layout_marginLeft="230dp"
+                android:clickable="true">
 
                 <ImageButton
                     android:id="@+id/bg_level_8_1"
@@ -526,6 +571,8 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/lvl_stroke"
                     android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
                     />
 
                 <TextView
@@ -575,7 +622,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="1070dp"
-                android:layout_marginLeft="120dp">
+                android:layout_marginLeft="120dp"
+                android:clickable="true">
 
                 <ImageButton
                     android:id="@+id/bg_level_9_1"
@@ -583,6 +631,8 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/lvl_stroke"
                     android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
                     />
 
                 <TextView
@@ -632,7 +682,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="1170dp"
-                android:layout_marginLeft="0dp">
+                android:layout_marginLeft="0dp"
+                android:clickable="true">
 
                 <ImageButton
                     android:id="@+id/bg_level_10_1"
@@ -640,6 +691,8 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/lvl_stroke"
                     android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
                     />
 
                 <TextView
@@ -689,7 +742,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="1270dp"
-                android:layout_marginLeft="120dp">
+                android:layout_marginLeft="120dp"
+                android:clickable="true">
 
                 <ImageButton
                     android:id="@+id/bg_level_11_1"
@@ -697,6 +751,8 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/lvl_stroke"
                     android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
                     />
 
                 <TextView
@@ -746,7 +802,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="1370dp"
-                android:layout_marginLeft="230dp">
+                android:layout_marginLeft="230dp"
+                android:clickable="true">
 
                 <ImageButton
                     android:id="@+id/bg_level_12_1"
@@ -754,6 +811,8 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/lvl_stroke"
                     android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
                     />
 
                 <TextView
@@ -803,7 +862,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="1470dp"
-                android:layout_marginLeft="120dp">
+                android:layout_marginLeft="120dp"
+                android:clickable="true">
 
                 <ImageButton
                     android:id="@+id/bg_level_13_1"
@@ -811,6 +871,8 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/lvl_stroke"
                     android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
                     />
 
                 <TextView
@@ -860,7 +922,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="1570dp"
-                android:layout_marginLeft="0dp">
+                android:layout_marginLeft="0dp"
+                android:clickable="true">
 
                 <ImageButton
                     android:id="@+id/bg_level_14_1"
@@ -868,6 +931,8 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/lvl_stroke"
                     android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
                     />
 
                 <TextView
@@ -948,7 +1013,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="1870dp"
-                android:layout_marginLeft="0dp">
+                android:layout_marginLeft="0dp"
+                android:clickable="true">
 
                 <ImageButton
                     android:id="@+id/bg_level_15_1"
@@ -956,6 +1022,8 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/lvl_stroke"
                     android:background="@android:color/transparent"
+                    android:clickable="false"
+                    android:focusable="false"
                     />
 
                 <TextView
@@ -973,7 +1041,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="20dp">
+                    android:layout_marginBottom="20dp"
+                    >
 
                     <ImageView
                         android:layout_width="20dp"
