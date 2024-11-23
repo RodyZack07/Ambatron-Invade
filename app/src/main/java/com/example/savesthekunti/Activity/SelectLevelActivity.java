@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -112,11 +113,27 @@ public class SelectLevelActivity extends AppCompatActivity {
         FrameLayout bgLevel14= findViewById(R.id.level14);
         FrameLayout bgLevel15= findViewById(R.id.level15);
 
+        LinearLayout levelStar1 = findViewById(R.id.levelStars1);
+        LinearLayout levelStar2 = findViewById(R.id.levelStars2);
+        LinearLayout levelStar3 = findViewById(R.id.levelStars3);
+        LinearLayout levelStar4 = findViewById(R.id.levelStars4);
+        LinearLayout levelStar5 = findViewById(R.id.levelStars5);
+        LinearLayout levelStar6 = findViewById(R.id.levelStars6);
+        LinearLayout levelStar7 = findViewById(R.id.levelStars7);
+        LinearLayout levelStar8 = findViewById(R.id.levelStars8);
+        LinearLayout levelStar9 = findViewById(R.id.levelStars9);
+        LinearLayout levelStar10 = findViewById(R.id.levelStars10);
+        LinearLayout levelStar11 = findViewById(R.id.levelStars11);
+        LinearLayout levelStar12 = findViewById(R.id.levelStars12);
+        LinearLayout levelStar13 = findViewById(R.id.levelStars13);
+        LinearLayout levelStar14 = findViewById(R.id.levelStars14);
+        LinearLayout levelStar15 = findViewById(R.id.levelStars15);
+
         username = getIntent().getStringExtra("username");
 
         // Query Firestore untuk mendapatkan data level
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        firestore.collection("Akun").document(username).collection("Levels").document("levelsCompleted").get()
+        firestore.collection("Akun").document(username).collection("Levels").document(username).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
 
@@ -135,20 +152,20 @@ public class SelectLevelActivity extends AppCompatActivity {
                         boolean isLevelsCompleted13 = documentSnapshot.getBoolean("isLevelCompleted13");
                         boolean isLevelsCompleted14 = documentSnapshot.getBoolean("isLevelCompleted14");
 
-                        updateLevelVisibility(bgLevel2, isLevelsCompleted1); // Level 2 bergantung pada Level 1
-                        updateLevelVisibility(bgLevel3, isLevelsCompleted2);
-                        updateLevelVisibility(bgLevel4, isLevelsCompleted3);
-                        updateLevelVisibility(bgLevel5, isLevelsCompleted4);
-                        updateLevelVisibility(bgLevel6, isLevelsCompleted5);
-                        updateLevelVisibility(bgLevel7, isLevelsCompleted6);
-                        updateLevelVisibility(bgLevel8, isLevelsCompleted7);
-                        updateLevelVisibility(bgLevel9, isLevelsCompleted8);
-                        updateLevelVisibility(bgLevel10, isLevelsCompleted9);
-                        updateLevelVisibility(bgLevel11, isLevelsCompleted10);
-                        updateLevelVisibility(bgLevel12, isLevelsCompleted11);
-                        updateLevelVisibility(bgLevel13, isLevelsCompleted12);
-                        updateLevelVisibility(bgLevel14, isLevelsCompleted13);
-                        updateLevelVisibility(bgLevel15, isLevelsCompleted14);
+                        updateLevelVisibility(bgLevel2, isLevelsCompleted1, levelStar1); // Level 2 bergantung pada Level 1
+                        updateLevelVisibility(bgLevel3, isLevelsCompleted2, levelStar2);
+                        updateLevelVisibility(bgLevel4, isLevelsCompleted3, levelStar3);
+                        updateLevelVisibility(bgLevel5, isLevelsCompleted4, levelStar4);
+                        updateLevelVisibility(bgLevel6, isLevelsCompleted5, levelStar5);
+                        updateLevelVisibility(bgLevel7, isLevelsCompleted6, levelStar6);
+                        updateLevelVisibility(bgLevel8, isLevelsCompleted7, levelStar7);
+                        updateLevelVisibility(bgLevel9, isLevelsCompleted8, levelStar8);
+                        updateLevelVisibility(bgLevel10, isLevelsCompleted9, levelStar9);
+                        updateLevelVisibility(bgLevel11, isLevelsCompleted10, levelStar10);
+                        updateLevelVisibility(bgLevel12, isLevelsCompleted11, levelStar11);
+                        updateLevelVisibility(bgLevel13, isLevelsCompleted12,levelStar12);
+                        updateLevelVisibility(bgLevel14, isLevelsCompleted13, levelStar13);
+                        updateLevelVisibility(bgLevel15, isLevelsCompleted14, levelStar14);
 
                     } else {
                         Log.e("Firestore", "Document not found for username: " + username);
@@ -173,13 +190,15 @@ public class SelectLevelActivity extends AppCompatActivity {
         bgLevel14.setOnClickListener(this::showLevelPopup14);
         bgLevel15.setOnClickListener(this::showLevelPopup15);
     }
-    private void updateLevelVisibility(FrameLayout levelImage, boolean isCompleted) {
+    private void updateLevelVisibility(FrameLayout levelImage, boolean isCompleted, LinearLayout levelStar) {
         if (isCompleted) {
             levelImage.setVisibility(View.VISIBLE);
-            levelImage.setAlpha(1.0f); // 100% opacity
+            levelImage.setAlpha(1.0f);
+            levelStar.setVisibility(View.VISIBLE);// 100% opacity
         } else {
             levelImage.setVisibility(View.VISIBLE);
-            levelImage.setAlpha(0.5f); // 50% opacity
+            levelImage.setAlpha(0.5f);
+            levelStar.setVisibility(View.GONE);// 50% opacity
         }
     }
 
