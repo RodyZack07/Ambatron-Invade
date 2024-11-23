@@ -60,6 +60,9 @@
         <activity android:name=".UI.LoadingScreenGame"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".Database.learnMore"
+            android:screenOrientation="portrait"/>
+
 
         <activity android:name=".Model.EditAsAdminActivity"/>
 

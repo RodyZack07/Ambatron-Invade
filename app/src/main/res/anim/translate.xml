@@ -1,0 +1,9 @@
+<!-- res/anim/scroll_from_bottom.xml -->
+<translate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fromYDelta="100%"
+    android:toYDelta="-100%"
+    android:duration="15000"
+    android:repeatMode="restart"
+    android:repeatCount="infinite"
+    android:interpolator="@android:anim/linear_interpolator"
+    android:startOffset="1200" /> <!-- Jeda 2 detik -->

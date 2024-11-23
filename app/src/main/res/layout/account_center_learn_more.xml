@@ -1,0 +1,49 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000">
+
+    <!-- Tombol Kembali -->
+    <ImageButton
+        android:id="@+id/backbutton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/account_center_silang"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <!-- ScrollView untuk Teks Kredit -->
+    <ScrollView
+        android:id="@+id/scrollViewCredits"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/backbutton">
+
+        <!-- LinearLayout untuk Teks Kredit -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <!-- Teks Kredit -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:lineSpacingExtra="8dp"
+                android:fontFamily="@font/poppins"
+                android:textSize="20sp"
+                android:layout_margin="16dp"
+                android:text="Developer: Sotgan Api Dev\n\nProject Manager: Zaki\nProgrammer: Rodyzack, Zkuu\nUI/UX: Sico, Raul\nAsset: Radit, Raka\nOther: Fauzi, Fadil\n\nBig thanks to:\nSMKN 8 SEMARANG" />
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

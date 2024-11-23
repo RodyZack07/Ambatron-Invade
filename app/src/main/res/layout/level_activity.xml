@@ -218,6 +218,30 @@
                         android:layout_height="20dp"
                         android:src="@drawable/lvl_blank_star" />
                 </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/levelStars2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="19dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+                </LinearLayout>
             </FrameLayout>
         </LinearLayout>
 
@@ -277,6 +301,31 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/lvl_blank_star" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/levelStars3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="19dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
@@ -338,6 +387,31 @@
                         android:layout_height="20dp"
                         android:src="@drawable/lvl_blank_star" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/levelStars4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="19dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+                </LinearLayout>
             </FrameLayout>
         </LinearLayout>
 
@@ -397,6 +471,31 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/lvl_blank_star" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/levelStars5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="19dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
@@ -458,6 +557,31 @@
                         android:layout_height="20dp"
                         android:src="@drawable/lvl_blank_star" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/levelStars6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="19dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+                </LinearLayout>
             </FrameLayout>
         </LinearLayout>
 
@@ -517,6 +641,31 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/lvl_blank_star" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/levelStars7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="19dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
@@ -607,6 +756,31 @@
                         android:layout_height="20dp"
                         android:src="@drawable/lvl_blank_star" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/levelStars8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="19dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+                </LinearLayout>
             </FrameLayout>
         </LinearLayout>
 
@@ -666,6 +840,31 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/lvl_blank_star" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/levelStars9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="19dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
@@ -727,6 +926,31 @@
                         android:layout_height="20dp"
                         android:src="@drawable/lvl_blank_star" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/levelStars10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="19dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+                </LinearLayout>
             </FrameLayout>
         </LinearLayout>
 
@@ -786,6 +1010,31 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/lvl_blank_star" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/levelStars11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="19dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
@@ -847,6 +1096,31 @@
                         android:layout_height="20dp"
                         android:src="@drawable/lvl_blank_star" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/levelStars12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="19dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+                </LinearLayout>
             </FrameLayout>
         </LinearLayout>
 
@@ -907,6 +1181,31 @@
                         android:layout_height="20dp"
                         android:src="@drawable/lvl_blank_star" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/levelStars13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="19dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+                </LinearLayout>
             </FrameLayout>
         </LinearLayout>
 
@@ -966,6 +1265,31 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/lvl_blank_star" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/levelStars14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="19dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
@@ -1058,6 +1382,31 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/lvl_blank_star" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/levelStars15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="19dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/lvl_yellow_star" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>

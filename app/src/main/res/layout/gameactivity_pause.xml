@@ -20,6 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Game Paused"
+        android:fontFamily="@font/neuropol"
         android:textSize="24sp"
         android:textColor="#FFFFFF"
         android:paddingBottom="20dp"
@@ -28,32 +29,41 @@
         android:layout_marginTop="100dp" />
 
     <!-- Button Resume -->
-    <Button
+    <ImageButton
         android:id="@+id/resumeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="90dp"
         android:text="Resume"
+        android:src="@drawable/menu_resume"
+        android:background="@android:color/transparent"
         android:layout_below="@id/pauseTitle"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp" />
+        android:scaleType="fitXY"
+        android:layout_marginTop="90dp" />
 
     <!-- Button Retry -->
-    <Button
+    <ImageButton
         android:id="@+id/retryButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="90dp"
         android:text="Retry"
+        android:src="@drawable/show_game_win_retry"
+        android:background="@android:color/transparent"
         android:layout_below="@id/resumeButton"
+        android:scaleType="fitXY"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp" />
 
     <!-- Button Quit -->
-    <Button
+    <ImageButton
         android:id="@+id/quitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="90dp"
         android:text="Quit"
+        android:src="@drawable/menu_quit_btn"
+        android:background="@android:color/transparent"
         android:layout_below="@id/retryButton"
+        android:scaleType="fitXY"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp" />
 </RelativeLayout>

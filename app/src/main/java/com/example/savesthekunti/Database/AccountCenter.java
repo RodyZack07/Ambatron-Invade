@@ -1,5 +1,6 @@
 package com.example.savesthekunti.Database;
 
+import android.accounts.Account;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,7 +34,7 @@ public class AccountCenter extends AppCompatActivity {
     private String username;
     private String email;
 
-    private ImageButton logoutBtn, deleteAccountBtn,  prevsbtn;
+    private ImageButton logoutBtn, learnmoreAccountBtn,  prevsbtn;
     private FirebaseAuth mAuth;
 
     @Override
@@ -49,7 +50,7 @@ public class AccountCenter extends AppCompatActivity {
 
         prevsbtn = findViewById(R.id.backbutton);
         logoutBtn = findViewById(R.id.logout_button);
-        deleteAccountBtn = findViewById(R.id.btn_delete_account);
+        learnmoreAccountBtn = findViewById(R.id.btn_delete_account);
 
         // Tombol kembali
         prevsbtn.setOnClickListener(view -> {
@@ -60,8 +61,14 @@ public class AccountCenter extends AppCompatActivity {
         // Tombol logout
         logoutBtn.setOnClickListener(view -> showExitPopup(view));
 
-        // Tombol delete account
-        deleteAccountBtn.setOnClickListener(view -> showDeleteAccountPopup(view));
+        // learn more
+        learnmoreAccountBtn.setOnClickListener(view -> {
+            Intent intent = new Intent(AccountCenter.this, learnMore.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        });
+
+
 
         // Ambil username dan email dari SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("LoginData", MODE_PRIVATE);
@@ -93,46 +100,6 @@ public class AccountCenter extends AppCompatActivity {
         cancelExit.setOnClickListener(v -> exitPopupWindow.dismiss());
     }
 
-    private void showDeleteAccountPopup(View anchorView) {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.account_center_delete, null);
-
-        int popupWidth = getResources().getDimensionPixelSize(R.dimen.popup_width);
-        int popupHeight = getResources().getDimensionPixelSize(R.dimen.popup_height);
-
-        exitPopupWindow = new PopupWindow(popupView, popupWidth, popupHeight, true);
-        exitPopupWindow.setAnimationStyle(R.style.PopupAnimation);
-        exitPopupWindow.showAtLocation(anchorView, Gravity.CENTER, 0, 0);
-
-        Button confirmDelete = popupView.findViewById(R.id.imageExit);
-        Button cancelDelete = popupView.findViewById(R.id.imageYes);
-
-        confirmDelete.setOnClickListener(v -> deleteAccount());
-        cancelDelete.setOnClickListener(v -> exitPopupWindow.dismiss());
-    }
-
-    private void deleteAccount() {
-        // Hapus data pengguna dari Firestore
-        DocumentReference userRef = firestore.collection("Akun").document(username);
-        userRef.delete()
-                .addOnSuccessListener(aVoid -> {
-                    if (mAuth.getCurrentUser() != null) {
-                        mAuth.getCurrentUser().delete()
-                                .addOnSuccessListener(aVoid1 -> {
-                                    Toast.makeText(AccountCenter.this, "Akun berhasil dihapus.", Toast.LENGTH_SHORT).show();
-                                    signOut();
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(AccountCenter.this, "Error deleting account: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                });
-                    } else {
-                        Toast.makeText(AccountCenter.this, "Pengguna tidak masuk.", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(AccountCenter.this, "Error deleting account: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-    }
 
     private void loadUserProfile() {
         DocumentReference akunRef = firestore.collection("Akun").document(username);
