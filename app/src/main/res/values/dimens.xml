@@ -18,15 +18,15 @@
     <dimen name ="player_ship_width">140dp</dimen>
     <dimen name ="player_ship_height">140dp</dimen>
 
-    <dimen name ="mosnter_size">60dp</dimen>
+    <dimen name ="mosnter_size">65dp</dimen>
     <dimen name ="bullet_size">50dp</dimen>
     <dimen name ="rudal_size">200dp</dimen>
 
     <dimen name ="setting_width">400dp</dimen>
     <dimen name ="setting_height">400dp</dimen>
 
-    <dimen name = "boss_width">300dp</dimen>
-    <dimen name = "boss_height">270dp</dimen>
+    <dimen name = "boss_width">250dp</dimen>
+    <dimen name = "boss_height">220dp</dimen>
 
     <dimen name = "level_height">300dp</dimen>
     <dimen name = "level_width">350dp</dimen>

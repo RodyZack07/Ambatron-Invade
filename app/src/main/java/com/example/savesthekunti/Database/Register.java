@@ -256,9 +256,4 @@ public class Register extends AppCompatActivity {
         levelsRef.document(userId).set(levelData);
 
     }
-
-
-
-
-
 }

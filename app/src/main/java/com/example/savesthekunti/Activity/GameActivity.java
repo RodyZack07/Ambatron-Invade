@@ -43,22 +43,17 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     private TextView scoreTxt, defeatedTxt;
     private ImageView explosionView;
     private Level levelData;
-    public PopupWindow gameOverWindow;
-    public PopupWindow gameWinWindow;
     private int initialHealth;
-    private int initalBossHealth;
     private int maxBossHealth;
     private ImageView oneBarLeft, twoBarLeft, threeBarLeft, fourBarLeft, fiveBarLeft;
     private ImageView bossBar1, bossBar2, bossBar3, bossBar4, bossBar5, bossBar6, bossBar7, bossBar8, bossBar9, bossBar10;
     private Level currentLevelData;
     private ImageButton pausemenu;
-    private int levelIndex;
     private LinearLayout bossHealthBar;
-    private boolean statusWin = false;
-    private boolean statusLose = false;
     private String username;
     private SharedPreferences sharedPreferences;
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    private MediaPlayer battleBgm;
 
 
 
@@ -76,15 +71,10 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
             return;
         }
 
-
-
-
         // Inisialisasi komponen UI
         explosionView = new ImageView(this);
         explosionView.setLayoutParams(new RelativeLayout.LayoutParams(300, 230)); // Atur ukuran sesuai kebutuhan
         explosionView.setVisibility(View.GONE);
-
-
 
 //        ================================================= PAUSE ======================================================================================
         pausemenu = findViewById(R.id.pausebtn);
@@ -111,6 +101,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         initialHealth = gameView.getPlayerShipHp();
         maxBossHealth = gameView.getBossAmbaMaxHp();
         bossHealthBar = findViewById(R.id.bossHealthBar);
+        battleBgm = MediaPlayer.create(this, R.raw.battle_bgm);
 
         if (gameView.getBossAmba() != null) {
             bossHealthBar.setVisibility(View.VISIBLE);
@@ -148,7 +139,8 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
             }
         });
         gameplayBg.start();
-
+        battleBgm.setLooping(true);
+        battleBgm.start();
 
         // ============================ FUNCTION SELECT PESAWAT =================================
         String selectedSkin = getIntent().getStringExtra("selectedSkin");
@@ -167,12 +159,20 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         });
     }
 
+    private int loadVolumePreference() {
+        SharedPreferences prefs = getSharedPreferences("settings", MODE_PRIVATE);
+        return prefs.getInt("volume", 50); // default 50
+    }
+
+    private void setVolume(MediaPlayer mediaPlayer, float volume) {
+        mediaPlayer.setVolume(volume, volume);
+    }
+
     @Override
     public void onPlayerHpChange(int newHp) {
         initialHealth = newHp;
         Log.d("GameActivity", "Player HP changed to: " + newHp);// Update initialHealth
         // ...
-
         oneBarLeft.setVisibility(newHp >= 1 ? View.VISIBLE : View.GONE);
         twoBarLeft.setVisibility(newHp >= 200 ? View.VISIBLE : View.GONE);
         threeBarLeft.setVisibility(newHp >= 400 ? View.VISIBLE : View.GONE);
@@ -181,8 +181,8 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
 
         if (newHp <= 0) {
             showGameOver(findViewById(R.id.gameContent));
-        }
-    }
+            battleBgm.release();
+        }}
 
     @Override
     public void onBossHpChange(int newHp) {
@@ -209,22 +209,16 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
             if (newHp <= 0) {
                 showGameWin(findViewById(R.id.gameContent));
                 updateLevelCompletionStatus(true);
+
+                if (currentLevelData.getLevelNumber() >= 10 && currentLevelData.getLevelNumber() <= 15){
+                    updatePlayerCurrency(3);}
+                battleBgm.release();
             }
         } else {
             Log.d("GameActivity", "BossAmba belum terinisialisasi");
         }
     }
 
-    private void unlockNextLevel(String username, int currentLevel) {
-        firestore.collection("Akun")
-                .document(username)
-                .update(
-                        "Levels.isLevelCompleted" + currentLevel, true,
-                        "Levels.isLevelCompleted" + (currentLevel + 1), true
-                )
-                .addOnSuccessListener(aVoid -> Log.d("GameActivity", "Level updated successfully"))
-                .addOnFailureListener(e -> Log.e("GameActivity", "Error updating levels", e));
-    }
 
     private void updateBossBars(int currentHp) {
         if (maxBossHealth <= 0) {
@@ -237,7 +231,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         int percentageHp = (int) ((double) currentHp / maxBossHealth * 100);
         Log.d("GameActivity", "Current Boss HP: " + currentHp + ", Percentage: " + percentageHp + "%");
 
-        bossBar1.setVisibility(percentageHp >= 10 ? View.VISIBLE : View.GONE);
+        bossBar1.setVisibility(percentageHp >= 1 ? View.VISIBLE : View.GONE);
         bossBar2.setVisibility(percentageHp >= 20 ? View.VISIBLE : View.GONE);
         bossBar3.setVisibility(percentageHp >= 30 ? View.VISIBLE : View.GONE);
         bossBar4.setVisibility(percentageHp >= 40 ? View.VISIBLE : View.GONE);
@@ -247,16 +241,6 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         bossBar8.setVisibility(percentageHp >= 80 ? View.VISIBLE : View.GONE);
         bossBar9.setVisibility(percentageHp >= 90 ? View.VISIBLE : View.GONE);
         bossBar10.setVisibility(percentageHp >= 100 ? View.VISIBLE : View.GONE);
-    }
-
-    private int calculateStars(int score) {
-        if (score > 1000) {
-            return 3; // 3 stars for scores over 1000
-        } else if (score > 500) {
-            return 2; // 2 stars for scores over 500
-        } else {
-            return 1; // 1 star for scores under 500
-        }
     }
 
     public void triggerExplosion(float x, float y) {
@@ -310,6 +294,43 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
                 });
     }
 
+    private void updatePlayerCurrency(int amount){
+        firestore.collection("Akun").document(username).get().
+                addOnSuccessListener(documentSnapshot -> {
+                    if(documentSnapshot.exists()){
+                        Long currentKoin = documentSnapshot.getLong("currency");
+                        if(currentKoin == null){
+                            currentKoin = 0L;
+                        }
+                        Long updateCurrency = currentKoin + amount;
+
+                        firestore.collection("Akun").document(username).
+                                update("currency", updateCurrency).
+                                addOnSuccessListener(aVoid -> {
+                                    Log.d("GameActivity", "Currency added" + amount);
+                        }).addOnFailureListener( e ->
+                                        Log.d("GameActivity", "Currency failed to add"));
+                    }
+                });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (battleBgm != null) {
+            battleBgm.start();
+            setVolume(battleBgm, loadVolumePreference() / 100f);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (battleBgm != null && battleBgm.isPlaying()) {
+            battleBgm.pause();
+        }
+    }
+
 
     @Override
     public void onBackPressed (){}
@@ -321,5 +342,10 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         if (gameView != null) {
             gameView.destroy();
         }
+        if (battleBgm != null) {
+            battleBgm.release();
+            battleBgm= null;
+        }
+
     }
 }

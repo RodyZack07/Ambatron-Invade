@@ -222,12 +222,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
-
     private void getUserData(String userId) {
         if (isInternetAvailable()) {
             db.collection("Akun").document(userId).get()

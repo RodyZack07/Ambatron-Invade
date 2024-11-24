@@ -220,9 +220,7 @@ public class SelectFighterActivity extends AppCompatActivity {
                     if (skinId != null && isLocked != null && isUnlocked != null) {
                         if (!isLocked || isUnlocked) {
                             ownedSkins.add(skinId); // Menambahkan skin yang sudah dibuka
-                        }
-                    }
-                }
+                        }}}
             } else {
                 Log.d("FetchUserSkins", "Error getting documents: ", task.getException());
             }
@@ -330,15 +328,12 @@ public class SelectFighterActivity extends AppCompatActivity {
                 Long currencyLong = documentSnapshot.getLong("currency");
                 if (currencyLong != null) {
                     int userCurrency = currencyLong.intValue();
-                    Log.d("UnlockSkin", "Currency pengguna: " + userCurrency);
                     if (userCurrency >= 10) {
                         skinRef.update("status_terkunci", false, "is_unlocked", true)
                                 .addOnSuccessListener(aVoid -> {
-                                    Log.d("UnlockSkin", "Skin berhasil di-unlock");
                                     int updatedCurrency = userCurrency - 10;
                                     userRef.update("currency", updatedCurrency)
                                             .addOnSuccessListener(aVoid1 -> {
-                                                Log.d("UnlockSkin", "Currency berhasil diperbarui");
                                                 fetchUserSkins();
                                                 Toast.makeText(this, "Skin berhasil dibuka!", Toast.LENGTH_SHORT).show();
                                             })
@@ -346,7 +341,6 @@ public class SelectFighterActivity extends AppCompatActivity {
                                 })
                                 .addOnFailureListener(e -> Log.e("UnlockSkin", "Gagal mengupdate status skin", e));
                     } else {
-                        Log.d("UnlockSkin", "Kointron tidak cukup.");
                         Toast.makeText(this, "Kointron tidak cukup", Toast.LENGTH_SHORT).show();
                     }
                 }

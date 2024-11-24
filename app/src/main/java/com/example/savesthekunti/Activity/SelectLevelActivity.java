@@ -57,7 +57,7 @@ public class SelectLevelActivity extends AppCompatActivity {
             new Level(12, 260, 310, 1000, R.drawable.bos_crab),
             new Level(13, 290, 320, 12000,  R.drawable.bos_punk),
             new Level(14, 310, 340, 15000,  R.drawable.bos_punk),
-            new Level(15, 320, 360, 25000, R.drawable.bos_punk),
+            new Level(15, 320, 360, 25000, R.drawable.boss_last),
     };
 
     public Level[] getLevels() {
@@ -151,6 +151,7 @@ public class SelectLevelActivity extends AppCompatActivity {
                         boolean isLevelsCompleted12 = documentSnapshot.getBoolean("isLevelCompleted12");
                         boolean isLevelsCompleted13 = documentSnapshot.getBoolean("isLevelCompleted13");
                         boolean isLevelsCompleted14 = documentSnapshot.getBoolean("isLevelCompleted14");
+                        boolean isLevelsCompleted15 = documentSnapshot.getBoolean("isLevelCompleted15");
 
                         updateLevelVisibility(bgLevel2, isLevelsCompleted1, levelStar1); // Level 2 bergantung pada Level 1
                         updateLevelVisibility(bgLevel3, isLevelsCompleted2, levelStar2);
@@ -163,9 +164,10 @@ public class SelectLevelActivity extends AppCompatActivity {
                         updateLevelVisibility(bgLevel10, isLevelsCompleted9, levelStar9);
                         updateLevelVisibility(bgLevel11, isLevelsCompleted10, levelStar10);
                         updateLevelVisibility(bgLevel12, isLevelsCompleted11, levelStar11);
-                        updateLevelVisibility(bgLevel13, isLevelsCompleted12,levelStar12);
+                        updateLevelVisibility(bgLevel13, isLevelsCompleted12, levelStar12);
                         updateLevelVisibility(bgLevel14, isLevelsCompleted13, levelStar13);
                         updateLevelVisibility(bgLevel15, isLevelsCompleted14, levelStar14);
+                        updateLevelVisibility(bgLevel15, isLevelsCompleted15, levelStar15);
 
                     } else {
                         Log.e("Firestore", "Document not found for username: " + username);
@@ -192,10 +194,12 @@ public class SelectLevelActivity extends AppCompatActivity {
     }
     private void updateLevelVisibility(FrameLayout levelImage, boolean isCompleted, LinearLayout levelStar) {
         if (isCompleted) {
+            levelImage.setClickable(true);
             levelImage.setVisibility(View.VISIBLE);
             levelImage.setAlpha(1.0f);
             levelStar.setVisibility(View.VISIBLE);// 100% opacity
         } else {
+            levelImage.setClickable(false);
             levelImage.setVisibility(View.VISIBLE);
             levelImage.setAlpha(0.5f);
             levelStar.setVisibility(View.GONE);// 50% opacity
