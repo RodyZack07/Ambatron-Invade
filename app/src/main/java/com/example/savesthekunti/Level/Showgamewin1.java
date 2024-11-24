@@ -17,6 +17,7 @@ import com.example.savesthekunti.Activity.Level;
 import com.example.savesthekunti.Activity.SelectFighterActivity;
 import com.example.savesthekunti.Activity.SelectLevelActivity;
 import com.example.savesthekunti.R;
+import com.example.savesthekunti.UI.LoadingScreenGame;
 
 public class Showgamewin1 extends AppCompatActivity {
     private Level[] levels;
@@ -85,7 +86,7 @@ public class Showgamewin1 extends AppCompatActivity {
 
 
             if (nextLevelData != null) { // Pastikan level berikutnya ada
-                Intent intent = new Intent(Showgamewin1.this, GameActivity.class);
+                Intent intent = new Intent(Showgamewin1.this, LoadingScreenGame.class);
                 intent.putExtra("levelData", nextLevelData);
                 intent.putExtra("selectedSkin", selectedSkin);// Kirim data level berikutnya
                 startActivity(intent);

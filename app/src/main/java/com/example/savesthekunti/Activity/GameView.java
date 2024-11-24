@@ -443,7 +443,7 @@ public int getScore() {
                 invalidate();
                 handler.postDelayed(this, 400); // Spawn setiap 400 ms
             }
-        }, 400);
+        }, 4000);
     }
 
     private void startShooting() {
@@ -457,7 +457,7 @@ public int getScore() {
                 shootBullet();
                 handler.postDelayed(this, 115); // Menembak setiap 100 ms
             }
-        }, 100);
+        }, 2000);
     }
 
     //SHOOT METHOD
@@ -612,9 +612,6 @@ public int getScore() {
             return shipWidth;
         }
     }
-
-
-
 
 
     // Class MonsterMini

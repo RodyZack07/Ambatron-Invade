@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -81,7 +82,9 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         // Inisialisasi komponen UI
         explosionView = new ImageView(this);
         explosionView.setLayoutParams(new RelativeLayout.LayoutParams(300, 230)); // Atur ukuran sesuai kebutuhan
-        explosionView.setVisibility(View.GONE);  // Sembunyikan awalnya
+        explosionView.setVisibility(View.GONE);
+
+
 
 //        ================================================= PAUSE ======================================================================================
         pausemenu = findViewById(R.id.pausebtn);
@@ -153,6 +156,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
 
         levelData = (Level) getIntent().getSerializableExtra("levelData");
         gameView.setLevelData(levelData);
+
         // ============================ FUNCTION SCORE =================================
         gameView.setOnChangeScoreListener(new GameView.OnChangeScoreListener() {
             @Override
