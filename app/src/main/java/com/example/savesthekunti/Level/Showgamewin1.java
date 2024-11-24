@@ -4,6 +4,7 @@ import static androidx.core.content.ContextCompat.startActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
@@ -20,6 +21,7 @@ import com.example.savesthekunti.R;
 public class Showgamewin1 extends AppCompatActivity {
     private Level[] levels;
     private String selectedSkin;
+    private MediaPlayer winSFX;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,9 @@ public class Showgamewin1 extends AppCompatActivity {
         SelectLevelActivity selectLevelActivity = new SelectLevelActivity();
         levels = selectLevelActivity.getLevels();
         selectedSkin = getIntent().getStringExtra("selectedSkin");
+
+        winSFX = MediaPlayer.create(this, R.raw.game_win);
+        winSFX.start();
 
         if (levelData == null) {
             Log.e("Showgamewin1", "levelData is null");

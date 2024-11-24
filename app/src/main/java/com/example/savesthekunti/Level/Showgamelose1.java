@@ -2,6 +2,7 @@ package com.example.savesthekunti.Level;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
@@ -15,6 +16,8 @@ import com.example.savesthekunti.Activity.SelectFighterActivity;
 import com.example.savesthekunti.R;
 
 public class Showgamelose1 extends AppCompatActivity {
+    private MediaPlayer loseSFX ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +25,17 @@ public class Showgamelose1 extends AppCompatActivity {
 
         // Ambil data level dari Intent
         Level levelData = (Level) getIntent().getSerializableExtra("levelData");
+        if (levelData != null) {
+            Log.d("Showgamelose1", "Level data received: " + levelData.toString());
+        } else {
+            Log.e("Showgamelose1", "Level data is null");
+        }
+
+
         String selectedSkin = getIntent().getStringExtra("selectedSkin");
+
+        loseSFX = MediaPlayer.create(this, R.raw.game_lose);
+        loseSFX.start();
 
         // Tampilkan nomor level di TextView jika levelData tidak null
         if (levelData != null) {
@@ -57,8 +70,13 @@ public class Showgamelose1 extends AppCompatActivity {
                 intent.putExtra("levelData", levelData);
                 intent.putExtra("selectedSkin", selectedSkin);
                 startActivity(intent);
-
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                if (levelData != null) {
+                    Log.d("Showgamelose1", "Level data received: " + levelData.toString());
+                } else {
+                    Log.e("Showgamelose1", "Level data is null");
+                }
+
                 finish();
             }
         });

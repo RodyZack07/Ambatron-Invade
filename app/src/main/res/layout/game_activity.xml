@@ -140,9 +140,9 @@
         android:id="@+id/bossHealthBar"
         android:layout_width="450dp"
         android:layout_height="65dp"
-        android:layout_marginTop="750dp"
+        android:layout_marginTop="700dp"
         android:gravity="left"
-        android:layout_marginLeft="70dp"
+        android:layout_marginLeft="10dp"
         android:orientation="horizontal"
        >
 
@@ -150,21 +150,23 @@
             android:layout_width="60dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
+            android:src="@drawable/boss_profile"
            />
 
         <ImageView
             android:id="@+id/bossBar1"
             android:layout_width="20dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:scaleType="fitXY"
-            android:src="@drawable/hp_boss_1" />
+            android:src="@drawable/hp_boss_1"
+            />
 
         <ImageView
             android:id="@+id/bossBar2"
-            android:layout_width="23dp"
-            android:layout_height="50dp"
+            android:layout_width="20dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:scaleType="fitXY"
@@ -173,7 +175,7 @@
         <ImageView
             android:id="@+id/bossBar3"
             android:layout_width="20dp"
-            android:layout_height="47dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:scaleType="fitXY"
@@ -182,7 +184,7 @@
         <ImageView
             android:id="@+id/bossBar4"
             android:layout_width="20dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:scaleType="fitXY"
@@ -191,7 +193,7 @@
         <ImageView
             android:id="@+id/bossBar5"
             android:layout_width="20dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:scaleType="fitXY"
@@ -200,7 +202,7 @@
         <ImageView
             android:id="@+id/bossBar6"
             android:layout_width="20dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:scaleType="fitXY"
@@ -209,7 +211,7 @@
         <ImageView
             android:id="@+id/bossBar7"
             android:layout_width="20dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:scaleType="fitXY"
@@ -218,7 +220,7 @@
         <ImageView
             android:id="@+id/bossBar8"
             android:layout_width="20dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:scaleType="fitXY"
@@ -227,7 +229,7 @@
         <ImageView
             android:id="@+id/bossBar9"
             android:layout_width="20dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:scaleType="fitXY"
@@ -236,7 +238,7 @@
         <ImageView
             android:id="@+id/bossBar10"
             android:layout_width="20dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:scaleType="fitXY"
