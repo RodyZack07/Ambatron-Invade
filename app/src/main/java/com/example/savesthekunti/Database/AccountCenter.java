@@ -78,8 +78,6 @@ public class AccountCenter extends AppCompatActivity {
         if (username != null && email != null) {
             createdAtTextView.setText(email);
             loadUserProfile();
-        } else {
-            Toast.makeText(AccountCenter.this, "Username atau email tidak ditemukan!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -111,11 +109,7 @@ public class AccountCenter extends AppCompatActivity {
                     String email = document.getString("email");
                     nicknameTextView.setText(username);
                     createdAtTextView.setText(email);
-                } else {
-                    Toast.makeText(AccountCenter.this, "Profil tidak ditemukan!", Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                Toast.makeText(AccountCenter.this, "Gagal memuat profil: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

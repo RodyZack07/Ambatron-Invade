@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             // Display warning message if user is not logged in
             warningText.setVisibility(View.VISIBLE);
             borderText.setVisibility(View.VISIBLE);
-            Toast.makeText(this, "Anda Harus Login Untuk Bermain", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Silahkan Regist dan Login untuk memainkan Ambatron Invades", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
             borderText.setVisibility(View.VISIBLE);
             playButton.setVisibility(View.GONE);
             warningText.setVisibility(View.VISIBLE);
-            Toast.makeText(this, "Anda Harus Login Untuk Bermain", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Silahkan Regist dan Login untuk memainkan Ambatron Invades", Toast.LENGTH_SHORT).show();
         } else {
             playButton.setVisibility(View.VISIBLE);
             playButton.setOnClickListener(v -> directSelectFighter());
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
                                     adminButton.setVisibility(View.VISIBLE);
                                 }
                             } else {
-                                Toast.makeText(MainActivity.this, "Data pengguna tidak ditemukan.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Sepertinya anda belum login", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(MainActivity.this, "Error: " + task.getException(), Toast.LENGTH_SHORT).show();
