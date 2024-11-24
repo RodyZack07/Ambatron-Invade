@@ -156,7 +156,7 @@ public class Register extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     setDefaultSkin(username);
                     setDefaultAchievements(username);
-                    setDefaultScore(username);
+//                    setDefaultScore(username);
                     setDefaultLevels(username);
 
                     Log.d("Register", "Akun berhasil didaftarkan dengan username sebagai ID");
@@ -229,27 +229,27 @@ public class Register extends AppCompatActivity {
         skinRef.document(skinId).set(lockedSkinData);
     }
 
-    private void setDefaultScore(String userId) {
-        // Mengakses koleksi "Akun" dan dokumen berdasarkan userId
-        CollectionReference scoreRef = firestore.collection("Akun").document(userId).collection("Score");
-
-        // Membuat data default untuk score
-        Map<String, Object> scoreData = new HashMap<>();
-        scoreData.put("highscore", 0); // Misalnya, nilai awal highscore adalah 0
-        scoreData.put("current_score", 0); // Nilai skor saat ini
-        scoreData.put("level", 1); // Level awal
-        scoreData.put("created_at", System.currentTimeMillis());
-        scoreData.put("updated_at", System.currentTimeMillis());
-
-        // Menyimpan data default ke dalam koleksi "Score" untuk pengguna
-        scoreRef.document("default_score").set(scoreData)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("Register", "Default score berhasil diset.");
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Register", "Gagal menyimpan default score", e);
-                });
-    }
+//    private void setDefaultScore(String userId) {
+//        // Mengakses koleksi "Akun" dan dokumen berdasarkan userId
+//        CollectionReference scoreRef = firestore.collection("Akun").document(userId).collection("Score");
+//
+//        // Membuat data default untuk score
+//        Map<String, Object> scoreData = new HashMap<>();
+//        scoreData.put("highscore", 0); // Misalnya, nilai awal highscore adalah 0
+//        scoreData.put("current_score", 0); // Nilai skor saat ini
+//        scoreData.put("level", 1); // Level awal
+//        scoreData.put("created_at", System.currentTimeMillis());
+//        scoreData.put("updated_at", System.currentTimeMillis());
+//
+//        // Menyimpan data default ke dalam koleksi "Score" untuk pengguna
+//        scoreRef.document("default_score").set(scoreData)
+//                .addOnSuccessListener(aVoid -> {
+//                    Log.d("Register", "Default score berhasil diset.");
+//                })
+//                .addOnFailureListener(e -> {
+//                    Log.e("Register", "Gagal menyimpan default score", e);
+//                });
+//    }
 
     private void setDefaultLevels(String userId) {
         // Akses subkoleksi "Levels" di dalam koleksi "Akun"
