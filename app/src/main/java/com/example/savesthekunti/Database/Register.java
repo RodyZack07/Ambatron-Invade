@@ -91,8 +91,24 @@ public class Register extends AppCompatActivity {
             return;
         }
 
+        if (username.length() > 6) {
+            Toast.makeText(Register.this, "Username tidak boleh lebih dari 6 karakter", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (password.length() < 6) {
             Toast.makeText(Register.this, "Password minimal 6 karakter", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            Toast.makeText(Register.this, "Password dan konfirmasi password tidak cocok", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Validasi password harus memiliki huruf dan angka
+        if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d).+$")) {
+            Toast.makeText(Register.this, "Password harus memiliki kombinasi", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -196,6 +212,9 @@ public class Register extends AppCompatActivity {
         addLockedSkin(skinRef, "retro_sky");
         addLockedSkin(skinRef, "wing_of_justice");
         addLockedSkin(skinRef, "x56_core");
+        addLockedSkin(skinRef, "shak_magma");
+        addLockedSkin(skinRef, "liz_blue");
+        addLockedSkin(skinRef, "nusei_15");
 
     }
 

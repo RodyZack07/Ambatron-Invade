@@ -45,7 +45,8 @@ public class SelectFighterActivity extends AppCompatActivity {
 
     private ImageView spaceShip;
     private ImageView lockOverlay; // Overlay untuk gembok
-    private String[] fighterIDs = {"blue_cosmos", "retro_sky", "wing_of_justice", "x56_core"};
+    private String[] fighterIDs = {"blue_cosmos", "retro_sky", "wing_of_justice", "x56_core", "shak_magma",
+    "liz_blue", "nusei_15"};
     private ArrayList<String> ownedSkins = new ArrayList<>(); // ArrayList untuk menyimpan skin yang dimiliki
     private int currentSkinIndex = 0;
     private Button unlockSkin;
