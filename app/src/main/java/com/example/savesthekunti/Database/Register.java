@@ -167,7 +167,7 @@ public class Register extends AppCompatActivity {
                     finish();
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("Register", "Gagal menyimpan akun", e);
+
                     Toast.makeText(Register.this, "Registrasi gagal: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
