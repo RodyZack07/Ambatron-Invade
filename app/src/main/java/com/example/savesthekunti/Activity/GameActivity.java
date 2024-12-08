@@ -128,7 +128,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         bossBar10 = findViewById(R.id.bossBar10);
 
 
-        Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.fight_raw); // Ganti dengan nama file video yang benar
+        Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.level_bg); // Ganti dengan nama file video yang benar
 
         gameplayBg.setVideoURI(videoUri); // Menggunakan gameplayBg
         gameplayBg.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -344,9 +344,6 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         }
     }
 
-
-
-
     @Override
     public void onBackPressed (){}
 
@@ -362,7 +359,5 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
             battleBgm = null;
         }
     }
-
-
 }
 

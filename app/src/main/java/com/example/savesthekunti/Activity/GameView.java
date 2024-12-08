@@ -139,6 +139,7 @@ public int getScore() {
         this.monsterMiniDamage = levelData.getMonsterMiniDamage();
         this.bossAmbaHp = levelData.getBossAmbaHp();
         bossAmbaBitmap = BitmapFactory.decodeResource(getResources(), levelData.getBossImageSrc());
+        monsterMiniBitmap = BitmapFactory.decodeResource(getResources(), levelData.getMonsterMiniSrc());
     }
 
     private void init(Context context) {
@@ -159,7 +160,6 @@ public int getScore() {
         bullets = new ArrayList<>();
 
         //Objek Bitmap
-        monsterMiniBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.monster_mini);
         bulletsBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.beam_bullet);
         bossExplodeSFX = MediaPlayer.create(context, R.raw.boss_explode);
         monsterExplodeSFX = MediaPlayer.create(context, R.raw.blown_monster);

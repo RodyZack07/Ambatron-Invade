@@ -8,17 +8,21 @@ public class Level implements Serializable {
     public int monsterMiniDamage;
     public int bossAmbaHp;
     public int bossImageSrc;
+    public int monsteMiniSrc;
 
     // Constructor, getters, and setters
-    public Level(int levelNumber, int monsterMiniHp, int monsterMiniDamage, int bossAmbaHp, int bossImageSrc ) {
+    public Level(int levelNumber, int monsterMiniHp, int monsterMiniDamage, int bossAmbaHp, int bossImageSrc, int monsterMiniSrc ) {
         this.levelNumber = levelNumber;
         this.monsterMiniHp = monsterMiniHp;
         this.monsterMiniDamage = monsterMiniDamage;
         this.bossAmbaHp = bossAmbaHp;
         this.bossImageSrc = bossImageSrc;
+        this.monsteMiniSrc = monsterMiniSrc;
     }
 
     // Getters
+    public int getMonsterMiniSrc(){return monsteMiniSrc;}
+
     public int getBossImageSrc() {
         return bossImageSrc;
     }

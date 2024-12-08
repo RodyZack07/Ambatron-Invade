@@ -43,21 +43,21 @@ public class SelectLevelActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
 
     private Level[] levels = {
-            new Level(1, 100, 30, 1000,  R.drawable.boss_amba),
-            new Level(2, 130, 60, 3000,  R.drawable.boss_amba),
-            new Level(3, 160, 90, 6000,  R.drawable.bos_astronout),
-            new Level(4, 190, 110, 11000,  R.drawable.bos_astronout),
-            new Level(5, 210, 140, 15000,  R.drawable.bos_blackarmor),
-            new Level(6, 240, 170, 20000,  R.drawable.bos_blackarmor),
-            new Level(7, 270, 200, 3500,  R.drawable.bos_jawa),
-            new Level(8, 300, 230, 4000,  R.drawable.bos_jawa),
-            new Level(9, 160, 260, 5000,  R.drawable.bos_claw),
-            new Level(10, 190, 290, 6000,  R.drawable.bos_claw),
-            new Level(11, 230, 300, 8000,  R.drawable.bos_crab),
-            new Level(12, 260, 310, 1000, R.drawable.bos_crab),
-            new Level(13, 290, 320, 12000,  R.drawable.bos_punk),
-            new Level(14, 310, 340, 15000,  R.drawable.bos_punk),
-            new Level(15, 320, 360, 25000, R.drawable.boss_last),
+            new Level(1, 100, 30, 1000,  R.drawable.boss_amba, R.drawable.monster_mini),
+            new Level(2, 130, 60, 3000,  R.drawable.boss_amba, R.drawable.monster_mini),
+            new Level(3, 160, 90, 6000,  R.drawable.bos_astronout, R.drawable.monster_mini),
+            new Level(4, 190, 110, 11000,  R.drawable.bos_astronout, R.drawable.monster_mini),
+            new Level(5, 210, 140, 15000,  R.drawable.bos_blackarmor, R.drawable.monster_mini),
+            new Level(6, 240, 170, 20000,  R.drawable.bos_blackarmor, R.drawable.monster_mini_jin),
+            new Level(7, 270, 200, 3500,  R.drawable.bos_jawa, R.drawable.monster_mini_jin),
+            new Level(8, 300, 230, 4000,  R.drawable.bos_jawa, R.drawable.monster_mini_jin),
+            new Level(9, 160, 260, 5000,  R.drawable.bos_claw, R.drawable.monster_mini_jin),
+            new Level(10, 190, 290, 6000,  R.drawable.bos_claw, R.drawable.monster_mini_rucs),
+            new Level(11, 230, 300, 8000,  R.drawable.bos_crab, R.drawable.monster_mini_rucs),
+            new Level(12, 260, 310, 1000, R.drawable.bos_crab, R.drawable.monster_mini_rucs),
+            new Level(13, 290, 320, 12000,  R.drawable.bos_punk, R.drawable.monster_mini_rucs),
+            new Level(14, 310, 340, 15000,  R.drawable.bos_punk, R.drawable.monster_mini_rucs),
+            new Level(15, 320, 360, 25000, R.drawable.boss_last, R.drawable.monster_mini_rucs),
     };
 
     public Level[] getLevels() {
@@ -85,7 +85,7 @@ public class SelectLevelActivity extends AppCompatActivity {
         mediaPlayer.start();
 
         backgroundVideo = findViewById(R.id.backgroundVideo);
-        Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.raw_gameplay);
+        Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.level_bg);
         backgroundVideo.setVideoURI(videoUri);
 
         backgroundVideo.setOnPreparedListener(mp -> {
