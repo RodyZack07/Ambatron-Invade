@@ -326,10 +326,25 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     @Override
     protected void onPause() {
         super.onPause();
-        if (battleBgm != null && battleBgm.isPlaying()) {
-            battleBgm.pause();
+        if (battleBgm != null) {
+            try {
+                if (battleBgm.isPlaying()) {
+                    battleBgm.pause();
+                }
+            } catch (IllegalStateException e) {
+                e.printStackTrace(); // Untuk debugging
+            }
         }
     }
+
+    private void initializeBattleBgm() {
+        if (battleBgm == null) {
+            battleBgm = MediaPlayer.create(this, R.raw.battle_bgm); // Ganti `R.raw.battle_bgm` sesuai file Anda
+            battleBgm.setLooping(true);
+        }
+    }
+
+
 
 
     @Override
@@ -338,14 +353,16 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Release any remaining resources
         if (gameView != null) {
             gameView.destroy();
+            gameView = null; // Bebaskan memori
         }
         if (battleBgm != null) {
             battleBgm.release();
-            battleBgm= null;
+            battleBgm = null;
         }
-
     }
+
+
 }
+
