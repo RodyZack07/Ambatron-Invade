@@ -43,21 +43,21 @@ public class SelectLevelActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
 
     private Level[] levels = {
-            new Level(1, 100, 30, 1000,  R.drawable.boss_amba, R.drawable.monster_mini, R.raw.level_bg),
-            new Level(2, 130, 60, 3000,  R.drawable.boss_amba, R.drawable.monster_mini, R.raw.level_bg),
-            new Level(3, 160, 90, 6000,  R.drawable.bos_astronout, R.drawable.monster_mini, R.raw.level_bg),
-            new Level(4, 190, 110, 11000,  R.drawable.bos_astronout, R.drawable.monster_mini_jin, R.raw.level_bg),
-            new Level(5, 210, 140, 15000,  R.drawable.bos_blackarmor, R.drawable.monster_mini_jin, R.raw.level_bg),
-            new Level(6, 240, 170, 20000,  R.drawable.bos_blackarmor, R.drawable.monster_mini_rucs, R.raw.manu_bg),
-            new Level(7, 270, 200, 3500,  R.drawable.bos_jawa, R.drawable.monster_mini_rucs,R.raw.manu_bg ),
-            new Level(8, 300, 230, 4000,  R.drawable.bos_jawa, R.drawable.monster_mini_rucs, R.raw.manu_bg),
-            new Level(9, 160, 260, 5000,  R.drawable.bos_claw, R.drawable.monster_mini_reak, R.raw.manu_bg),
-            new Level(10, 190, 290, 6000,  R.drawable.bos_claw, R.drawable.monster_mini_reak, R.raw.manu_bg),
-            new Level(11, 230, 300, 8000,  R.drawable.bos_crab, R.drawable.monster_mini_reak, R.raw.manu_bg),
-            new Level(12, 260, 310, 1000, R.drawable.bos_crab, R.drawable.monster_mini_wing, R.raw.manu_bg),
-            new Level(13, 290, 320, 12000,  R.drawable.bos_punk, R.drawable.monster_mini_wing, R.raw.manu_bg),
-            new Level(14, 310, 340, 15000,  R.drawable.bos_punk, R.drawable.monster_mini_future, R.raw.manu_bg),
-            new Level(15, 320, 360, 25000, R.drawable.boss_last, R.drawable.monster_mini_future, R.raw.manu_bg),
+            new Level(1, 100, 30, 1000,  R.drawable.boss_amba, R.drawable.monster_mini, R.raw.bg1),
+            new Level(2, 130, 60, 3000,  R.drawable.boss_amba, R.drawable.monster_mini, R.raw.bg1),
+            new Level(3, 160, 90, 6000,  R.drawable.bos_astronout, R.drawable.monster_mini, R.raw.bg1),
+            new Level(4, 190, 110, 11000,  R.drawable.bos_astronout, R.drawable.monster_mini_jin, R.raw.bg1),
+            new Level(5, 210, 140, 15000,  R.drawable.bos_blackarmor, R.drawable.monster_mini_jin, R.raw.bg2),
+            new Level(6, 240, 170, 20000,  R.drawable.bos_blackarmor, R.drawable.monster_mini_rucs, R.raw.bg2),
+            new Level(7, 270, 200, 3500,  R.drawable.bos_jawa, R.drawable.monster_mini_rucs,R.raw.bg2 ),
+            new Level(8, 300, 230, 4000,  R.drawable.bos_jawa, R.drawable.monster_mini_rucs, R.raw.bg3),
+            new Level(9, 160, 260, 5000,  R.drawable.bos_claw, R.drawable.monster_mini_reak, R.raw.bg3),
+            new Level(10, 190, 290, 6000,  R.drawable.bos_claw, R.drawable.monster_mini_reak, R.raw.bg3),
+            new Level(11, 230, 300, 8000,  R.drawable.bos_crab, R.drawable.monster_mini_reak, R.raw.bg3),
+            new Level(12, 260, 310, 1000, R.drawable.bos_crab, R.drawable.monster_mini_wing, R.raw.bg4),
+            new Level(13, 290, 320, 12000,  R.drawable.bos_punk, R.drawable.monster_mini_wing, R.raw.bg4),
+            new Level(14, 310, 340, 15000,  R.drawable.bos_punk, R.drawable.monster_mini_future, R.raw.bg4),
+            new Level(15, 320, 360, 25000, R.drawable.boss_last, R.drawable.monster_mini_future, R.raw.bg5),
     };
 
     public Level[] getLevels() {
