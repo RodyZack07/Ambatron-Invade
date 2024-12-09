@@ -127,9 +127,9 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         bossBar9 = findViewById(R.id.bossBar9);
         bossBar10 = findViewById(R.id.bossBar10);
 
+        levelData = (Level) getIntent().getSerializableExtra("levelData");
 
-        Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.level_bg); // Ganti dengan nama file video yang benar
-
+        Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + levelData.getGamePlayBgSrc()); // Ganti dengan nama file video yang benar
         gameplayBg.setVideoURI(videoUri); // Menggunakan gameplayBg
         gameplayBg.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
@@ -146,7 +146,7 @@ public class GameActivity extends AppCompatActivity implements GameView.OnPlayer
         String selectedSkin = getIntent().getStringExtra("selectedSkin");
         gameView.setSelectedShipIndex(selectedSkin);
 
-        levelData = (Level) getIntent().getSerializableExtra("levelData");
+
         gameView.setLevelData(levelData);
 
         // ============================ FUNCTION SCORE =================================
